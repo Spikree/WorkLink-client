@@ -84,17 +84,20 @@ const LandingPage = () => {
         </div>
 
         <div className="flex flex-col gap-4">
-          <h1 className="text-6xl font-bold">
+          <h1 className="text-3xl sm:text-6xl font-bold">
             Where <span className="text-secondary">Talent</span> Meets{" "}
-            <span className="text-secondary">Oppourtinity</span>
+            <span className="text-secondary">Opportunity</span>
           </h1>
 
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 mb-8 max-w-sm sm:max-w-3xl mx-auto">
             Connect with top freelancers, manage projects, and grow your
             business with our secure and efficient platform. Get Started
           </p>
           <Link to="/auth">
-            <Button disableStyles={false} className="flex items-center gap-2 p-3">
+            <Button
+              disableStyles={false}
+              className="flex items-center gap-2 p-3"
+            >
               Get Started now <FaArrowRight />
             </Button>
           </Link>

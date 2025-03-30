@@ -22,13 +22,13 @@ const Login = ({setIsLogin} : props) => {
   const validateForm = () => {
     if(email === "") {
       setError("Email is required")
-      toast.error(error);
+      toast.error(error || "Email is required");
       return false;
     }
 
     if(password === "") {
       setError("Password is required")
-      toast.error(error);
+      toast.error(error || "Password is required");
       return false;
     }
     return true
