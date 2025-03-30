@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaEye, FaEyeSlash, FaArrowRight, FaArrowLeft } from "react-icons/fa";
+import { useAuthStore } from "../store/useAuthStore.ts";
+import toast from "react-hot-toast";
 
 type props = {
     setIsLogin: (isLogin: boolean) => void;
@@ -8,6 +10,8 @@ type props = {
 
 const Register = ({setIsLogin} : props) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [error,setError] = useState<string>("");
+  const {signup,isSigningUp} = useAuthStore();
   const [userDetails, setUserDetails] = useState({
     email: "",
     password: "",
@@ -19,6 +23,29 @@ const Register = ({setIsLogin} : props) => {
 
   const  handleIsLogin = () => {
     setIsLogin(true)
+  }
+
+  const validateForm = () => {
+    if(userDetails.email === "") {
+      setError("Email is required");
+      toast.error(error);
+      return false;
+    } else if(userDetails.password) {
+      setError("Password is required")
+      toast.error(error);
+      return false;
+    } else if(userDetails.name === "") {
+      setError("Name is required");
+      toast.error(error)
+      return false;
+    } 
+    return true
+  }
+
+  const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if(!validateForm()) return;
+    signup(userDetails);
   }
 
   const togglePasswordVisibility = () => {
@@ -92,7 +119,7 @@ const Register = ({setIsLogin} : props) => {
             </motion.p>
           </div>
 
-          <form className="px-8 pb-8" >
+          <form className="px-8 pb-8" onSubmit={handleSignUp}>
             <AnimatePresence mode="wait" custom={currentStep === 1 ? 1 : -1}>
               {currentStep === 1 && (
                 <motion.div
@@ -232,7 +259,7 @@ const Register = ({setIsLogin} : props) => {
                       type="submit"
                       className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all"
                     >
-                      Create Account
+                      {isSigningUp?"loading":"create account"}
                     </button>
 
                     <button

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useAuthStore } from "../store/useAuthStore";
+import toast from "react-hot-toast";
 
 type props = {
   setIsLogin: (isLogin: boolean) => void;
@@ -8,12 +10,39 @@ type props = {
 
 const Login = ({setIsLogin} : props) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const {login,isLoggingIn} = useAuthStore();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [error,setError] = useState<string>("");
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
+
+  const validateForm = () => {
+    if(email === "") {
+      setError("Email is required")
+      toast.error(error);
+      return false;
+    }
+
+    if(password === "") {
+      setError("Password is required")
+      toast.error(error);
+      return false;
+    }
+    return true
+  }
+
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = {
+      email: email,
+      password: password
+    }
+    if(!validateForm()) return;
+    login(formData)
+  }
 
   const setIsRegister = () => {
     setIsLogin(false)
@@ -54,7 +83,7 @@ const Login = ({setIsLogin} : props) => {
             </motion.p>
           </div>
 
-          <form className="px-8 pb-8 space-y-4">
+          <form className="px-8 pb-8 space-y-4" onSubmit={handleLogin}>
             <motion.div
               variants={inputVariants}
               custom={1}
@@ -101,7 +130,7 @@ const Login = ({setIsLogin} : props) => {
               type="submit"
               className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all"
             >
-              Login
+              {isLoggingIn ? "loading..." : "login"}
             </motion.button>
 
             <motion.p
