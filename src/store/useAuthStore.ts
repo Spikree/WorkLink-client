@@ -29,6 +29,7 @@ type AuthStore = {
   isCheckingAuth: boolean;
   signup: (data: authData) => Promise<void>;
   login: (data: authData) => Promise<void>;
+  logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
 
   authUser: authUser | null;
@@ -69,20 +70,32 @@ export const useAuthStore = create<AuthStore>((set) => ({
     }
   },
 
-  login: async(data: authData) => {
-    set({isLoggingIn: true});
+  login: async (data: authData) => {
+    set({ isLoggingIn: true });
     try {
-        const response = await axiosInstance.post("/auth/login", data)
-        toast.success(response.data.message)
-        set({ authUser: response.data.user });
+      const response = await axiosInstance.post("/auth/login", data);
+      toast.success(response.data.message);
+      set({ authUser: response.data.user });
     } catch (error) {
-        const axiosError = error as AxiosError<{ message: string }>;
-        const errorMessage =
-          axiosError.response?.data?.message ||
-          "Login failed. Please try again.";
-        toast.error(errorMessage);
+      const axiosError = error as AxiosError<{ message: string }>;
+      const errorMessage =
+        axiosError.response?.data?.message || "Login failed. Please try again.";
+      toast.error(errorMessage);
     } finally {
-        set({isLoggingIn: false});
+      set({ isLoggingIn: false });
     }
-  }
+  },
+
+  logout: async () => {
+    try {
+      const response = await axiosInstance.post("/auth/logout");
+      toast.success(response.data.message);
+      set({ authUser: null });
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      const errorMessage =
+        axiosError.response?.data?.message || "failed to logout";
+      toast.error(errorMessage);
+    }
+  },
 }));

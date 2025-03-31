@@ -8,21 +8,21 @@ import Dashboard from "./pages/Dashboard";
 import { useAuthStore } from "./store/useAuthStore";
 import { useEffect } from "react";
 import { Loader } from "lucide-react";
+import SidebarLayout from "./lib/SidebarLayout";
 
 function App() {
-
-  const {checkAuth,isCheckingAuth} = useAuthStore();
+  const { checkAuth, isCheckingAuth } = useAuthStore();
 
   useEffect(() => {
     checkAuth();
-  },[checkAuth]);
+  }, [checkAuth]);
 
-  if(isCheckingAuth) {
+  if (isCheckingAuth) {
     return (
       <div className="flex items-center justify-center h-screen">
-      <Loader className="size-10 animate-spin" />
-    </div>
-    )
+        <Loader className="size-10 animate-spin" />
+      </div>
+    );
   }
 
   return (
@@ -34,8 +34,10 @@ function App() {
             <Route path="/auth" element={<Auth />} />
           </Route>
 
-          <Route element={<ProtectedRoutes/>}>
-            <Route path="/dashboard" element={<Dashboard/>}/>
+          <Route element={<ProtectedRoutes />}>
+            <Route element={<SidebarLayout />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+            </Route>
           </Route>
         </Routes>
         <Toaster />
