@@ -4,33 +4,17 @@ import { useJobStore } from "../store/useJobStore";
 import { useEffect } from "react";
 
 const Dashboard = () => {
-  const handleApply = () => {
-    alert("Application submitted!");
+  const handleApply = (jobId: string) => {
+    alert("Application submitted!" + jobId);
   };
 
-  const {isFetchingJobs,getJobs} = useJobStore();
+  const { isFetchingJobs, getJobs, jobs } = useJobStore();
 
   useEffect(() => {
     getJobs();
-  },[getJobs])
+  }, [getJobs]);
 
-  const jobData = {
-    title: "Senior Frontend Developer",
-    salary: "120,000 - 150,000",
-    company: "Tech Innovators Inc.",
-    postedDate: "2 days ago",
-    description:
-      "We're looking for an experienced Frontend Developer to join our dynamic team. The ideal candidate will have a strong foundation in modern web technologies and a passion for creating exceptional user experiences.",
-    skills: [
-      { name: "React" },
-      { name: "TypeScript" },
-      { name: "Tailwind CSS" },
-      { name: "Next.js" },
-      { name: "GraphQL" },
-    ],
-  };
-
-  if(isFetchingJobs) {
+  if (isFetchingJobs) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader className="size-10 animate-spin" />
@@ -38,8 +22,14 @@ const Dashboard = () => {
     );
   }
   return (
-    <div className="mt-16 sm:mt-0">
-      <JobCard {...jobData} onApply={handleApply} />
+    <div className="mt-16 sm:mt-0 flex flex-col gap-4 sm:overflow-y-auto h-[calc(100vh-3rem)] pb-6">
+      {jobs.map((job) => (
+        <JobCard
+          key={job._id}
+          jobs={job}
+          onApply={() => handleApply(job._id)}
+        />
+      ))}
     </div>
   );
 };

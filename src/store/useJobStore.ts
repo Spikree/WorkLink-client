@@ -28,14 +28,14 @@ export const useJobStore = create<JobStore>((set) => ({
   getJobs: async () => {
     set({isFetchingJobs: true})
     try {
-      const response = await axiosInstance.get<Job[]>("/job/getJobs");
-      console.log(response)
-      set({ jobs: response.data });
+      const response = await axiosInstance.get<{jobs: Job[]}>("/job/getJobs");
+      set({ jobs: response.data.jobs});
     } catch (error) {
         const axiosError = error as AxiosError<{ message: string }>;
         const errorMessage =
           axiosError.response?.data?.message || "Server Error.";
         toast.error(errorMessage);
+        set({ jobs: [] });
     } finally {
         set({isFetchingJobs: false})
     }

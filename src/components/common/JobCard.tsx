@@ -2,66 +2,72 @@ import React from "react";
 import { Calendar, Building2, DollarSign } from "lucide-react";
 import Button from "./Button";
 
-interface Skill {
-  name: string;
-}
-
 interface JobCardProps {
-  title: string;
-  salary: string;
-  company: string;
-  postedDate: string;
-  description: string;
-  skills: Skill[];
-  onApply: () => void;
+  jobs: {
+    _id: string;
+    title: string;
+    description: string;
+    budget: string;
+    skillsRequired: string[]; // Changed from Skill[] to string[]
+    employer: string;
+    status: string;
+    createdAt: string;
+    employerName: string;
+  };
+  onApply: (jobId: string) => void;
 }
 
-const JobCard: React.FC<JobCardProps> = ({
-  title,
-  salary,
-  company,
-  postedDate,
-  description,
-  skills,
-  onApply,
-}) => {
+const JobCard: React.FC<JobCardProps> = ({ jobs, onApply }) => {
+  // Format the date to be more readable
+  const formattedDate = new Date(jobs.createdAt).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+  
   return (
     <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
       <div className="space-y-4">
         <div className="flex justify-between items-start">
           <div>
-            <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
+            <h2 className="text-xl font-semibold text-gray-800">
+              {jobs.title}
+            </h2>
             <div className="flex items-center gap-2 mt-1 text-gray-600">
               <Building2 className="w-4 h-4" />
-              <span>{company}</span>
+              <span>{jobs.employerName}</span>
             </div>
           </div>
           <div className="flex items-center text-green-600 font-medium">
             <DollarSign className="w-4 h-4" />
-            <span>{salary}</span>
+            <span>{Number(jobs.budget).toLocaleString()}</span>
           </div>
         </div>
 
         <div className="flex items-center gap-1.5 text-gray-500 text-sm">
           <Calendar className="w-4 h-4" />
-          <span>Posted {postedDate}</span>
+          <span>Posted {formattedDate}</span>
         </div>
 
-        <p className="text-gray-600 leading-relaxed">{description}</p>
+        <p className="text-gray-600 leading-relaxed">
+          {jobs.description.length > 200 
+            ? `${jobs.description.substring(0, 200)}...` 
+            : jobs.description}
+        </p>
 
         <div className="flex flex-wrap gap-2 mt-4">
-          {skills.map((skill, index) => (
+          {jobs.skillsRequired.map((skill, index) => (
             <span
               key={index}
               className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-sm font-medium"
             >
-              {skill.name}
+              {skill}
             </span>
           ))}
         </div>
 
         <Button
-          onClick={onApply}
+          onClick={() => onApply(jobs._id)}
           disableStyles={false}
           className="w-full mt-4 bg-blue-600 text-white py-2.5 px-4 rounded-lg font-medium 
                    hover:bg-blue-700 transition-colors duration-200 focus:outline-none 
