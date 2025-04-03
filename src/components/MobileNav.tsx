@@ -2,6 +2,7 @@ import { useState } from "react";
 import { MdWorkHistory } from "react-icons/md";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import {workLinkLogo} from "../assets/assets"
 import {
   FiBriefcase,
   FiBook,
@@ -30,7 +31,7 @@ const MobileNav = () => {
   }
 
   const freelancerMenuItems = [
-    { title: "Home", icon: <FiHome size={20} />, to: "/home" },
+    { title: "Home", icon: <FiHome size={20} />, to: "/dashboard" },
     { title: "Applied Jobs", icon: <FiBriefcase size={20} />, to: "/appliedjobs" },
     { title: "Finished Jobs", icon: <MdWorkHistory size={20} />, to: "/finishedJobs" },
     { title: "Saved Jobs", icon: <FiBook size={20} />, to: "/savedJobs" },
@@ -83,7 +84,9 @@ const MobileNav = () => {
             className="flex items-center"
           >
             <div className="h-8 w-8 bg-blue-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">S</span>
+              <span className="text-lg">
+                <img className="rounded-xl" src={workLinkLogo} alt="work link logo" />
+              </span>
             </div>
             <span className="ml-2 text-white font-semibold">Skill Match</span>
           </div>

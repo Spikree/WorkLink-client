@@ -2,13 +2,18 @@ import { Loader } from "lucide-react";
 import JobCard from "../components/common/JobCard";
 import { useJobStore } from "../store/useJobStore";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
+
+  const navigate = useNavigate();
+
   const handleApply = (jobId: string) => {
-    alert("Application submitted!" + jobId);
+    navigate(`/jobDetails/${jobId}`);
+    getJob(jobId);
   };
 
-  const { isFetchingJobs, getJobs, jobs } = useJobStore();
+  const { isFetchingJobs, getJobs, jobs,getJob } = useJobStore();
 
   useEffect(() => {
     getJobs();

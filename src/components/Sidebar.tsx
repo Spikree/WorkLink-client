@@ -2,6 +2,7 @@ import { useState } from "react";
 import { MdWorkHistory } from "react-icons/md";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import {workLinkLogo} from "../assets/assets"
 import {
   FiChevronLeft,
   FiChevronRight,
@@ -32,7 +33,7 @@ const Sidebar = () => {
   };
 
   const freelancerMenuItems = [
-    { title: "Home", icon: <FiHome size={20} />, to: "/home" },
+    { title: "Home", icon: <FiHome size={20} />, to: "/dashboard" },
     {
       title: "Applied Jobs",
       icon: <FiBriefcase size={20} />,
@@ -104,7 +105,9 @@ const Sidebar = () => {
         >
           <div className="flex items-center justify-center">
             <div className="h-10 w-10 bg-blue-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xl">S</span>
+              <span className="text-xl">
+                <img className="rounded-xl" src={workLinkLogo} alt="work link logo" />
+              </span>
             </div>
             {isOpen && (
               <span className="ml-3 text-white font-semibold">Skill Match</span>

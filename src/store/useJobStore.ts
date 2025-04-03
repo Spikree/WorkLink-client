@@ -17,12 +17,15 @@ type Job = {
 
 type JobStore = {
   getJobs: () => Promise<void>;
+  getJob:(data: string) => Promise<void>;
   jobs: Job[];
   isFetchingJobs: boolean;
+  job: Job | null;
 };
 
 export const useJobStore = create<JobStore>((set) => ({
   jobs: [],
+  job: null,
   isFetchingJobs: false,
 
   getJobs: async () => {
@@ -30,6 +33,22 @@ export const useJobStore = create<JobStore>((set) => ({
     try {
       const response = await axiosInstance.get<{jobs: Job[]}>("/job/getJobs");
       set({ jobs: response.data.jobs});
+    } catch (error) {
+        const axiosError = error as AxiosError<{ message: string }>;
+        const errorMessage =
+          axiosError.response?.data?.message || "Server Error.";
+        toast.error(errorMessage);
+        set({ jobs: [] });
+    } finally {
+        set({isFetchingJobs: false})
+    }
+  },
+
+  getJob: async (jobId) => {
+    set({isFetchingJobs: true})
+    try {
+      const response = await axiosInstance.get<{job: Job}>(`/job/getJob/${jobId}`);
+      set({ job: response.data.job});
     } catch (error) {
         const axiosError = error as AxiosError<{ message: string }>;
         const errorMessage =
