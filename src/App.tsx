@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { Loader } from "lucide-react";
 import SidebarLayout from "./lib/SidebarLayout";
 import JobDetails from "./pages/JobDetails";
+import Profile from "./pages/Profile";
 
 function App() {
   const { checkAuth, isCheckingAuth } = useAuthStore();
@@ -39,6 +40,7 @@ function App() {
             <Route element={<SidebarLayout />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/jobDetails/:jobId" element={<JobDetails />} />
+              <Route path="/profile" element={<Profile />} />
             </Route>
           </Route>
         </Routes>

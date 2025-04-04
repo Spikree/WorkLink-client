@@ -12,7 +12,7 @@ import { useJobStore } from "../store/useJobStore";
 const JobDetails: React.FC = () => {
   const { jobId } = useParams() as { jobId: string };
 
-  const { getJob, job } = useJobStore();
+  const { getJob, job, saveJob } = useJobStore();
 
   useEffect(() => {
     getJob(jobId);
@@ -66,13 +66,25 @@ const JobDetails: React.FC = () => {
                 </div>
               </div>
             </div>
-            <button
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 
+            <div className="flex gap-4">
+              <button
+                className="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 
                            transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 
                            focus:ring-offset-2"
-            >
-              Apply Now
-            </button>
+              >
+                Apply Now
+              </button>
+              <button
+                className="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 
+                           transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 
+                           focus:ring-offset-2"
+                onClick={() => {
+                  saveJob(jobId);
+                }}
+              >
+                save job
+              </button>
+            </div>
           </div>
         </div>
       </div>

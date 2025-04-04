@@ -27,10 +27,13 @@ type AuthStore = {
   isSigningUp: boolean;
   isLoggingIn: boolean;
   isCheckingAuth: boolean;
+  isProfileLoading: boolean;
   signup: (data: authData) => Promise<void>;
   login: (data: authData) => Promise<void>;
   logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
+  getProfile: () => Promise<void>;
+  
 
   authUser: authUser | null;
 };
@@ -40,8 +43,10 @@ export const useAuthStore = create<AuthStore>((set) => ({
   isLoggingIn: false,
   authUser: null,
   isCheckingAuth: false,
+  isProfileLoading: false,
 
   checkAuth: async () => {
+    set({isCheckingAuth: true})
     try {
       const response = await axiosInstance.get("/auth/check");
       set({ authUser: response.data });
@@ -95,6 +100,18 @@ export const useAuthStore = create<AuthStore>((set) => ({
       const axiosError = error as AxiosError<{ message: string }>;
       const errorMessage =
         axiosError.response?.data?.message || "failed to logout";
+      toast.error(errorMessage);
+    }
+  },
+
+  getProfile: async () => {
+    try {
+      const response = await axiosInstance.get(`/profile/getUser`);
+      console.log(response)
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      const errorMessage =
+        axiosError.response?.data?.message || "failed to fetch profile";
       toast.error(errorMessage);
     }
   },
