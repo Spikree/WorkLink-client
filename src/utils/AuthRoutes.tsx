@@ -4,6 +4,7 @@ import { useAuthStore } from "../store/useAuthStore";
 const AuthRoutes = () => {
   const { authUser, isCheckingAuth } = useAuthStore();
   const location = useLocation();
+  const from = location.state?.from?.pathname || "/dashboard";
 
   const isAuthRoute = location.pathname === "/" || location.pathname === "/auth";
 
@@ -12,7 +13,7 @@ const AuthRoutes = () => {
   }
 
   if (authUser && isAuthRoute) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to={from} replace />;
   }
 
   return <Outlet />;
