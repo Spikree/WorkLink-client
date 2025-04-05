@@ -14,6 +14,10 @@ import {
   Instagram,
   Linkedin,
   Youtube,
+  Users,
+  BriefcaseBusiness,
+  LucideBadgeCheck,
+  BrainCircuit,
 } from "lucide-react";
 import Button from "../components/common/Button";
 import { FaArrowRight } from "react-icons/fa6";
@@ -105,25 +109,33 @@ const LandingPage = () => {
       </div>
 
       <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 pb-16 pt-16 text-center bg-danger">
-        <div className="flex justify-center items-center gap-8 sm:gap-28 lg:gap-60 flex-wrap">
-          <div className="flex flex-col gap-2 text-center">
-            <h1 className="font-bold text-4xl">50k+</h1>
-            <p className="text-gray-500">Freelancers</p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+          <div className="flex flex-col items-center text-center">
+            <div className="bg-brand-blue/10 p-3 rounded-full mb-3">
+              <Users className="h-7 w-7 text-brand-blue" />
+            </div>
+            <p className="text-lg font-medium">10k+ Freelancers</p>
           </div>
 
-          <div className="flex flex-col gap-2 text-center">
-            <h1 className="font-bold text-4xl">100k+</h1>
-            <p className="text-gray-500">Completed Projects</p>
+          <div className="flex flex-col items-center text-center">
+            <div className="bg-brand-blue/10 p-3 rounded-full mb-3">
+              <BriefcaseBusiness className="h-7 w-7 text-brand-blue" />
+            </div>
+            <p className="text-lg font-medium">5k+ Employers</p>
           </div>
 
-          <div className="flex flex-col gap-2 text-center">
-            <h1 className="font-bold text-4xl">30k</h1>
-            <p className="text-gray-500">Active Clients</p>
+          <div className="flex flex-col items-center text-center">
+            <div className="bg-brand-teal/10 p-3 rounded-full mb-3">
+              <LucideBadgeCheck className="h-7 w-7 text-brand-teal" />
+            </div>
+            <p className="text-lg font-medium">30k+ Projects</p>
           </div>
 
-          <div className="flex flex-col gap-2 text-center">
-            <h1 className="font-bold text-4xl">95%</h1>
-            <p className="text-gray-500">Satisfaction Rate</p>
+          <div className="flex flex-col items-center text-center">
+            <div className="bg-brand-teal/10 p-3 rounded-full mb-3">
+              <BrainCircuit className="h-7 w-7 text-brand-teal" />
+            </div>
+            <p className="text-lg font-medium">100+ Skills</p>
           </div>
         </div>
       </div>

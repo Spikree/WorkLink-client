@@ -23,6 +23,26 @@ type authUser = {
   };
 };
 
+type UserDetails = {
+  message: string;
+  userDetails: {
+    _id: string;
+    email: string;
+    role: 'freelancer' | 'employer';
+    profile: {
+      name: string;
+      skills: string[];
+      portfolio: string;
+      rating: number;
+      bio: string;
+    };
+    createdOn: string;
+    __v: number;
+    averageRating: string;
+    totalRatings: number;
+  };
+};
+
 type AuthStore = {
   isSigningUp: boolean;
   isLoggingIn: boolean;
@@ -34,14 +54,15 @@ type AuthStore = {
   checkAuth: () => Promise<void>;
   getProfile: () => Promise<void>;
   
-
   authUser: authUser | null;
+  userProfile: UserDetails | null;
 };
 
 export const useAuthStore = create<AuthStore>((set) => ({
   isSigningUp: false,
   isLoggingIn: false,
   authUser: null,
+  userProfile: null,
   isCheckingAuth: false,
   isProfileLoading: false,
 
@@ -107,7 +128,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
   getProfile: async () => {
     try {
       const response = await axiosInstance.get(`/profile/getUser`);
-      console.log(response)
+      set({userProfile: response.data});
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       const errorMessage =
