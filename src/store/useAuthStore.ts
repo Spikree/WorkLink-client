@@ -11,6 +11,13 @@ type authData = {
   portfolio?: string;
 };
 
+type editData = {
+  bio:string,
+  portfolio: string,
+  skills: string,
+  name?: string;
+}
+
 type authUser = {
   _id: string;
   email: string;
@@ -53,12 +60,13 @@ type AuthStore = {
   logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
   getProfile: () => Promise<void>;
+  editProfile: (data: editData) => Promise<void>;
   
   authUser: authUser | null;
   userProfile: UserDetails | null;
 };
 
-export const useAuthStore = create<AuthStore>((set) => ({
+export const useAuthStore = create<AuthStore>((set,get) => ({
   isSigningUp: false,
   isLoggingIn: false,
   authUser: null,
@@ -136,4 +144,18 @@ export const useAuthStore = create<AuthStore>((set) => ({
       toast.error(errorMessage);
     }
   },
+
+  editProfile: async (data: editData) => {
+    try {
+      const response = await axiosInstance.put(`/profile/edit`, data)
+      toast.success(response.data.message);
+      await get().getProfile();
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      const errorMessage =
+        axiosError.response?.data?.message || "failed to update profile";
+      toast.error(errorMessage);
+    }
+  }
+  
 }));

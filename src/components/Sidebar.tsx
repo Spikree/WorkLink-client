@@ -2,7 +2,7 @@ import { useState } from "react";
 import { MdWorkHistory } from "react-icons/md";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import {workLinkLogo} from "../assets/assets"
+import { workLinkLogo } from "../assets/assets";
 import {
   FiChevronLeft,
   FiChevronRight,
@@ -25,7 +25,7 @@ const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [showProfileOptions, setShowProfileOptions] = useState(false);
   const navigate = useNavigate();
-  const { authUser,logout } = useAuthStore();
+  const { authUser, logout } = useAuthStore();
   const dontShowProfileOptions = () => {
     if (showProfileOptions) {
       setShowProfileOptions(false);
@@ -90,11 +90,11 @@ const Sidebar = () => {
       <div
         className={`${
           isOpen ? "w-64" : "w-20"
-        } bg-gray-800 flex flex-col transition-all duration-300 h-screen relative`}
+        } bg-[#1d1e27] flex flex-col transition-all duration-300 h-screen relative`}
       >
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="sm:flex hidden absolute -right-3 top-8 bg-gray-800 text-white rounded-full p-1.5 border border-gray-600 hover:bg-gray-700 focus:outline-none"
+          className="sm:flex hidden absolute -right-3 top-8 bg-[#1d1e27] text-white rounded-full p-1.5 border border-gray-600 hover:bg-[#292a36] focus:outline-none"
         >
           {isOpen ? <FiChevronLeft size={16} /> : <FiChevronRight size={16} />}
         </button>
@@ -106,7 +106,11 @@ const Sidebar = () => {
           <div className="flex items-center justify-center">
             <div className="h-10 w-10 bg-blue-500 rounded-lg flex items-center justify-center">
               <span className="text-xl">
-                <img className="rounded-xl" src={workLinkLogo} alt="work link logo" />
+                <img
+                  className="rounded-xl"
+                  src={workLinkLogo}
+                  alt="work link logo"
+                />
               </span>
             </div>
             {isOpen && (
@@ -151,7 +155,7 @@ const Sidebar = () => {
                   onClick={() => {
                     setShowProfileOptions(!showProfileOptions);
                   }}
-                  className="bg-gray-700 rounded-lg shadow-lg overflow-hidden"
+                  className="bg-[#292a36] rounded-lg shadow-lg overflow-hidden"
                 >
                   {profileOptions.map((option, index) => (
                     <button
@@ -172,7 +176,7 @@ const Sidebar = () => {
 
           <div
             onClick={() => setShowProfileOptions(!showProfileOptions)}
-            className="p-4 border-t border-gray-700 cursor-pointer hover:bg-gray-700 transition-colors"
+            className="p-4 border-t border-gray-700 cursor-pointer hover:bg-[#292a36] transition-colors"
           >
             <div className="flex items-center">
               <div className="h-8 w-8 rounded-full bg-gray-600 text-white flex justify-center items-center">

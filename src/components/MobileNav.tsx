@@ -73,7 +73,7 @@ const MobileNav = () => {
   return (
     <div className="sm:hidden mb-16" onClick={dontShowProfileOptions}>
       {/* Fixed Top Navigation Bar */}
-      <div className="fixed top-0 left-0 right-0 bg-gray-800 z-50">
+      <div className="fixed top-0 left-0 right-0 bg-[#1d1e27] z-50">
         <div className="flex items-center justify-between px-4 py-3">
           {/* Logo */}
           <div 
@@ -109,7 +109,7 @@ const MobileNav = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-gray-800 z-40 pt-16"
+            className="fixed inset-0 bg-[#1d1e27] z-40 pt-16"
           >
             <div className="flex flex-col h-full">
               {/* Menu Items */}
@@ -122,7 +122,7 @@ const MobileNav = () => {
                         navigate(item.to);
                         setIsMenuOpen(false);
                       }}
-                      className="flex items-center w-full text-gray-300 hover:bg-gray-700 rounded-lg px-4 py-3 transition-colors"
+                      className="flex items-center w-full text-gray-300 hover:bg-[#292a36] rounded-lg px-4 py-3 transition-colors"
                       whileTap={{ scale: 0.95 }}
                     >
                       <span className="text-gray-400">{item.icon}</span>
@@ -159,7 +159,7 @@ const MobileNav = () => {
                         <motion.button
                           key={index}
                           onClick={option.action}
-                          className="flex items-center w-full text-gray-300 hover:bg-gray-700 rounded-lg px-4 py-3 transition-colors"
+                          className="flex items-center w-full text-gray-300 hover:bg-[#292a36] rounded-lg px-4 py-3 transition-colors"
                           whileTap={{ scale: 0.95 }}
                         >
                           <span className="text-gray-400">{option.icon}</span>

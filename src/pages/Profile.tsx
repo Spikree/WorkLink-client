@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import {
   Pencil,
@@ -8,16 +8,20 @@ import {
   User,
   Briefcase,
   Calendar,
+  Loader,
 } from "lucide-react";
 
 const Profile = () => {
-  const { getProfile, userProfile, isProfileLoading } = useAuthStore();
+  const { getProfile, userProfile, isProfileLoading, editProfile } =
+    useAuthStore();
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({
     bio: "",
     portfolio: "",
     skills: "",
+    name: "",
   });
+  const cancelEditButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     getProfile();
@@ -29,22 +33,34 @@ const Profile = () => {
         bio: userProfile.userDetails.profile.bio,
         portfolio: userProfile.userDetails.profile.portfolio,
         skills: userProfile.userDetails.profile.skills.join(", "),
+        name: userProfile.userDetails.profile.name,
       });
     }
   }, [userProfile]);
 
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        cancelEditButtonRef.current?.click();
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, []);
+
   if (isProfileLoading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-gray-50">
-        <div className="text-xl font-semibold">Loading profile...</div>
+      <div className="flex items-center justify-center h-screen">
+        <Loader className="size-10 animate-spin" />
       </div>
     );
   }
 
   if (!userProfile) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-gray-50">
-        <div className="text-xl font-semibold">No profile data available</div>
+      <div className="flex items-center justify-center h-screen">
+        <Loader className="size-10 animate-spin" />
       </div>
     );
   }
@@ -55,6 +71,7 @@ const Profile = () => {
   const handleEditSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsEditing(false);
+    editProfile(editForm);
   };
 
   const formatDate = (dateString: string) => {
@@ -77,9 +94,21 @@ const Profile = () => {
                       <User className="h-16 w-16 text-blue-600" />
                     </div>
                   </div>
-                  <h1 className="mt-4 text-3xl font-bold text-white">
-                    {profile.name}
-                  </h1>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editForm.name}
+                      onChange={(e) =>
+                        setEditForm({ ...editForm, name: e.target.value })
+                      }
+                      className="w-full px-4 py-3 rounded-xl mt-6 border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow duration-150"
+                      placeholder="your name"
+                    />
+                  ) : (
+                    <h1 className="mt-4 text-3xl font-bold text-white">
+                      {profile.name}
+                    </h1>
+                  )}
                   <div className="mt-2 flex items-center text-blue-100">
                     <Briefcase className="h-4 w-4" />
                     <span className="ml-2 capitalize">{role}</span>
@@ -219,6 +248,7 @@ const Profile = () => {
                     <button
                       type="button"
                       onClick={() => setIsEditing(false)}
+                      ref={cancelEditButtonRef}
                       className="px-6 py-3 border border-gray-200 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors duration-150"
                     >
                       Cancel
