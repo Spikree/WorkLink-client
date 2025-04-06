@@ -1,16 +1,41 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
+import {
+  Pencil,
+  Star,
+  Link as LinkIcon,
+  Mail,
+  User,
+  Briefcase,
+  Calendar,
+} from "lucide-react";
 
 const Profile = () => {
   const { getProfile, userProfile, isProfileLoading } = useAuthStore();
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState({
+    bio: "",
+    portfolio: "",
+    skills: "",
+  });
 
   useEffect(() => {
     getProfile();
   }, [getProfile]);
 
+  useEffect(() => {
+    if (userProfile) {
+      setEditForm({
+        bio: userProfile.userDetails.profile.bio,
+        portfolio: userProfile.userDetails.profile.portfolio,
+        skills: userProfile.userDetails.profile.skills.join(", "),
+      });
+    }
+  }, [userProfile]);
+
   if (isProfileLoading) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center min-h-screen bg-gray-50">
         <div className="text-xl font-semibold">Loading profile...</div>
       </div>
     );
@@ -18,114 +43,195 @@ const Profile = () => {
 
   if (!userProfile) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center min-h-screen bg-gray-50">
         <div className="text-xl font-semibold">No profile data available</div>
       </div>
     );
   }
 
-  const { 
-    email, 
-    role, 
-    profile,
-    averageRating,
-    totalRatings 
-  } = userProfile.userDetails;
+  const { email, role, profile, averageRating, totalRatings, createdOn } =
+    userProfile.userDetails;
+
+  const handleEditSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsEditing(false);
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+    });
+  };
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4">
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
-        {/* Header Section */}
-        <div className="bg-blue-50 p-6 border-b">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-800">{profile.name}</h1>
-              <div className="flex items-center mt-1">
-                <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 capitalize">
-                  {role}
-                </span>
+    <div className="sm:mt-0 gap-4 sm:overflow-y-auto pb-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-600 to-blue-800 px-6 py-8">
+                <div className="flex flex-col items-center">
+                  <div className="h-32 w-32 rounded-full bg-white p-2 shadow-lg">
+                    <div className="h-full w-full rounded-full bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
+                      <User className="h-16 w-16 text-blue-600" />
+                    </div>
+                  </div>
+                  <h1 className="mt-4 text-3xl font-bold text-white">
+                    {profile.name}
+                  </h1>
+                  <div className="mt-2 flex items-center text-blue-100">
+                    <Briefcase className="h-4 w-4" />
+                    <span className="ml-2 capitalize">{role}</span>
+                  </div>
+                </div>
               </div>
-            </div>
-            
-            <div className="mt-4 md:mt-0 flex items-center">
-              <div className="text-right">
-                <div className="flex items-center">
-                  <div className="text-yellow-500 mr-1">★</div>
-                  <span className="font-bold">{averageRating}</span>
-                  <span className="text-gray-500 ml-1">({totalRatings} ratings)</span>
+
+              <div className="px-6 py-6 space-y-4">
+                <div className="flex items-center justify-between p-4 bg-blue-50 rounded-xl">
+                  <div className="flex items-center">
+                    <Star className="h-5 w-5 text-yellow-400 fill-current" />
+                    <span className="ml-2 text-lg font-semibold">
+                      {averageRating}
+                    </span>
+                  </div>
+                  <span className="text-gray-600">{totalRatings} reviews</span>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center text-gray-600">
+                    <Mail className="h-5 w-5" />
+                    <span className="ml-3">{email}</span>
+                  </div>
+                  <div className="flex items-center text-gray-600">
+                    <Calendar className="h-5 w-5" />
+                    <span className="ml-3">Joined {formatDate(createdOn)}</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Main Content */}
-        <div className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Left Column */}
-            <div className="md:col-span-2 space-y-6">
-              <div>
-                <h2 className="text-lg font-semibold text-gray-700 mb-2">Bio</h2>
-                <p className="text-gray-600">{profile.bio || "No bio available"}</p>
-              </div>
-              
-              <div>
-                <h2 className="text-lg font-semibold text-gray-700 mb-2">Skills</h2>
-                <div className="flex flex-wrap gap-2">
-                  {profile.skills && profile.skills.length > 0 ? (
-                    profile.skills[0].split(',').map((skill, index) => (
-                      <span 
-                        key={index} 
-                        className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-800 capitalize"
+          {/* Right Column - Main Content */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-2xl shadow-lg p-8">
+              {!isEditing ? (
+                <div className="space-y-8">
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <h2 className="text-2xl font-bold text-gray-900">
+                        About
+                      </h2>
+                      <button
+                        onClick={() => setIsEditing(true)}
+                        className="flex items-center px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 bg-blue-50 rounded-lg transition-colors duration-150"
                       >
-                        {skill.trim()}
-                      </span>
-                    ))
-                  ) : (
-                    <span className="text-gray-500">No skills listed</span>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column */}
-            <div className="space-y-6">
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h2 className="text-lg font-semibold text-gray-700 mb-2">Contact</h2>
-                <div className="space-y-2">
-                  <div className="flex items-start">
-                    <span className="text-gray-500 w-20">Email:</span>
-                    <span className="text-gray-800">{email}</span>
+                        <Pencil className="h-4 w-4 mr-2" />
+                        Edit Profile
+                      </button>
+                    </div>
+                    <p className="text-gray-600 leading-relaxed">
+                      {profile.bio}
+                    </p>
                   </div>
-                  <div className="flex items-start">
-                    <span className="text-gray-500 w-20">Portfolio:</span>
-                    <a 
-                      href={profile.portfolio.startsWith('http') ? profile.portfolio : `http://${profile.portfolio}`}
-                      target="_blank" 
+
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                      Portfolio
+                    </h2>
+                    <a
+                      href={profile.portfolio}
+                      target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-600 hover:underline"
+                      className="inline-flex items-center px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-150"
                     >
-                      {profile.portfolio}
+                      <LinkIcon className="h-5 w-5 text-blue-600" />
+                      <span className="ml-2 text-gray-700">
+                        {profile.portfolio}
+                      </span>
                     </a>
                   </div>
-                </div>
-              </div>
 
-              <div className="p-4 rounded-lg border border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-700 mb-2">Account Info</h2>
-                <div className="space-y-2">
-                  <div className="flex items-start">
-                    <span className="text-gray-500 w-20">Role:</span>
-                    <span className="text-gray-800 capitalize">{role}</span>
-                  </div>
-                  <div className="flex items-start">
-                    <span className="text-gray-500 w-20">Member since:</span>
-                    <span className="text-gray-800">
-                      {new Date(userProfile.userDetails.createdOn).toLocaleDateString()}
-                    </span>
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                      Skills
+                    </h2>
+                    <div className="flex flex-wrap gap-2">
+                      {profile.skills.map((skill: string, index: number) => (
+                        <span
+                          key={index}
+                          className="px-4 py-2 bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 rounded-xl text-sm font-medium"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
+              ) : (
+                <form onSubmit={handleEditSubmit} className="space-y-6">
+                  <div>
+                    <label className="block text-lg font-semibold text-gray-900 mb-2">
+                      About
+                    </label>
+                    <textarea
+                      value={editForm.bio}
+                      onChange={(e) =>
+                        setEditForm({ ...editForm, bio: e.target.value })
+                      }
+                      rows={4}
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow duration-150"
+                      placeholder="Tell us about yourself..."
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-lg font-semibold text-gray-900 mb-2">
+                      Portfolio URL
+                    </label>
+                    <input
+                      type="text"
+                      value={editForm.portfolio}
+                      onChange={(e) =>
+                        setEditForm({ ...editForm, portfolio: e.target.value })
+                      }
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow duration-150"
+                      placeholder="https://your-portfolio.com"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-lg font-semibold text-gray-900 mb-2">
+                      Skills
+                    </label>
+                    <input
+                      type="text"
+                      value={editForm.skills}
+                      onChange={(e) =>
+                        setEditForm({ ...editForm, skills: e.target.value })
+                      }
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow duration-150"
+                      placeholder="Enter skills separated by commas"
+                    />
+                  </div>
+
+                  <div className="flex justify-end space-x-4 pt-4">
+                    <button
+                      type="button"
+                      onClick={() => setIsEditing(false)}
+                      className="px-6 py-3 border border-gray-200 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors duration-150"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transition-colors duration-150"
+                    >
+                      Save Changes
+                    </button>
+                  </div>
+                </form>
+              )}
             </div>
           </div>
         </div>

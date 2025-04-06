@@ -27,7 +27,7 @@ const Dashboard = () => {
     );
   }
   return (
-    <div className="mt-16 sm:mt-0 flex flex-col gap-4 sm:overflow-y-auto h-[calc(100vh-3rem)] pb-6">
+    <div className="flex flex-col gap-10 p-2 m-4">
       {jobs.map((job) => (
         <JobCard
           key={job._id}
