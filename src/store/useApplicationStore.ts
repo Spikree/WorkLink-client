@@ -11,6 +11,7 @@ type Application = {
     coverLetter: string,
     status: string,
     submittedAt: string,
+    jobTitle: string
 }
 
 type ApplicationStore = {

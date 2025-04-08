@@ -1,5 +1,6 @@
 import React from 'react';
 import { Calendar, DollarSign, CheckCircle2, Clock, XCircle, Briefcase } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface ApplicationCardProps {
   application: {
@@ -10,6 +11,7 @@ interface ApplicationCardProps {
     coverLetter: string;
     status: string;
     submittedAt: string;
+    jobTitle: string;
   };
 }
 
@@ -51,7 +53,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({ application }) => {
             <div className="flex items-center gap-2 mb-2">
               <Briefcase className="h-5 w-5 text-indigo-500" />
               <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">
-                {application.job}
+                {application.jobTitle}
               </h3>
             </div>
             <div className="flex items-center gap-3 text-sm text-gray-500">
@@ -81,10 +83,11 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({ application }) => {
       
       <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
         <div className="flex items-center justify-between">
-          
+          <Link to={`/jobDetails/${application.job}`}>
           <button className="text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors">
             View Details
           </button>
+          </Link>
         </div>
       </div>
     </div>

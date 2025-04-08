@@ -27,7 +27,7 @@ const AppliedJobs = () => {
           <p className="text-gray-600 text-lg">No job applications found.</p>
         </div>
       ) : (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-4">
           {applications.map((application) => (
             <ApplicationCard key={application._id} application={application} />
           ))}
