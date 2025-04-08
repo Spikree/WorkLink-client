@@ -14,6 +14,7 @@ import Profile from "./pages/Profile";
 import AppliedJobs from "./pages/AppliedJobs";
 import FinishedJobs from "./pages/FinishedJobs";
 import SavedJobs from "./pages/SavedJobs";
+import CurrentJobs from "./pages/CurrentJobs";
 
 function App() {
   const { checkAuth, isCheckingAuth } = useAuthStore();
@@ -47,6 +48,7 @@ function App() {
               <Route path="/appliedjobs" element={<AppliedJobs />} />
               <Route path="/finishedJobs" element={<FinishedJobs />} /> 
               <Route path="/savedJobs" element={<SavedJobs />} />
+              <Route path="/currentJob" element={<CurrentJobs />} />
             </Route>
           </Route>
         </Routes>

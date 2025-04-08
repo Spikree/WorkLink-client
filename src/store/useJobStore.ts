@@ -32,12 +32,23 @@ type SavedJob = {
   freelancer: string;
 }
 
+type CurrentJob = {
+  _id: string;
+  freelancer: string;
+  jobId: string;
+  jobTitle: string;
+  jobDescription: string;
+  employer: string;
+  payCheck: string;
+}
+
 type JobStore = {
   getJobs: () => Promise<void>;
   getJob: (data: string) => Promise<void>;
   saveJob: (data: string) => Promise<void>;
   getFinishedJob: () => Promise<void>;
   getSavedJobs: () => Promise<void>;
+  getCurrentJobs: () => Promise<void>;
   applyJob: (
     jobId: string,
     bidAmount: string,
@@ -46,6 +57,7 @@ type JobStore = {
   jobs: Job[];
   finishedJobs : FinishedJob[];
   savedJobs: SavedJob[];
+  currentJobs: CurrentJob[];
   isFetchingJobs: boolean;
   job: Job | null;
 };
@@ -54,6 +66,7 @@ export const useJobStore = create<JobStore>((set,get) => ({
   jobs: [],
   finishedJobs: [],
   savedJobs:[],
+  currentJobs:[],
   job: null,
   isFetchingJobs: false,
 
@@ -143,7 +156,25 @@ export const useJobStore = create<JobStore>((set,get) => ({
       const response = await axiosInstance.get("/job/getSavedJobs")
       set({savedJobs: response.data.savedJobs})
     } catch (error) {
-      console.log(error)
+      const axiosError = error as AxiosError<{ message: string }>;
+      const errorMessage =
+        axiosError.response?.data?.message || "Server Error.";
+      toast.error(errorMessage);
+    } finally {
+      set({isFetchingJobs: false});
+    }
+  },
+
+  getCurrentJobs: async () => {
+    set({isFetchingJobs: true});
+    try {
+      const response = await axiosInstance.get("/job/getCurrentJobs")
+      set({currentJobs: response.data.currentJobs});
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      const errorMessage =
+        axiosError.response?.data?.message || "Server Error.";
+      toast.error(errorMessage);
     } finally {
       set({isFetchingJobs: false});
     }
