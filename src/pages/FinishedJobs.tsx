@@ -4,13 +4,13 @@ import { Loader } from "lucide-react";
 import FinishedJobCard from "../components/common/FinishedJobCard";
 
 const FinishedJobs = () => {
-  const { getFinishedJob, finishedJobs } = useJobStore();
+  const { getFinishedJob, finishedJobs,isFetchingJobs } = useJobStore();
 
   useEffect(() => {
     getFinishedJob();
   }, [getFinishedJob]);
 
-  if (!finishedJobs) {
+  if (isFetchingJobs) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader className="size-10 animate-spin text-emerald-600" />
@@ -19,7 +19,7 @@ const FinishedJobs = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Completed Jobs</h1>
         <p className="mt-2 text-sm text-gray-600">

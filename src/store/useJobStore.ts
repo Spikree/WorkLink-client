@@ -24,11 +24,20 @@ type FinishedJob = {
   createdAt: string;
 }
 
+type SavedJob = {
+  _id: string;
+  jobTitle: string;
+  jobDescription: string;
+  jobId: string;
+  freelancer: string;
+}
+
 type JobStore = {
   getJobs: () => Promise<void>;
   getJob: (data: string) => Promise<void>;
   saveJob: (data: string) => Promise<void>;
   getFinishedJob: () => Promise<void>;
+  getSavedJobs: () => Promise<void>;
   applyJob: (
     jobId: string,
     bidAmount: string,
@@ -36,13 +45,15 @@ type JobStore = {
   ) => Promise<void>;
   jobs: Job[];
   finishedJobs : FinishedJob[];
+  savedJobs: SavedJob[];
   isFetchingJobs: boolean;
   job: Job | null;
 };
 
-export const useJobStore = create<JobStore>((set) => ({
+export const useJobStore = create<JobStore>((set,get) => ({
   jobs: [],
   finishedJobs: [],
+  savedJobs:[],
   job: null,
   isFetchingJobs: false,
 
@@ -84,6 +95,7 @@ export const useJobStore = create<JobStore>((set) => ({
     try {
       const response = await axiosInstance.post(`/job/saveJob/${jobId}`);
       toast.success(response.data.message);
+      await get().getSavedJobs();
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       const errorMessage =
@@ -116,7 +128,24 @@ export const useJobStore = create<JobStore>((set) => ({
       const response = await axiosInstance.get("/job/getFinishedJobs");
       set({finishedJobs: response.data.finishedJobs})
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      const errorMessage =
+        axiosError.response?.data?.message || "Server Error.";
+      toast.error(errorMessage);
+    } finally {
+      set({isFetchingJobs: false});
     }
   },
+
+  getSavedJobs: async () => {
+    set({isFetchingJobs: true});
+    try {
+      const response = await axiosInstance.get("/job/getSavedJobs")
+      set({savedJobs: response.data.savedJobs})
+    } catch (error) {
+      console.log(error)
+    } finally {
+      set({isFetchingJobs: false});
+    }
+  }
 }));
