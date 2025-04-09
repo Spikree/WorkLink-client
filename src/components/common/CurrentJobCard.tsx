@@ -1,5 +1,6 @@
 import React from 'react';
 import { Briefcase, DollarSign, Building2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface CurrentJobProps {
   job: {
@@ -57,9 +58,11 @@ const CurrentJobCard: React.FC<CurrentJobProps> = ({ job }) => {
 
       <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
         <div className="flex items-center justify-between">
+          <Link to={`/jobDetails/${job.jobId}`}>
           <button className="text-sm font-medium text-purple-600 hover:text-purple-700 transition-colors flex items-center gap-1.5">
             View Details
           </button>
+          </Link>
           <button className="text-sm font-medium text-purple-600 hover:text-purple-700 transition-colors flex items-center gap-1.5">
             Submit Work
           </button>

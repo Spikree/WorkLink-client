@@ -22,7 +22,7 @@ import { MessageSquareText } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 
 const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [showProfileOptions, setShowProfileOptions] = useState(false);
   const navigate = useNavigate();
   const { authUser, logout } = useAuthStore();
@@ -100,7 +100,7 @@ const Sidebar = () => {
         </button>
 
         <div
-          onClick={() => navigate("/home")}
+          onClick={() => navigate("/dashboard")}
           className="p-4 border-b border-gray-700"
         >
           <div className="flex items-center justify-center">

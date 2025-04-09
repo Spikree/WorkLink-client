@@ -13,6 +13,7 @@ const Auth = () => {
         <img
           src="https://frontends.udemycdn.com/components/auth/desktop-illustration-step-2-x1.webp"
           alt="image"
+          className="animate-pulse"
         />
       </div>
       <div className="w-full md:w-1/2 flex items-center justify-center md:p-8">
