@@ -3,7 +3,7 @@ import Login from "../components/Login";
 import Register from "../components/Register";
 
 const Auth = () => {
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
 
   return (
     <div className="flex min-h-screen">
@@ -13,7 +13,6 @@ const Auth = () => {
         <img
           src="https://frontends.udemycdn.com/components/auth/desktop-illustration-step-2-x1.webp"
           alt="image"
-          className="animate-pulse"
         />
       </div>
       <div className="w-full md:w-1/2 flex items-center justify-center md:p-8">

@@ -24,6 +24,14 @@ type FinishedJob = {
   createdAt: string;
 }
 
+type createJobData = {
+  title: string;
+  description: string;
+  budget: string;
+  skillsRequired: string[];
+  status: string;
+}
+
 type SavedJob = {
   _id: string;
   jobTitle: string;
@@ -46,6 +54,7 @@ type JobStore = {
   getJobs: () => Promise<void>;
   getJob: (data: string) => Promise<void>;
   saveJob: (data: string) => Promise<void>;
+  createJob: (data: createJobData) => Promise<void>;
   getFinishedJob: () => Promise<void>;
   getSavedJobs: () => Promise<void>;
   getCurrentJobs: () => Promise<void>;
@@ -59,6 +68,7 @@ type JobStore = {
   savedJobs: SavedJob[];
   currentJobs: CurrentJob[];
   isFetchingJobs: boolean;
+  isPostingJob: boolean;
   job: Job | null;
 };
 
@@ -69,6 +79,7 @@ export const useJobStore = create<JobStore>((set,get) => ({
   currentJobs:[],
   job: null,
   isFetchingJobs: false,
+  isPostingJob: false,
 
   getJobs: async () => {
     set({ isFetchingJobs: true });
@@ -177,6 +188,23 @@ export const useJobStore = create<JobStore>((set,get) => ({
       toast.error(errorMessage);
     } finally {
       set({isFetchingJobs: false});
+    }
+  },
+
+  createJob : async (data : createJobData) => {
+    set({isPostingJob: true});
+    try {
+      const response = await axiosInstance.post("/job/createJob",
+        data
+      )
+      toast.success(response.data.message);
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      const errorMessage =
+        axiosError.response?.data?.message || "Server Error.";
+      toast.error(errorMessage);
+    } finally {
+      set({isPostingJob: false});
     }
   }
 }));

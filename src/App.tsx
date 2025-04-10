@@ -4,6 +4,8 @@ import Auth from "./pages/Auth";
 import { Toaster } from "react-hot-toast";
 import AuthRoutes from "./utils/AuthRoutes";
 import ProtectedRoutes from "./utils/ProtectedRoutes";
+import EmployerRoutes from "./utils/EmployerRoutes";
+import FreelancerRoutes from "./utils/FreelancerRoutes";
 import Dashboard from "./pages/Dashboard";
 import { useAuthStore } from "./store/useAuthStore";
 import { useEffect } from "react";
@@ -15,6 +17,9 @@ import AppliedJobs from "./pages/AppliedJobs";
 import FinishedJobs from "./pages/FinishedJobs";
 import SavedJobs from "./pages/SavedJobs";
 import CurrentJobs from "./pages/CurrentJobs";
+import Home from "./pages/Home";
+import PostJob from "./pages/PostJob";
+import GetOnGoingJobs from "./pages/GetOnGoingJobs";
 
 function App() {
   const { checkAuth, isCheckingAuth } = useAuthStore();
@@ -42,6 +47,14 @@ function App() {
 
           <Route element={<ProtectedRoutes />}>
             <Route element={<SidebarLayout />}>
+
+            <Route element={<EmployerRoutes/>}>
+            <Route path="/home" element={<Home />} />
+            <Route path="/postJob" element={<PostJob />} />
+            <Route path="/getOnGoingJobs" element={<GetOnGoingJobs />} />
+            </Route>
+
+            <Route element={<FreelancerRoutes/>}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/jobDetails/:jobId" element={<JobDetails />} />
               <Route path="/profile" element={<Profile />} />
@@ -49,6 +62,7 @@ function App() {
               <Route path="/finishedJobs" element={<FinishedJobs />} /> 
               <Route path="/savedJobs" element={<SavedJobs />} />
               <Route path="/currentJob" element={<CurrentJobs />} />
+            </Route>
             </Route>
           </Route>
         </Routes>

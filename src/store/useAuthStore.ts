@@ -93,6 +93,7 @@ export const useAuthStore = create<AuthStore>((set,get) => ({
       const response = await axiosInstance.post("/auth/register", data);
       console.log(response);
       set({ authUser: response.data.user });
+      localStorage.setItem('user_role',response.data.user.role);
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       const errorMessage =
@@ -110,6 +111,7 @@ export const useAuthStore = create<AuthStore>((set,get) => ({
       const response = await axiosInstance.post("/auth/login", data);
       toast.success(response.data.message);
       set({ authUser: response.data.user });
+      localStorage.setItem('user_role',response.data.user.role);
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       const errorMessage =
