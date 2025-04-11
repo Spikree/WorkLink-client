@@ -15,6 +15,16 @@ type Job = {
   employerName: string;
 };
 
+type onGoingJobs = {
+  _id: string;
+  freelancer: string;
+  jobId: string;
+  jobTitle: string;
+  jobDescription: string;
+  employer: string;
+  payCheck: string;
+}
+
 type FinishedJob = {
   _id: string;
   jobTitle: string;
@@ -54,10 +64,12 @@ type JobStore = {
   getJobs: () => Promise<void>;
   getJob: (data: string) => Promise<void>;
   saveJob: (data: string) => Promise<void>;
+  deleteJob: (data: string) => Promise<void>;
   createJob: (data: createJobData) => Promise<void>;
   getFinishedJob: () => Promise<void>;
   getSavedJobs: () => Promise<void>;
   getCurrentJobs: () => Promise<void>;
+  getOnGoingJobs: () => Promise<void>;
   applyJob: (
     jobId: string,
     bidAmount: string,
@@ -67,7 +79,9 @@ type JobStore = {
   finishedJobs : FinishedJob[];
   savedJobs: SavedJob[];
   currentJobs: CurrentJob[];
+  onGoingJobs: onGoingJobs[];
   isFetchingJobs: boolean;
+  isDeletingJob: boolean;
   isPostingJob: boolean;
   job: Job | null;
 };
@@ -77,8 +91,10 @@ export const useJobStore = create<JobStore>((set,get) => ({
   finishedJobs: [],
   savedJobs:[],
   currentJobs:[],
+  onGoingJobs:[],
   job: null,
   isFetchingJobs: false,
+  isDeletingJob: false,
   isPostingJob: false,
 
   getJobs: async () => {
@@ -205,6 +221,36 @@ export const useJobStore = create<JobStore>((set,get) => ({
       toast.error(errorMessage);
     } finally {
       set({isPostingJob: false});
+    }
+  },
+
+  getOnGoingJobs : async () => {
+    set({isFetchingJobs: true});
+    try {
+      const response = await axiosInstance.get("/job/getOnGoingJobs");
+      set({onGoingJobs: response.data.jobs})
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      const errorMessage =
+        axiosError.response?.data?.message || "Server Error.";
+      toast.error(errorMessage);
+    } finally {
+      set({isFetchingJobs: false}); 
+    }
+  },
+
+  deleteJob: async (data: string) => {
+    set({isDeletingJob: true});
+    try {
+      const response = await axiosInstance.delete(`/job/deleteJob/${data}`);
+      toast.success(response.data.message);
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      const errorMessage =
+        axiosError.response?.data?.message || "Server Error.";
+      toast.error(errorMessage);
+    } finally {
+      set({isDeletingJob: false});
     }
   }
 }));
