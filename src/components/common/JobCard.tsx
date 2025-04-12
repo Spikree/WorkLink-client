@@ -18,7 +18,7 @@ interface JobCardProps {
   onDelete?: (jobId: string) => void;
 }
 
-const JobCard: React.FC<JobCardProps> = ({ jobs, onApply,onDelete }) => {
+const JobCard: React.FC<JobCardProps> = ({ jobs, onApply, onDelete }) => {
   // Format the date to be more readable
   const formattedDate = new Date(jobs.createdAt).toLocaleDateString("en-US", {
     year: "numeric",
@@ -56,21 +56,26 @@ const JobCard: React.FC<JobCardProps> = ({ jobs, onApply,onDelete }) => {
             : jobs.description}
         </p>
 
-        <div className="flex text-center justify-between">
-          <div className="flex flex-wrap gap-2 mt-4">
-            {jobs.skillsRequired.map((skill, index) => (
-              <span
-                key={index}
-                className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-sm font-medium"
-              >
-                {skill}
-              </span>
-            ))}
-          </div>
+        <div className="flex flex-wrap gap-2 mt-4">
+          {jobs.skillsRequired.map((skill, index) => (
+            <span
+              key={index}
+              className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-sm font-medium"
+            >
+              {skill}
+            </span>
+          ))}
 
-          {onDelete && <div>
-              <button onClick={() => onDelete(jobs._id)} className="items-center text-center align-middle bg-blue-500 px-6 py-2 rounded-xl text-white">delete</button>
-          </div>}
+          {onDelete && (
+            <div className="sm:ml-10 sm:mt-0 mt-5">
+              <button
+                onClick={() => onDelete(jobs._id)}
+                className="items-center text-center align-middle bg-blue-500 px-6 py-2 rounded-xl text-white"
+              >
+                delete
+              </button>
+            </div>
+          )}
         </div>
 
         {onApply && (

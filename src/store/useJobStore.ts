@@ -247,6 +247,7 @@ export const useJobStore = create<JobStore>((set,get) => ({
     try {
       const response = await axiosInstance.delete(`/job/deleteJob/${data}`);
       toast.success(response.data.message);
+      await get().getCreatedJobs();
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       const errorMessage =
@@ -261,7 +262,7 @@ export const useJobStore = create<JobStore>((set,get) => ({
     set({isFetchingJobs: true});
     try {
       const response = await axiosInstance.get("/job/getCreatedJobs");
-      set({createdJobs: response.data.jobs});
+      set({createdJobs: response.data.jobs || []});
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       const errorMessage =
