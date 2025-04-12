@@ -70,12 +70,14 @@ type JobStore = {
   getSavedJobs: () => Promise<void>;
   getCurrentJobs: () => Promise<void>;
   getOnGoingJobs: () => Promise<void>;
+  getCreatedJobs: () => Promise<void>;
   applyJob: (
     jobId: string,
     bidAmount: string,
     coverLetter: string
   ) => Promise<void>;
   jobs: Job[];
+  createdJobs: Job[];
   finishedJobs : FinishedJob[];
   savedJobs: SavedJob[];
   currentJobs: CurrentJob[];
@@ -92,6 +94,7 @@ export const useJobStore = create<JobStore>((set,get) => ({
   savedJobs:[],
   currentJobs:[],
   onGoingJobs:[],
+  createdJobs: [],
   job: null,
   isFetchingJobs: false,
   isDeletingJob: false,
@@ -251,6 +254,21 @@ export const useJobStore = create<JobStore>((set,get) => ({
       toast.error(errorMessage);
     } finally {
       set({isDeletingJob: false});
+    }
+  },
+
+  getCreatedJobs: async () => {
+    set({isFetchingJobs: true});
+    try {
+      const response = await axiosInstance.get("/job/getCreatedJobs");
+      set({createdJobs: response.data.jobs});
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      const errorMessage =
+        axiosError.response?.data?.message || "Server Error.";
+      toast.error(errorMessage);
+    } finally {
+      set({isFetchingJobs: false});
     }
   }
 }));

@@ -14,17 +14,18 @@ interface JobCardProps {
     createdAt: string;
     employerName: string;
   };
-  onApply: (jobId: string) => void;
+  onApply?: (jobId: string) => void;
+  onDelete?: (jobId: string) => void;
 }
 
-const JobCard: React.FC<JobCardProps> = ({ jobs, onApply }) => {
+const JobCard: React.FC<JobCardProps> = ({ jobs, onApply,onDelete }) => {
   // Format the date to be more readable
-  const formattedDate = new Date(jobs.createdAt).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
+  const formattedDate = new Date(jobs.createdAt).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
-  
+
   return (
     <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
       <div className="space-y-4">
@@ -50,31 +51,39 @@ const JobCard: React.FC<JobCardProps> = ({ jobs, onApply }) => {
         </div>
 
         <p className="text-gray-600 leading-relaxed">
-          {jobs.description.length > 200 
-            ? `${jobs.description.substring(0, 200)}...` 
+          {jobs.description.length > 200
+            ? `${jobs.description.substring(0, 200)}...`
             : jobs.description}
         </p>
 
-        <div className="flex flex-wrap gap-2 mt-4">
-          {jobs.skillsRequired.map((skill, index) => (
-            <span
-              key={index}
-              className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-sm font-medium"
-            >
-              {skill}
-            </span>
-          ))}
+        <div className="flex text-center justify-between">
+          <div className="flex flex-wrap gap-2 mt-4">
+            {jobs.skillsRequired.map((skill, index) => (
+              <span
+                key={index}
+                className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-sm font-medium"
+              >
+                {skill}
+              </span>
+            ))}
+          </div>
+
+          {onDelete && <div>
+              <button onClick={() => onDelete(jobs._id)} className="items-center text-center align-middle bg-blue-500 px-6 py-2 rounded-xl text-white">delete</button>
+          </div>}
         </div>
 
-        <Button
-          onClick={() => onApply(jobs._id)}
-          disableStyles={false}
-          className="w-full mt-4 bg-blue-600 text-white py-2.5 px-4 rounded-lg font-medium 
+        {onApply && (
+          <Button
+            onClick={() => onApply(jobs._id)}
+            disableStyles={false}
+            className="w-full mt-4 bg-blue-600 text-white py-2.5 px-4 rounded-lg font-medium 
                    hover:bg-blue-700 transition-colors duration-200 focus:outline-none 
                    focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-        >
-          Apply Now
-        </Button>
+          >
+            Apply Now
+          </Button>
+        )}
       </div>
     </div>
   );
