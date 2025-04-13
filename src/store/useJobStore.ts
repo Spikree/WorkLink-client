@@ -231,7 +231,7 @@ export const useJobStore = create<JobStore>((set,get) => ({
     set({isFetchingJobs: true});
     try {
       const response = await axiosInstance.get("/job/getOnGoingJobs");
-      set({onGoingJobs: response.data.jobs})
+      set({onGoingJobs: response.data.jobs || []})
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       const errorMessage =
