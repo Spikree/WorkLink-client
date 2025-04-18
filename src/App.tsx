@@ -20,6 +20,7 @@ import CurrentJobs from "./pages/CurrentJobs";
 import Home from "./pages/Home";
 import PostJob from "./pages/PostJob";
 import GetOnGoingJobs from "./pages/GetOnGoingJobs";
+import ChatPage from "./pages/ChatPage";
 
 function App() {
   const { checkAuth, isCheckingAuth } = useAuthStore();
@@ -62,6 +63,7 @@ function App() {
               <Route path="/finishedJobs" element={<FinishedJobs />} /> 
               <Route path="/savedJobs" element={<SavedJobs />} />
               <Route path="/currentJob" element={<CurrentJobs />} />
+              <Route path="/chat" element={<ChatPage />} />
             </Route>
             </Route>
           </Route>
