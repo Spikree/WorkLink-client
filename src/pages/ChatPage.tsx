@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Send, Menu, Phone, Video, MoreVertical } from 'lucide-react'
+import { socket } from '../socket/socket'
 
 const ChatPage = () => {
   const [message, setMessage] = useState('')
@@ -24,7 +25,7 @@ const ChatPage = () => {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-gray-100 sm:mt-0 mt-0">
+    <div className="flex flex-col h-screen bg-gray-100">
       {/* Header */}
       <div className="bg-white shadow-sm">
         <div className="max-w-4xl mx-auto">
