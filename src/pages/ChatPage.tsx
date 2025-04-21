@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Send, Menu, Phone, Video, MoreVertical } from 'lucide-react'
-import { socket } from '../socket/socket'
+// import { socket } from '../socket/socket'
 
 const ChatPage = () => {
   const [message, setMessage] = useState('')
