@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import Auth from "./pages/Auth";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import AuthRoutes from "./utils/AuthRoutes";
 import ProtectedRoutes from "./utils/ProtectedRoutes";
 import EmployerRoutes from "./utils/EmployerRoutes";
@@ -23,11 +23,19 @@ import GetOnGoingJobs from "./pages/GetOnGoingJobs";
 import ChatPage from "./pages/ChatPage";
 
 function App() {
-  const { checkAuth, isCheckingAuth } = useAuthStore();
+  const { checkAuth, isCheckingAuth ,logout} = useAuthStore();
+  const user_role = localStorage.getItem("user_role")
 
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
+
+  useEffect(() => {
+    if(!user_role) {
+      logout();
+      toast.error("Please Login again");
+    }
+  },[user_role,logout]);
 
   if (isCheckingAuth) {
     return (

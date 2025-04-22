@@ -12,14 +12,17 @@ type message = {
 
 type chatStore = {
   getMessages: (data: string) => Promise<void>;
+  sendMessage: (data: string, text: string) => Promise<void>;
 
   isFetchingMessages: boolean;
+  isSendingMessage: boolean;
 
   messages: message[];
 };
 
 export const useAuthStore = create<chatStore>((set) => ({
   isFetchingMessages: false,
+  isSendingMessage: false,
   messages: [],
 
   getMessages: async (userId: string) => {
@@ -34,6 +37,24 @@ export const useAuthStore = create<chatStore>((set) => ({
       toast.error(errorMessage);
     } finally {
         set({ isFetchingMessages: false });
+    }
+  },
+
+  sendMessage: async (userId: string, text: string) => {
+    set({isSendingMessage: true});
+
+    try {
+      const response = await axiosInstance.post(`/sendMessage/${userId}`, {
+        text
+      })
+      console.log(response)
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      const errorMessage =
+        axiosError.response?.data?.message || "Server Error.";
+      toast.error(errorMessage);
+    } finally {
+      set({isSendingMessage: false});
     }
   },
 }));
