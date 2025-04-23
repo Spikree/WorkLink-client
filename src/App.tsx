@@ -23,19 +23,21 @@ import GetOnGoingJobs from "./pages/GetOnGoingJobs";
 import ChatPage from "./pages/ChatPage";
 
 function App() {
-  const { checkAuth, isCheckingAuth ,logout} = useAuthStore();
-  const user_role = localStorage.getItem("user_role")
+  const { checkAuth, isCheckingAuth, logout, authUser } = useAuthStore();
+  const user_role = localStorage.getItem("user_role");
 
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
 
   useEffect(() => {
-    if(!user_role) {
+    if (!authUser) {
+      return;
+    } else if (user_role !== "freelancer" && user_role !== "employer") {
       logout();
       toast.error("Please Login again");
     }
-  },[user_role,logout]);
+  }, [user_role, logout, authUser]);
 
   if (isCheckingAuth) {
     return (
@@ -56,23 +58,22 @@ function App() {
 
           <Route element={<ProtectedRoutes />}>
             <Route element={<SidebarLayout />}>
+              <Route element={<EmployerRoutes />}>
+                <Route path="/home" element={<Home />} />
+                <Route path="/postJob" element={<PostJob />} />
+                <Route path="/getOnGoingJobs" element={<GetOnGoingJobs />} />
+              </Route>
 
-            <Route element={<EmployerRoutes/>}>
-            <Route path="/home" element={<Home />} />
-            <Route path="/postJob" element={<PostJob />} />
-            <Route path="/getOnGoingJobs" element={<GetOnGoingJobs />} />
-            </Route>
-
-            <Route element={<FreelancerRoutes/>}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/jobDetails/:jobId" element={<JobDetails />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/appliedjobs" element={<AppliedJobs />} />
-              <Route path="/finishedJobs" element={<FinishedJobs />} /> 
-              <Route path="/savedJobs" element={<SavedJobs />} />
-              <Route path="/currentJob" element={<CurrentJobs />} />
-              <Route path="/chat" element={<ChatPage />} />
-            </Route>
+              <Route element={<FreelancerRoutes />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/jobDetails/:jobId" element={<JobDetails />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/appliedjobs" element={<AppliedJobs />} />
+                <Route path="/finishedJobs" element={<FinishedJobs />} />
+                <Route path="/savedJobs" element={<SavedJobs />} />
+                <Route path="/currentJob" element={<CurrentJobs />} />
+                <Route path="/chat" element={<ChatPage />} />
+              </Route>
             </Route>
           </Route>
         </Routes>
