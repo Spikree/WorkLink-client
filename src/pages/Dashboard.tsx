@@ -70,6 +70,9 @@ const Dashboard = () => {
   }
   return (
     <div className="flex flex-col gap-10 p-2 m-4">
+      <div className="header">
+        <h1 className="text-4xl font-bold">Dashboard</h1>
+      </div>
       {jobs.map((job) => (
         <JobCard
           key={job._id}
