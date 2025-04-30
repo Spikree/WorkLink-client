@@ -35,24 +35,27 @@ const Dashboard = () => {
               <div className="h-5 bg-gray-200 rounded w-20"></div>
             </div>
           </div>
-  
+
           <div className="flex items-center gap-1.5">
             <div className="w-4 h-4 bg-gray-200 rounded"></div>
             <div className="h-4 bg-gray-200 rounded w-36"></div>
           </div>
-  
+
           <div className="space-y-2">
             <div className="h-4 bg-gray-200 rounded w-full"></div>
             <div className="h-4 bg-gray-200 rounded w-full"></div>
             <div className="h-4 bg-gray-200 rounded w-3/4"></div>
           </div>
-  
+
           <div className="flex flex-wrap gap-2 mt-4">
             {Array.from({ length: 4 }).map((_, index) => (
-              <div key={index} className="px-3 py-1 bg-gray-200 rounded-full w-16 h-6"></div>
+              <div
+                key={index}
+                className="px-3 py-1 bg-gray-200 rounded-full w-16 h-6"
+              ></div>
             ))}
           </div>
-  
+
           <div className="w-full h-10 bg-gray-200 rounded-lg mt-4"></div>
         </div>
       </div>
@@ -70,8 +73,14 @@ const Dashboard = () => {
   }
   return (
     <div className="flex flex-col gap-10 p-2 m-4">
-      <div className="header">
-        <h1 className="text-4xl font-bold">Dashboard</h1>
+      <div className="flex">
+        <div className="header">
+          <h1 className="text-4xl font-bold">Dashboard</h1>
+          <p className="mt-2 text-sm text-gray-600">
+            All Job Listings Will Appear Here
+          </p>
+        </div>
+        {/* Implement a search box here */}
       </div>
       {jobs.map((job) => (
         <JobCard

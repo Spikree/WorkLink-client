@@ -72,7 +72,12 @@ const AppliedJobs = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Applied Jobs</h1>
+      <div className="flex flex-col gap-0 mb-8">
+        <h1 className="text-3xl font-bold text-gray-900">Applied Jobs</h1>
+        <p className="mt-2 text-sm text-gray-600">All your applied jobs will appear here</p>
+      </div>
+
+      
 
       {applications.length === 0 ? (
         <div className="text-center py-12">
