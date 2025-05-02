@@ -72,7 +72,7 @@ const Sidebar = () => {
         navigate("/profile");
       },
     },
-    { title: "Settings", icon: <FiSettings size={16} />, action: () => {} },
+    { title: "Settings", icon: <FiSettings size={16} />, action: () => {navigate("/settings")} },
     {
       title: "Logout",
       icon: <FiLogOut size={16} />,
