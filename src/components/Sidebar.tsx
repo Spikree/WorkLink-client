@@ -2,7 +2,8 @@ import { useState } from "react";
 import { MdWorkHistory } from "react-icons/md";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { workLinkLogo } from "../assets/assets";
+import { workLinkLogoDark } from "../assets/assets";
+
 import {
   FiChevronLeft,
   FiChevronRight,
@@ -104,11 +105,11 @@ const Sidebar = () => {
           className="p-4 border-b border-gray-700"
         >
           <div className="flex items-center justify-center">
-            <div className="h-10 w-10 bg-blue-500 rounded-lg flex items-center justify-center">
+            <div className="h-10 w-10 rounded-lg flex items-center justify-center">
               <span className="text-xl">
                 <img
                   className="rounded-xl"
-                  src={workLinkLogo}
+                  src={workLinkLogoDark}
                   alt="work link logo"
                 />
               </span>

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { MdWorkHistory } from "react-icons/md";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import {workLinkLogo} from "../assets/assets"
+import {workLinkLogoDark} from "../assets/assets"
 import {
   FiBriefcase,
   FiBook,
@@ -61,6 +61,7 @@ const MobileNav = () => {
       setIsMenuOpen(false);
     }},
     { title: "Settings", icon: <FiSettings size={16} />, action: () => {
+      navigate("/settings");
       setIsMenuOpen(false);
     }},
     { title: "Logout", icon: <FiLogOut size={16} />, action: () => {
@@ -83,9 +84,9 @@ const MobileNav = () => {
             }}
             className="flex items-center"
           >
-            <div className="h-8 w-8 bg-blue-500 rounded-lg flex items-center justify-center">
+            <div className="h-10 w-10  rounded-lg flex items-center justify-center">
               <span className="text-lg">
-                <img className="rounded-xl" src={workLinkLogo} alt="work link logo" />
+                <img className="rounded-xl" src={workLinkLogoDark} alt="work link logo" />
               </span>
             </div>
             <span className="ml-2 text-white font-semibold">Skill Match</span>
