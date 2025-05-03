@@ -51,16 +51,16 @@ const Profile = () => {
 
   if (isProfileLoading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <Loader className="size-10 animate-spin" />
+      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-primary/5 to-danger/20">
+        <Loader className="size-10 animate-spin text-primary" />
       </div>
     );
   }
 
   if (!userProfile) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <Loader className="size-10 animate-spin" />
+      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-primary/5 to-danger/20">
+        <Loader className="size-10 animate-spin text-primary" />
       </div>
     );
   }
@@ -82,16 +82,16 @@ const Profile = () => {
   };
 
   return (
-    <div className="sm:mt-0 gap-4 sm:overflow-y-auto pb-6">
+    <div className="min-h-screen bg-gradient-to-br ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-              <div className="bg-gradient-to-r from-blue-600 to-blue-800 px-6 py-8">
+            <div className="bg-white rounded-2xl shadow-lg shadow-primary/5 overflow-hidden">
+              <div className="bg-gradient-to-r from-primary to-primary/90 px-6 py-8">
                 <div className="flex flex-col items-center">
                   <div className="h-32 w-32 rounded-full bg-white p-2 shadow-lg">
-                    <div className="h-full w-full rounded-full bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
-                      <User className="h-16 w-16 text-blue-600" />
+                    <div className="h-full w-full rounded-full bg-gradient-to-br from-primary/5 to-danger/20 flex items-center justify-center">
+                      <User className="h-16 w-16 text-primary" />
                     </div>
                   </div>
                   {isEditing ? (
@@ -101,7 +101,7 @@ const Profile = () => {
                       onChange={(e) =>
                         setEditForm({ ...editForm, name: e.target.value })
                       }
-                      className="w-full px-4 py-3 rounded-xl mt-6 border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow duration-150"
+                      className="w-full px-4 py-3 rounded-xl mt-6 border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
                       placeholder="your name"
                     />
                   ) : (
@@ -109,7 +109,7 @@ const Profile = () => {
                       {profile.name}
                     </h1>
                   )}
-                  <div className="mt-2 flex items-center text-blue-100">
+                  <div className="mt-2 flex items-center text-white/80">
                     <Briefcase className="h-4 w-4" />
                     <span className="ml-2 capitalize">{role}</span>
                   </div>
@@ -117,9 +117,9 @@ const Profile = () => {
               </div>
 
               <div className="px-6 py-6 space-y-4">
-                <div className="flex items-center justify-between p-4 bg-blue-50 rounded-xl">
+                <div className="flex items-center justify-between p-4 bg-gradient-to-r from-primary/5 to-danger/20 rounded-xl">
                   <div className="flex items-center">
-                    <Star className="h-5 w-5 text-yellow-400 fill-current" />
+                    <Star className="h-5 w-5 text-primary fill-current" />
                     <span className="ml-2 text-lg font-semibold">
                       {averageRating}
                     </span>
@@ -141,9 +141,8 @@ const Profile = () => {
             </div>
           </div>
 
-          {/* Right Column - Main Content */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-2xl shadow-lg p-8">
+            <div className="bg-white rounded-2xl shadow-lg shadow-primary/5 p-8">
               {!isEditing ? (
                 <div className="space-y-8">
                   <div>
@@ -153,7 +152,7 @@ const Profile = () => {
                       </h2>
                       <button
                         onClick={() => setIsEditing(true)}
-                        className="flex items-center px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 bg-blue-50 rounded-lg transition-colors duration-150"
+                        className="flex items-center px-4 py-2 text-sm font-medium text-primary hover:text-primary/90 bg-gradient-to-r from-primary/5 to-danger/20 rounded-lg transition-colors duration-150"
                       >
                         <Pencil className="h-4 w-4 mr-2" />
                         Edit Profile
@@ -172,9 +171,9 @@ const Profile = () => {
                       href={profile.portfolio}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-150"
+                      className="inline-flex items-center px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gradient-to-r hover:from-primary/5 hover:to-danger/20 transition-colors duration-150"
                     >
-                      <LinkIcon className="h-5 w-5 text-blue-600" />
+                      <LinkIcon className="h-5 w-5 text-primary" />
                       <span className="ml-2 text-gray-700">
                         {profile.portfolio}
                       </span>
@@ -189,7 +188,7 @@ const Profile = () => {
                       {profile.skills.map((skill: string, index: number) => (
                         <span
                           key={index}
-                          className="px-4 py-2 bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 rounded-xl text-sm font-medium"
+                          className="px-4 py-2 bg-gradient-to-r from-primary/5 to-danger/20 text-primary rounded-xl text-sm font-medium"
                         >
                           {skill}
                         </span>
@@ -209,7 +208,7 @@ const Profile = () => {
                         setEditForm({ ...editForm, bio: e.target.value })
                       }
                       rows={4}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow duration-150"
+                      className="w-full px-4 h-64 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
                       placeholder="Tell us about yourself..."
                     />
                   </div>
@@ -224,7 +223,7 @@ const Profile = () => {
                       onChange={(e) =>
                         setEditForm({ ...editForm, portfolio: e.target.value })
                       }
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow duration-150"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
                       placeholder="https://your-portfolio.com"
                     />
                   </div>
@@ -239,7 +238,7 @@ const Profile = () => {
                       onChange={(e) =>
                         setEditForm({ ...editForm, skills: e.target.value })
                       }
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow duration-150"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
                       placeholder="Enter skills separated by commas"
                     />
                   </div>
@@ -249,13 +248,13 @@ const Profile = () => {
                       type="button"
                       onClick={() => setIsEditing(false)}
                       ref={cancelEditButtonRef}
-                      className="px-6 py-3 border border-gray-200 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors duration-150"
+                      className="flex-1 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-xl transition-colors"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
-                      className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transition-colors duration-150"
+                      className="flex-1 px-4 py-3 bg-gradient-to-r from-primary to-primary/90 text-white rounded-xl hover:from-primary/90 hover:to-primary/80 transition-colors"
                     >
                       Save Changes
                     </button>
