@@ -2,11 +2,13 @@ import { useEffect, useState, useRef } from "react";
 import { Send, Menu, Phone, Video, MoreVertical } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useChatStore } from "../store/useChatStore";
+import { useAuthStore } from "../store/useAuthStore";
 // import { socket } from '../socket/socket'
 
 const ChatPage = () => {
   const { messages, isFetchingMessages, sendMessage, getMessages } =
     useChatStore();
+  const { getUserDetails, chatuserDetails } = useAuthStore();
   const { id: chatId } = useParams<{ id: string }>();
   const [message, setMessage] = useState<string>("");
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -22,8 +24,9 @@ const ChatPage = () => {
   useEffect(() => {
     if (chatId) {
       getMessages(chatId);
+      getUserDetails(chatId);
     }
-  }, [getMessages, chatId]);
+  }, [getMessages, chatId, getUserDetails]);
 
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -47,7 +50,9 @@ const ChatPage = () => {
                   className="w-10 h-10 rounded-full object-cover"
                 />
                 <div>
-                  <h2 className="font-semibold">Sarah Parker</h2>
+                  <h2 className="font-semibold">
+                    {chatuserDetails?.profile?.name}
+                  </h2>
                   <p className="text-sm text-green-500">Online</p>
                 </div>
               </div>

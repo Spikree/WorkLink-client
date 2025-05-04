@@ -12,11 +12,12 @@ type authData = {
 };
 
 type editData = {
-  bio:string,
-  portfolio: string,
-  skills: string,
+  bio: string;
+  portfolio: string;
+  skills: string;
   name?: string;
-}
+};
+
 
 type authUser = {
   _id: string;
@@ -25,6 +26,7 @@ type authUser = {
   profile: {
     name: string;
     bio?: string;
+    rating: string;
     skills?: string[];
     portfolio?: string;
   };
@@ -35,7 +37,7 @@ type UserDetails = {
   userDetails: {
     _id: string;
     email: string;
-    role: 'freelancer' | 'employer';
+    role: "freelancer" | "employer";
     profile: {
       name: string;
       skills: string[];
@@ -61,21 +63,24 @@ type AuthStore = {
   checkAuth: () => Promise<void>;
   getProfile: () => Promise<void>;
   editProfile: (data: editData) => Promise<void>;
-  
+  getUserDetails: (userId: string) => Promise<void>;
+
   authUser: authUser | null;
   userProfile: UserDetails | null;
+  chatuserDetails: authUser | null;
 };
 
-export const useAuthStore = create<AuthStore>((set,get) => ({
+export const useAuthStore = create<AuthStore>((set, get) => ({
   isSigningUp: false,
   isLoggingIn: false,
   authUser: null,
   userProfile: null,
   isCheckingAuth: false,
   isProfileLoading: false,
+  chatuserDetails: null,
 
   checkAuth: async () => {
-    set({isCheckingAuth: true})
+    set({ isCheckingAuth: true });
     try {
       const response = await axiosInstance.get("/auth/check");
       set({ authUser: response.data });
@@ -93,7 +98,7 @@ export const useAuthStore = create<AuthStore>((set,get) => ({
       const response = await axiosInstance.post("/auth/register", data);
       console.log(response);
       set({ authUser: response.data.user });
-      localStorage.setItem('user_role',response.data.user.role);
+      localStorage.setItem("user_role", response.data.user.role);
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       const errorMessage =
@@ -111,7 +116,7 @@ export const useAuthStore = create<AuthStore>((set,get) => ({
       const response = await axiosInstance.post("/auth/login", data);
       toast.success(response.data.message);
       set({ authUser: response.data.user });
-      localStorage.setItem('user_role',response.data.user.role);
+      localStorage.setItem("user_role", response.data.user.role);
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       const errorMessage =
@@ -138,7 +143,7 @@ export const useAuthStore = create<AuthStore>((set,get) => ({
   getProfile: async () => {
     try {
       const response = await axiosInstance.get(`/profile/getUser`);
-      set({userProfile: response.data});
+      set({ userProfile: response.data });
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       const errorMessage =
@@ -149,7 +154,7 @@ export const useAuthStore = create<AuthStore>((set,get) => ({
 
   editProfile: async (data: editData) => {
     try {
-      const response = await axiosInstance.put(`/profile/edit`, data)
+      const response = await axiosInstance.put(`/profile/edit`, data);
       toast.success(response.data.message);
       await get().getProfile();
     } catch (error) {
@@ -158,6 +163,19 @@ export const useAuthStore = create<AuthStore>((set,get) => ({
         axiosError.response?.data?.message || "failed to update profile";
       toast.error(errorMessage);
     }
-  }
-  
+  },
+
+  getUserDetails: async (userId: string) => {
+    try {
+      const response = await axiosInstance.get(
+        `/user/getUserDetails/${userId}`
+      );
+      set({chatuserDetails: response.data.user})
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      const errorMessage =
+        axiosError.response?.data?.message || "failed to update profile";
+      toast.error(errorMessage);
+    }
+  },
 }));

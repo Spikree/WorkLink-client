@@ -29,7 +29,9 @@ export const useChatStore = create<chatStore>((set) => ({
   getMessages: async (userId: string) => {
     set({ isFetchingMessages: true });
     try {
-      const response = await axiosInstance.get(`/message/getMessages/${userId}`);
+      const response = await axiosInstance.get(
+        `/message/getMessages/${userId}`
+      );
       set({ messages: response.data.messages });
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
@@ -37,25 +39,32 @@ export const useChatStore = create<chatStore>((set) => ({
         axiosError.response?.data?.message || "Server Error.";
       toast.error(errorMessage);
     } finally {
-        set({ isFetchingMessages: false });
+      set({ isFetchingMessages: false });
     }
   },
 
   sendMessage: async (userId: string, text: string) => {
-    set({isSendingMessage: true});
+    set({ isSendingMessage: true });
 
     try {
-      const response = await axiosInstance.post(`/message/sendMessage/${userId}`, {
-        text
-      })
-      console.log(response)
+      const response = await axiosInstance.post(
+        `/message/sendMessage/${userId}`,
+        {
+          text,
+        }
+      );
+      const newMessage = response.data.newMessage;
+
+      set((state) => ({
+        messages: [...state.messages, newMessage],
+      }));
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       const errorMessage =
         axiosError.response?.data?.message || "Server Error.";
       toast.error(errorMessage);
     } finally {
-      set({isSendingMessage: false});
+      set({ isSendingMessage: false });
     }
   },
 }));
