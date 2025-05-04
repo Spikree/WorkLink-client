@@ -4,10 +4,12 @@ import { AxiosError } from "axios";
 import toast from "react-hot-toast";
 
 type message = {
+  _id: string;
   senderId: string;
   receiverId: string;
   text: string;
   chatId: string;
+  createdAt: string;
 };
 
 type chatStore = {
@@ -16,11 +18,10 @@ type chatStore = {
 
   isFetchingMessages: boolean;
   isSendingMessage: boolean;
-
   messages: message[];
 };
 
-export const useAuthStore = create<chatStore>((set) => ({
+export const useChatStore = create<chatStore>((set) => ({
   isFetchingMessages: false,
   isSendingMessage: false,
   messages: [],
@@ -28,7 +29,7 @@ export const useAuthStore = create<chatStore>((set) => ({
   getMessages: async (userId: string) => {
     set({ isFetchingMessages: true });
     try {
-      const response = await axiosInstance.get(`/getMessages/${userId}`);
+      const response = await axiosInstance.get(`/message/getMessages/${userId}`);
       set({ messages: response.data.messages });
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
@@ -44,7 +45,7 @@ export const useAuthStore = create<chatStore>((set) => ({
     set({isSendingMessage: true});
 
     try {
-      const response = await axiosInstance.post(`/sendMessage/${userId}`, {
+      const response = await axiosInstance.post(`/message/sendMessage/${userId}`, {
         text
       })
       console.log(response)
