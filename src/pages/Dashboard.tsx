@@ -1,5 +1,6 @@
 // import { Loader } from "lucide-react";
 import JobCard from "../components/common/JobCard";
+import SearchBar from "../components/common/SearchBar";
 import { useJobStore } from "../store/useJobStore";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -74,13 +75,17 @@ const Dashboard = () => {
   return (
     <div className="flex flex-col gap-10 p-2 m-4">
       <div className="flex">
-        <div className="header">
-          <h1 className="text-4xl font-bold">Dashboard</h1>
-          <p className="mt-2 text-sm text-gray-600">
-            All Job Listings Will Appear Here
-          </p>
+        <div className="flex justify-between w-full">
+          <div className="header">
+            <h1 className="text-4xl font-bold">Dashboard</h1>
+            <p className="mt-2 text-sm text-gray-600">
+              All Job Listings Will Appear Here
+            </p>
+          </div>
+          <div>
+            <SearchBar placeholder="search for jobs" />
+          </div>
         </div>
-        {/* Implement a search box here */}
       </div>
       {jobs.map((job) => (
         <JobCard

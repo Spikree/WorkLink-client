@@ -24,6 +24,7 @@ import ChatPage from "./pages/ChatPage";
 import Settings from "./pages/Settings";
 import ChangePassword from "./pages/ChangePassword";
 import ChangeEmail from "./pages/ChangeEmail";
+import Chat from "./pages/Chat";
 
 function App() {
   const { checkAuth, isCheckingAuth, logout, authUser } = useAuthStore();
@@ -76,9 +77,10 @@ function App() {
                 <Route path="/finishedJobs" element={<FinishedJobs />} />
                 <Route path="/savedJobs" element={<SavedJobs />} />
                 <Route path="/currentJob" element={<CurrentJobs />} />
-                <Route path="/chat" element={<ChatPage />} />
+                <Route path="/chat" element={<Chat />} />
                 <Route path="/changePassword" element={<ChangePassword/>} />
                 <Route path="/changeEmail" element={<ChangeEmail/>} />
+                <Route path="/chatRoom/:id" element={<ChatPage/>} />
               </Route>
             </Route>
           </Route>

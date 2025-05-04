@@ -73,7 +73,13 @@ const Sidebar = () => {
         navigate("/profile");
       },
     },
-    { title: "Settings", icon: <FiSettings size={16} />, action: () => {navigate("/settings")} },
+    {
+      title: "Settings",
+      icon: <FiSettings size={16} />,
+      action: () => {
+        navigate("/settings");
+      },
+    },
     {
       title: "Logout",
       icon: <FiLogOut size={16} />,
@@ -130,13 +136,19 @@ const Sidebar = () => {
             <button
               key={index}
               onClick={() => navigate(item.to)}
-              className="flex items-center text-gray-300 hover:bg-gray-700 rounded-lg px-4 py-3 transition-colors duration-200"
+              className="flex items-center text-gray-300 hover:bg-gray-700 rounded-lg px-4 py-3 transition-colors duration-200 relative group"
             >
               <span className="text-gray-400">{item.icon}</span>
               {isOpen && (
                 <motion.span className="ml-3 font-medium">
                   {item.title}
                 </motion.span>
+              )}
+
+              {!isOpen && (
+                <div className="absolute left-full ml-2 px-2 py-2 bg-gray-800 text-white text-sm rounded-md whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                  {item.title}
+                </div>
               )}
             </button>
           ))}
