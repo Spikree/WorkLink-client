@@ -73,20 +73,21 @@ const Dashboard = () => {
     );
   }
   return (
-    <div className="flex flex-col gap-10 p-2 m-4">
+    <div className="flex flex-col gap-10 p-2 m-4 sm:px-16">
       <div className="flex">
-        <div className="flex justify-between w-full">
+        <div className="sm:flex sm:justify-between w-full">
           <div className="header">
             <h1 className="text-4xl font-bold">Dashboard</h1>
             <p className="mt-2 text-sm text-gray-600">
               All Job Listings Will Appear Here
             </p>
           </div>
-          <div>
+          <div className="mt-6">
             <SearchBar placeholder="search for jobs" />
           </div>
         </div>
       </div>
+      <div className="flex flex-col gap-4">
       {jobs.map((job) => (
         <JobCard
           key={job._id}
@@ -94,6 +95,8 @@ const Dashboard = () => {
           onApply={() => handleApply(job._id)}
         />
       ))}
+      </div>
+      
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { Send, Menu, Phone, Video, MoreVertical } from "lucide-react";
+import { Send, Phone, Video, MoreVertical, Loader2, MessageCircle } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useChatStore } from "../store/useChatStore";
 import { useAuthStore } from "../store/useAuthStore";
@@ -38,11 +38,11 @@ const ChatPage = () => {
   return (
     <div className="flex flex-col sm:h-[94vh] h-[90vh] bg-gray-100">
       {/* Header */}
-      <div className="bg-white shadow-sm">
+      <div className="bg-white shadow-sm rounded-lg">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between p-4">
             <div className="flex items-center gap-3">
-              <Menu className="w-6 h-6 text-gray-600 cursor-pointer md:hidden" />
+              {/* <Menu className="w-6 h-6 text-gray-600 cursor-pointer md:hidden" /> */}
               <div className="flex items-center gap-3">
                 <img
                   src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=faces"
@@ -70,9 +70,22 @@ const ChatPage = () => {
       <div className="h-[75vh] overflow-y-auto p-4" ref={chatContainerRef}>
         <div className="max-w-4xl mx-auto flex flex-col gap-4">
           {isFetchingMessages ? (
-            <div className="text-center text-gray-500">Loading messages...</div>
+            <div className="flex flex-col items-center justify-center h-full">
+            <div className="bg-white p-8 rounded-lg shadow-md text-center">
+              <Loader2 className="w-12 h-12 text-blue-500 animate-spin mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">Loading messages</h3>
+              <p className="text-gray-500">Please wait while we fetch your conversation...</p>
+            </div>
+          </div>
           ) : messages.length === 0 ? (
-            <div className="text-center text-gray-500">No messages yet</div>
+            <div className="flex flex-col items-center justify-center h-full">
+            <div className="bg-white p-8 rounded-lg shadow-md text-center">
+              <MessageCircle className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">No messages yet</h3>
+              <p className="text-gray-500 mb-4">Start the conversation by sending your first message!</p>
+              <div className="w-32 h-1 bg-gradient-to-r from-blue-300 to-blue-500 mx-auto rounded-full" />
+            </div>
+          </div>
           ) : (
             messages.map((msg, index) => {
               const isSentToChatId = msg.receiverId === chatId;
@@ -136,7 +149,7 @@ const ChatPage = () => {
       </div>
 
       {/* Message Input */}
-      <div className="bg-white border-t">
+      <div className="bg-white border-t rounded-lg">
         <div className="max-w-4xl mx-auto p-4">
           <form className="flex items-center gap-4">
             <input
