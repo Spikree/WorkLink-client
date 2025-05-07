@@ -24,6 +24,7 @@ import { FaArrowRight } from "react-icons/fa6";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import ReviewSection from "../components/common/ReviewSection";
 
 const LandingPage = () => {
   const [isHovered, setIsHovered] = useState<number | null>(null);
@@ -140,7 +141,7 @@ const LandingPage = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 text-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-8 text-center">
         <div>
           <h1 className="text-4xl font-bold mb-4 text-primary">
             Everything you need to Succeed
@@ -185,6 +186,9 @@ const LandingPage = () => {
           </div>
         </motion.div>
       </div>
+
+      <div className="pb-16"><ReviewSection/></div>
+      
 
       <footer className="w-full bg-[#1d1e27] text-white">
         {/* Top section with language selector */}
