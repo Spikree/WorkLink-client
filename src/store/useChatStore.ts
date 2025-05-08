@@ -15,7 +15,7 @@ type message = {
 type chatStore = {
   getMessages: (data: string) => Promise<void>;
   sendMessage: (data: string, text: string) => Promise<void>;
-
+  setMessages: (data: message) => Promise<void>;
   isFetchingMessages: boolean;
   isSendingMessage: boolean;
   messages: message[];
@@ -43,6 +43,12 @@ export const useChatStore = create<chatStore>((set) => ({
     }
   },
 
+  setMessages: async (newMsg: message) => {
+    set((state) => ({
+      messages: [...state.messages, newMsg]
+    }))
+  },
+  
   sendMessage: async (userId: string, text: string) => {
     set({ isSendingMessage: true });
 
