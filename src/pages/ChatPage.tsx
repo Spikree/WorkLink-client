@@ -3,15 +3,70 @@ import { Send, Phone, Video, MoreVertical, Loader2, MessageCircle } from "lucide
 import { useParams } from "react-router-dom";
 import { useChatStore } from "../store/useChatStore";
 import { useAuthStore } from "../store/useAuthStore";
-// import { socket } from '../socket/socket'
+import { socket } from '../socket/socket'
 
 const ChatPage = () => {
   const { messages, isFetchingMessages, sendMessage, getMessages } =
     useChatStore();
-  const { getUserDetails, chatuserDetails } = useAuthStore();
+  const { getUserDetails, chatuserDetails , authUser} = useAuthStore();
   const { id: chatId } = useParams<{ id: string }>();
   const [message, setMessage] = useState<string>("");
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  // const [isTyping, setIsTyping] = useState<boolean>(false);
+  // const [typingUser, setTypingUser] = useState(null);
+  // const [isUserActive, setIsUserActive] = useState<boolean>(false);
+
+  // const typingTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const userId = authUser?._id
+  const actualChatId = userId && chatId ? [userId, chatId].sort().join("_") : "";
+
+  // const handleTyping = () => {
+  //   if(!isTyping && actualChatId) {
+  //     socket.emit("typing", {
+  //       senderId: userId,
+  //       receiverId: chatId,
+  //       chatId: actualChatId
+  //     });
+  //     setIsTyping(true);
+  //   }
+
+  //   if(typingTimerRef.current) {
+  //     clearTimeout(typingTimerRef.current);
+  //   }
+
+  //   typingTimerRef.current = setTimeout(() => {
+  //     if(actualChatId) {
+  //       socket.emit("stopTyping", {
+  //         senderId: userId,
+  //         receiverId: chatId,
+  //         chatId: actualChatId
+  //       });
+  //       setIsTyping(false);
+  //     }
+  //   }, 200);
+  // }
+
+  useEffect(() => {
+    if(!socket.connected) {
+      socket.connect();
+    }
+
+    if(userId) {
+      socket.auth = {userId};
+      socket.emit("join", userId);
+
+      if(actualChatId) {
+        socket.emit("joinChat", actualChatId);
+      }
+
+      socket.emit("setActiveStatus",{userId});
+    }
+
+    socket.off("newMessage");
+    socket.off("userActiveStatus");
+    socket.off("userTyping");
+  },[actualChatId, userId]);
 
   const sendText = (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,7 +100,7 @@ const ChatPage = () => {
               {/* <Menu className="w-6 h-6 text-gray-600 cursor-pointer md:hidden" /> */}
               <div className="flex items-center gap-3">
                 <img
-                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=faces"
+                  src=""
                   alt="Profile"
                   className="w-10 h-10 rounded-full object-cover"
                 />
