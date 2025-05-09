@@ -30,7 +30,7 @@ const Register = ({setIsLogin} : props) => {
       setError("Email is required");
       toast.error(error);
       return false;
-    } else if(userDetails.password) {
+    } else if(userDetails.password === "") {
       setError("Password is required")
       toast.error(error);
       return false;
