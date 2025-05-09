@@ -6,6 +6,7 @@ import {
   MoreVertical,
   Loader2,
   MessageCircle,
+  ArrowLeft,
 } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useChatStore } from "../store/useChatStore";
@@ -82,14 +83,12 @@ const ChatPage = () => {
     socket.off("userTyping");
 
     socket.on("newMessage", (newMsg) => {
-
       if (
         (newMsg.senderId === userId && newMsg.receiverId === chatId) ||
         (newMsg.senderId === chatId && newMsg.receiverId === userId)
       ) {
         setMessages(newMsg);
       }
-
     });
 
     socket.on("userActiveStatus", (data) => {
@@ -137,67 +136,89 @@ const ChatPage = () => {
     }
   }, [messages]);
 
+  const formatTime = (dateString: string) => {
+    return new Date(dateString).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
   return (
-    <div className="flex flex-col sm:h-[94vh] h-[90vh] bg-gray-100">
+    <div className="flex flex-col sm:h-[94vh] h-[90vh] bg-gray-50">
       {/* Header */}
-      <div className="bg-white shadow-sm rounded-lg">
+      <div className="bg-white shadow-sm sticky top-0 z-10">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between p-4">
             <div className="flex items-center gap-3">
-              {/* <Menu className="w-6 h-6 text-gray-600 cursor-pointer md:hidden" /> */}
+              <div className="md:hidden">
+                <ArrowLeft className="w-5 h-5 text-gray-600 cursor-pointer" />
+              </div>
               <div className="flex items-center gap-3">
-                <img
-                  src="12e"
-                  alt="Profile"
-                  className="w-10 h-10 rounded-full object-cover"
-                />
-                <div>
-                  <h2 className="font-semibold">
-                    {chatuserDetails?.profile?.name}
-                  </h2>
-                  {isUserActive ? (
-                    <p className="text-sm text-green-500">Online</p>
-                  ) : (
-                    <p className="text-sm text-gray-500">Offline</p>
+                <div className="relative">
+                  {/* <img
+                    src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                    alt="Profile"
+                    className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm"
+                  /> */}
+                  {isUserActive && (
+                    <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
                   )}
+                </div>
+                <div>
+                  <h2 className="font-semibold text-gray-900">
+                    {chatuserDetails?.profile?.name || "User"}
+                  </h2>
+                  <p className={`text-xs ${isUserActive ? "text-green-500" : "text-gray-500"}`}>
+                    {isUserActive ? "Online" : "Offline"}
+                  </p>
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-4">
-              <Phone className="w-5 h-5 text-gray-600 cursor-pointer" />
-              <Video className="w-5 h-5 text-gray-600 cursor-pointer" />
-              <MoreVertical className="w-5 h-5 text-gray-600 cursor-pointer" />
+            <div className="flex items-center gap-3">
+              <button className="p-2 rounded-full hover:bg-gray-100 transition-colors">
+                <Phone className="w-5 h-5 text-gray-600" />
+              </button>
+              <button className="p-2 rounded-full hover:bg-gray-100 transition-colors">
+                <Video className="w-5 h-5 text-gray-600" />
+              </button>
+              <button className="p-2 rounded-full hover:bg-gray-100 transition-colors">
+                <MoreVertical className="w-5 h-5 text-gray-600" />
+              </button>
             </div>
           </div>
         </div>
       </div>
 
       {/* Chat Area */}
-      <div className="h-[75vh] overflow-y-auto p-4" ref={chatContainerRef}>
-        <div className="max-w-4xl mx-auto flex flex-col gap-4">
+      <div 
+        className="flex-1 overflow-y-auto px-4 py-6 scroll-smooth" 
+        ref={chatContainerRef}
+        style={{  backgroundBlendMode: "overlay", backgroundColor: "rgba(255,255,255,0.95)" }}
+      >
+        <div className="max-w-2xl mx-auto flex flex-col gap-3">
           {isFetchingMessages ? (
             <div className="flex flex-col items-center justify-center h-full">
-              <div className="bg-white p-8 rounded-lg shadow-md text-center">
-                <Loader2 className="w-12 h-12 text-blue-500 animate-spin mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+              <div className="bg-white p-6 rounded-xl shadow-md text-center">
+                <Loader2 className="w-10 h-10 text-blue-500 animate-spin mx-auto mb-3" />
+                <h3 className="text-lg font-semibold text-gray-800 mb-1">
                   Loading messages
                 </h3>
-                <p className="text-gray-500">
+                <p className="text-sm text-gray-500">
                   Please wait while we fetch your conversation...
                 </p>
               </div>
             </div>
           ) : messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full">
-              <div className="bg-white p-8 rounded-lg shadow-md text-center">
-                <MessageCircle className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <div className="bg-white p-6 rounded-xl shadow-md text-center">
+                <MessageCircle className="w-14 h-14 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">
                   No messages yet
                 </h3>
-                <p className="text-gray-500 mb-4">
+                <p className="text-gray-500 mb-4 text-sm">
                   Start the conversation by sending your first message!
                 </p>
-                <div className="w-32 h-1 bg-gradient-to-r from-blue-300 to-blue-500 mx-auto rounded-full" />
+                <div className="w-32 h-1 bg-gradient-to-r from-blue-400 to-indigo-500 mx-auto rounded-full" />
               </div>
             </div>
           ) : (
@@ -225,11 +246,17 @@ const ChatPage = () => {
               const showDateSeparator =
                 index === 0 || messageDate !== prevMessageDate;
 
+              // Check if messages are from the same sender and within 2 minutes
+              const isContinuousMessage = index > 0 && 
+                prevMessage && 
+                prevMessage.senderId === msg.senderId && 
+                new Date(msg.createdAt).getTime() - new Date(prevMessage.createdAt).getTime() < 2 * 60 * 1000;
+
               return (
-                <div key={msg._id}>
+                <div key={msg._id || index} className="animate-fadeIn">
                   {showDateSeparator && (
-                    <div className="text-center my-2">
-                      <span className="inline-block bg-gray-200 text-gray-600 text-sm px-4 py-1 rounded-full">
+                    <div className="text-center my-3">
+                      <span className="inline-block bg-white bg-opacity-80 text-gray-600 text-xs px-3 py-1 rounded-full shadow-sm">
                         {messageDate}
                       </span>
                     </div>
@@ -237,21 +264,18 @@ const ChatPage = () => {
                   <div
                     className={`flex ${
                       isSentToChatId ? "justify-end" : "justify-start"
-                    }`}
+                    } ${!isContinuousMessage ? 'mt-2' : 'mt-1'}`}
                   >
                     <div
-                      className={`max-w-xs lg:max-w-md p-3 rounded-lg ${
+                      className={`p-3 rounded-2xl ${
                         isSentToChatId
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-200 text-gray-800"
-                      }`}
+                          ? "bg-blue-600 text-white rounded-br-none"
+                          : "bg-white text-gray-800 shadow-sm rounded-bl-none"
+                      } ${isContinuousMessage ? (isSentToChatId ? 'rounded-tr-none' : 'rounded-tl-none') : ''}`}
                     >
-                      <p>{msg.text}</p>
-                      <p className="text-xs mt-1 opacity-70">
-                        {new Date(msg.createdAt).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
+                      <p className="text-sm">{msg.text}</p>
+                      <p className={`text-xs mt-1 ${isSentToChatId ? 'text-blue-100' : 'text-gray-500'}`}>
+                        {formatTime(msg.createdAt)}
                       </p>
                     </div>
                   </div>
@@ -262,44 +286,47 @@ const ChatPage = () => {
         </div>
       </div>
 
+      {/* Typing Indicator */}
       {typingUser && (
-        <div className="flex items-center space-x-1 p-2 mx-6 my-2 bg-gray-200 rounded-2xl w-fit mt-0">
-          <motion.div
-            className="w-2.5 h-2.5 bg-gray-500 rounded-full"
-            animate={{ y: [0, -3, 0] }}
-            transition={{
-              repeat: Infinity,
-              duration: 0.6,
-              ease: "easeInOut",
-            }}
-          />
-          <motion.div
-            className="w-2.5 h-2.5 bg-gray-500 rounded-full"
-            animate={{ y: [0, -3, 0] }}
-            transition={{
-              repeat: Infinity,
-              duration: 0.6,
-              ease: "easeInOut",
-              delay: 0.2,
-            }}
-          />
-          <motion.div
-            className="w-2.5 h-2.5 bg-gray-500 rounded-full"
-            animate={{ y: [0, -3, 0] }}
-            transition={{
-              repeat: Infinity,
-              duration: 0.6,
-              ease: "easeInOut",
-              delay: 0.4,
-            }}
-          />
+        <div className="flex px-4 mb-2">
+          <div className="flex items-center space-x-1 p-2 bg-white rounded-full shadow-sm w-fit">
+            <motion.div
+              className="w-2 h-2 bg-gray-400 rounded-full"
+              animate={{ y: [0, -3, 0] }}
+              transition={{
+                repeat: Infinity,
+                duration: 0.6,
+                ease: "easeInOut",
+              }}
+            />
+            <motion.div
+              className="w-2 h-2 bg-gray-400 rounded-full"
+              animate={{ y: [0, -3, 0] }}
+              transition={{
+                repeat: Infinity,
+                duration: 0.6,
+                ease: "easeInOut",
+                delay: 0.2,
+              }}
+            />
+            <motion.div
+              className="w-2 h-2 bg-gray-400 rounded-full"
+              animate={{ y: [0, -3, 0] }}
+              transition={{
+                repeat: Infinity,
+                duration: 0.6,
+                ease: "easeInOut",
+                delay: 0.4,
+              }}
+            />
+          </div>
         </div>
       )}
 
       {/* Message Input */}
-      <div className="bg-white border-t rounded-lg">
-        <div className="max-w-4xl mx-auto p-4">
-          <form className="flex items-center gap-4">
+      <div className="bg-white border-t sticky bottom-0">
+        <div className="max-w-2xl mx-auto p-3">
+          <form className="flex items-center gap-2" onSubmit={sendText}>
             <input
               type="text"
               value={message}
@@ -308,15 +335,16 @@ const ChatPage = () => {
                 handleTyping();
               }}
               placeholder="Type a message..."
-              className="flex-1 bg-gray-100 rounded-full px-6 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 bg-gray-100 rounded-full px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white transition-all"
             />
             <button
-              onClick={(e) => {
-                sendText(e);
-              }}
-              className="bg-blue-500 text-white rounded-full p-3 hover:bg-blue-600 transition-colors"
+              type="submit"
+              disabled={!message.trim()}
+              className={`${
+                message.trim() ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-400'
+              } text-white rounded-full p-2.5 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`}
             >
-              <Send className="w-5 h-5" />
+              <Send className="w-4 h-4" />
             </button>
           </form>
         </div>
