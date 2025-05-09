@@ -23,7 +23,7 @@ const SavedJobCard: React.FC<SavedJobProps> = ({ job }) => {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300">
       <div className="p-6">
-        <div className="flex items-start justify-between gap-4 mb-4">
+        <div className="flex flex-col items-start justify-between gap-4 mb-4">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
               <Briefcase className="h-5 w-5 text-blue-500" />
