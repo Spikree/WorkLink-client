@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
+import ProfileSkeleton from "../components/common/ProfileSkeleton";
 import {
   Pencil,
   Star,
@@ -8,7 +9,6 @@ import {
   User,
   Briefcase,
   Calendar,
-  Loader,
 } from "lucide-react";
 
 const Profile = () => {
@@ -51,17 +51,13 @@ const Profile = () => {
 
   if (isProfileLoading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-primary/5 to-danger/20">
-        <Loader className="size-10 animate-spin text-primary" />
-      </div>
+      <ProfileSkeleton/>
     );
   }
 
   if (!userProfile) {
     return (
-      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-primary/5 to-danger/20">
-        <Loader className="size-10 animate-spin text-primary" />
-      </div>
+      <ProfileSkeleton/>
     );
   }
 
