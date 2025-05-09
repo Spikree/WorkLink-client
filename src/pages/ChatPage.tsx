@@ -13,6 +13,7 @@ import { useChatStore } from "../store/useChatStore";
 import { useAuthStore } from "../store/useAuthStore";
 import { socket } from "../socket/socket";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const ChatPage = () => {
   const {
@@ -29,6 +30,17 @@ const ChatPage = () => {
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [typingUser, setTypingUser] = useState(null);
   const [isUserActive, setIsUserActive] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const role = localStorage.getItem("user_role");
+
+  const goToChatPage = () => {
+    if(role === "freelancer") {
+      navigate("/chat")
+    } else if(role === "employer") {
+      navigate("/chatEmp")
+    }
+   
+  }
 
   const typingTimerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -151,15 +163,15 @@ const ChatPage = () => {
           <div className="flex items-center justify-between p-4">
             <div className="flex items-center gap-3">
               <div className="md:hidden">
-                <ArrowLeft className="w-5 h-5 text-gray-600 cursor-pointer" />
+                <ArrowLeft onClick={goToChatPage} className="w-5 h-5 text-gray-600 cursor-pointer" />
               </div>
               <div className="flex items-center gap-3">
                 <div className="relative">
-                  {/* <img
+                  <img
                     src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                     alt="Profile"
                     className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm"
-                  /> */}
+                  />
                   {isUserActive && (
                     <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
                   )}
