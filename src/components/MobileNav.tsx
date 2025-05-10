@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdWorkHistory } from "react-icons/md";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import {workLinkLogoDark} from "../assets/assets"
+import { workLinkLogoDark } from "../assets/assets";
 import {
   FiBriefcase,
   FiBook,
@@ -23,53 +23,85 @@ const MobileNav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showProfileOptions, setShowProfileOptions] = useState(false);
   const navigate = useNavigate();
-  const { authUser,logout } = useAuthStore();
+  const { authUser, logout } = useAuthStore();
   const dontShowProfileOptions = () => {
-    if(showProfileOptions) {
-      setShowProfileOptions(false)
+    if (showProfileOptions) {
+      setShowProfileOptions(false);
     }
-  }
+  };
+
+  useEffect(() => {
+    const setRealVH = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+    };
+
+    setRealVH();
+    window.addEventListener("resize", setRealVH);
+
+    return () => window.removeEventListener("resize", setRealVH);
+  }, []);
 
   const freelancerMenuItems = [
     { title: "Home", icon: <FiHome size={20} />, to: "/dashboard" },
-    { title: "Applied Jobs", icon: <FiBriefcase size={20} />, to: "/appliedjobs" },
-    { title: "Finished Jobs", icon: <MdWorkHistory size={20} />, to: "/finishedJobs" },
+    {
+      title: "Applied Jobs",
+      icon: <FiBriefcase size={20} />,
+      to: "/appliedjobs",
+    },
+    {
+      title: "Finished Jobs",
+      icon: <MdWorkHistory size={20} />,
+      to: "/finishedJobs",
+    },
     { title: "Saved Jobs", icon: <FiBook size={20} />, to: "/savedJobs" },
     { title: "Current Job", icon: <FiStar size={20} />, to: "/currentJob" },
-    { title: "Chat", icon: <MessageSquareText size={20}/>, to: "/chat" },
+    { title: "Chat", icon: <MessageSquareText size={20} />, to: "/chat" },
   ];
 
   const employerMenuItems = [
-      { title: "dashboard", icon: <FiHome size={20} />, to: "/dashboard" },
-      {
-        title: "Post Job",
-        icon: <FiPlusCircle size={20} />,
-        to: "/postJob",
-      },
-      {
-            title: "Jobs in progress",
-            icon: <FiSave size={20} />,
-            to: "/getOnGoingJobs",
-          },
-          { title: "Chat", icon: <MessageSquareText size={20}/>, to: "/chatEmp" },
-    ];
-  
-
-  const profileOptions = [
-    { title: "Profile", icon: <FiUser size={16} />, action: () => {
-      navigate("/profile");
-      setIsMenuOpen(false);
-    }},
-    { title: "Settings", icon: <FiSettings size={16} />, action: () => {
-      navigate("/settings");
-      setIsMenuOpen(false);
-    }},
-    { title: "Logout", icon: <FiLogOut size={16} />, action: () => {
-      logout();
-    }},
+    { title: "dashboard", icon: <FiHome size={20} />, to: "/dashboard" },
+    {
+      title: "Post Job",
+      icon: <FiPlusCircle size={20} />,
+      to: "/postJob",
+    },
+    {
+      title: "Jobs in progress",
+      icon: <FiSave size={20} />,
+      to: "/getOnGoingJobs",
+    },
+    { title: "Chat", icon: <MessageSquareText size={20} />, to: "/chatEmp" },
   ];
 
-  const menuItems = authUser?.role === "employer" ? employerMenuItems : freelancerMenuItems;
+  const profileOptions = [
+    {
+      title: "Profile",
+      icon: <FiUser size={16} />,
+      action: () => {
+        navigate("/profile");
+        setIsMenuOpen(false);
+      },
+    },
+    {
+      title: "Settings",
+      icon: <FiSettings size={16} />,
+      action: () => {
+        navigate("/settings");
+        setIsMenuOpen(false);
+      },
+    },
+    {
+      title: "Logout",
+      icon: <FiLogOut size={16} />,
+      action: () => {
+        logout();
+      },
+    },
+  ];
+
+  const menuItems =
+    authUser?.role === "employer" ? employerMenuItems : freelancerMenuItems;
 
   return (
     <div className="sm:hidden mb-16" onClick={dontShowProfileOptions}>
@@ -77,7 +109,7 @@ const MobileNav = () => {
       <div className="fixed top-0 left-0 right-0 bg-[#1d1e27] z-50">
         <div className="flex items-center justify-between px-4 py-3">
           {/* Logo */}
-          <div 
+          <div
             onClick={() => {
               navigate("/home");
               setIsMenuOpen(false);
@@ -86,7 +118,11 @@ const MobileNav = () => {
           >
             <div className="h-10 w-10  rounded-lg flex items-center justify-center">
               <span className="text-lg">
-                <img className="rounded-xl" src={workLinkLogoDark} alt="work link logo" />
+                <img
+                  className="rounded-xl"
+                  src={workLinkLogoDark}
+                  alt="work link logo"
+                />
               </span>
             </div>
             <span className="ml-2 text-white font-semibold">Skill Match</span>
@@ -110,7 +146,8 @@ const MobileNav = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-[#1d1e27] z-40 pt-16"
+            style={{ height: "calc(var(--vh, 1vh) * 100)" }}
+            className="fixed top-0 left-0 right-0 bg-[#1d1e27] z-40 pt-16"
           >
             <div className="flex flex-col h-full">
               {/* Menu Items */}
@@ -135,7 +172,7 @@ const MobileNav = () => {
 
               {/* Profile Section */}
               <div className="border-t border-gray-700 px-4 py-4">
-                <div 
+                <div
                   onClick={() => setShowProfileOptions(!showProfileOptions)}
                   className="flex items-center space-x-3 mb-4"
                 >
@@ -143,7 +180,9 @@ const MobileNav = () => {
                     {authUser?.profile?.name?.charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-300">{authUser?.profile?.name}</p>
+                    <p className="text-sm font-medium text-gray-300">
+                      {authUser?.profile?.name}
+                    </p>
                     <p className="text-xs text-gray-500">{authUser?.email}</p>
                   </div>
                 </div>

@@ -67,24 +67,24 @@ function App() {
                 <Route path="/home" element={<Home />} />
                 <Route path="/postJob" element={<PostJob />} />
                 <Route path="/getOnGoingJobs" element={<GetOnGoingJobs />} />
-                <Route path="/chatEmp" element={<EmpChat/>} />
+                <Route path="/chatEmp" element={<EmpChat />} />
               </Route>
 
               {/* common page between employer and freelancer */}
-              <Route path="/chatRoom/:id" element={<ChatPage/>} />
-
+              <Route path="/chatRoom/:id" element={<ChatPage />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/changePassword" element={<ChangePassword />} />
+              <Route path="/changeEmail" element={<ChangeEmail />} />
+              
               <Route element={<FreelancerRoutes />}>
                 <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/settings" element={<Settings />} />
                 <Route path="/jobDetails/:jobId" element={<JobDetails />} />
-                <Route path="/profile" element={<Profile />} />
                 <Route path="/appliedjobs" element={<AppliedJobs />} />
                 <Route path="/finishedJobs" element={<FinishedJobs />} />
                 <Route path="/savedJobs" element={<SavedJobs />} />
                 <Route path="/currentJob" element={<CurrentJobs />} />
                 <Route path="/chat" element={<Chat />} />
-                <Route path="/changePassword" element={<ChangePassword/>} />
-                <Route path="/changeEmail" element={<ChangeEmail/>} />
               </Route>
             </Route>
           </Route>

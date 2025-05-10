@@ -244,11 +244,6 @@ const LandingPage = () => {
               <ul className="space-y-3 text-[14px] text-gray-300">
                 <li>
                   <a href="#" className="hover:text-white">
-                    Teach on SkillMatch
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white">
                     Community
                   </a>
                 </li>
@@ -302,7 +297,7 @@ const LandingPage = () => {
           </div>
           <div className="flex flex-col md:flex-row justify-between items-center border-t border-gray-700 pt-8">
             <div className="flex items-center mb-4 md:mb-0">
-              <span className="text-2xl font-bold mr-2">SkillMatch</span>
+              <span className="text-2xl font-bold mr-2">WorkLink</span>
               <span className="text-sm text-gray-300">
                 © {new Date().getFullYear()}
               </span>
