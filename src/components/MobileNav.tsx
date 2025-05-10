@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { MdWorkHistory } from "react-icons/md";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -29,18 +29,6 @@ const MobileNav = () => {
       setShowProfileOptions(false);
     }
   };
-
-  useEffect(() => {
-    const setRealVH = () => {
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty("--vh", `${vh}px`);
-    };
-
-    setRealVH();
-    window.addEventListener("resize", setRealVH);
-
-    return () => window.removeEventListener("resize", setRealVH);
-  }, []);
 
   const freelancerMenuItems = [
     { title: "Home", icon: <FiHome size={20} />, to: "/dashboard" },
@@ -146,8 +134,7 @@ const MobileNav = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2 }}
-            style={{ height: "calc(var(--vh, 1vh) * 100)" }}
-            className="fixed top-0 left-0 right-0 bg-[#1d1e27] z-40 pt-16"
+            className="fixed inset-0 bg-[#1d1e27] z-40 pt-16"
           >
             <div className="flex flex-col h-full">
               {/* Menu Items */}
