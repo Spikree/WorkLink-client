@@ -16,9 +16,15 @@ interface JobCardProps {
   };
   onApply?: (jobId: string) => void;
   onDelete?: (jobId: string) => void;
+  navigateToJobDashboard?: (jobId: string) => void;
 }
 
-const JobCard: React.FC<JobCardProps> = ({ jobs, onApply, onDelete }) => {
+const JobCard: React.FC<JobCardProps> = ({
+  jobs,
+  onApply,
+  onDelete,
+  navigateToJobDashboard,
+}) => {
   // Format the date to be more readable
   const formattedDate = new Date(jobs.createdAt).toLocaleDateString("en-US", {
     year: "numeric",
@@ -42,23 +48,30 @@ const JobCard: React.FC<JobCardProps> = ({ jobs, onApply, onDelete }) => {
       <div className="space-y-4">
         {/* Header section with title and budget */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
-          <div className="flex-1">
+          <div
+            onClick={() => {
+              navigateToJobDashboard?.(jobs?._id);
+            }}
+            className="flex-1"
+          >
             <h2 className="text-lg sm:text-xl font-bold text-gray-800 flex items-center">
               <Briefcase className="w-5 h-5 text-blue-600 mr-2 flex-shrink-0 hidden sm:inline" />
               <span className="break-words">{jobs.title}</span>
             </h2>
-            
+
             <div className="flex items-center gap-2 mt-2 text-gray-600 text-sm">
               <Building2 className="w-4 h-4 flex-shrink-0 text-gray-500" />
               <span className="truncate font-medium">{jobs.employerName}</span>
-              
+
               <span className="mx-1 text-gray-400">•</span>
-              
+
               <Calendar className="w-4 h-4 flex-shrink-0 text-gray-500" />
-              <span className="text-gray-500 text-xs sm:text-sm">Posted {formattedDate}</span>
+              <span className="text-gray-500 text-xs sm:text-sm">
+                Posted {formattedDate}
+              </span>
             </div>
           </div>
-          
+
           <div className="flex items-center text-green-600 font-bold text-base sm:text-lg flex-shrink-0 bg-green-50 px-3 py-1 rounded-full">
             <DollarSign className="w-4 h-4 mr-1" />
             <span>{formatBudget(jobs.budget)}</span>
@@ -66,7 +79,12 @@ const JobCard: React.FC<JobCardProps> = ({ jobs, onApply, onDelete }) => {
         </div>
 
         {/* Description section */}
-        <div className="bg-gray-50 p-3 rounded-lg">
+        <div
+          onClick={() => {
+            navigateToJobDashboard?.(jobs?._id);
+          }}
+          className="bg-gray-50 p-3 rounded-lg"
+        >
           <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
             {jobs.description.length > 150
               ? `${jobs.description.substring(0, 150)}...`

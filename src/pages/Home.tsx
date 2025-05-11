@@ -3,12 +3,14 @@ import { useJobStore } from "../store/useJobStore";
 import JobCard from "../components/common/JobCard";
 import DeleteModal from "../components/common/DeleteModal";
 import { LayoutGrid, Plus } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Home = () => {
   const { getCreatedJobs, createdJobs, deleteJob } = useJobStore();
   const [jobDeleteId, setJobDeleteId] = useState<string>("");
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const role = localStorage.getItem('user_role');
+  const navigate = useNavigate();
 
   useEffect(() => {
     getCreatedJobs();
@@ -28,6 +30,12 @@ const Home = () => {
   const onCancelDelete = () => {
     setShowDeleteModal(false);
   };
+
+  const navigateToJobDashboard = (jobId : string) => {
+    if(role === "employer") {
+      navigate(`/jobDashboard/${jobId}`)
+    }
+  }
 
   if(createdJobs?.length === 0) {
     return (
@@ -49,9 +57,11 @@ const Home = () => {
 
   return (
     <div className="flex flex-col gap-10 p-2 m-4">
+      <div>
       {createdJobs?.map((job) => (
-        <JobCard key={job._id} jobs={job} onDelete={() => onDelete(job._id)} />
+        <JobCard key={job._id} jobs={job} onDelete={() => onDelete(job._id)} navigateToJobDashboard={navigateToJobDashboard} />
       ))}
+      </div>
 
       {showDeleteModal && (
         <DeleteModal
