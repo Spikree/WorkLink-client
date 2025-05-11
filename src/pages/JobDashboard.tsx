@@ -7,18 +7,28 @@ import {
   FileText, 
   Tag, 
   User, 
-  Calendar
+  Calendar,
+  Clock,
+  FileText as FileIcon
 } from "lucide-react";
+import { useApplicationStore } from "../store/useApplicationStore";
+
+
 
 const JobDashboard = () => {
   const { id: jobId } = useParams<{ id: string }>();
-  const { getJob, job,isFetchingJobs } = useJobStore();
+  const { getJob, job, isFetchingJobs } = useJobStore();
+  const { getJobApplications, jobApplications } = useApplicationStore();
 
   useEffect(() => {
     if (jobId) {
       getJob(jobId);
     }
-  }, [getJob, jobId]);
+    
+    if (jobId) {
+      getJobApplications(jobId);
+    }
+  }, [getJob, getJobApplications, jobId]);
 
   if (isFetchingJobs) {
     return (
@@ -40,7 +50,7 @@ const JobDashboard = () => {
   }
 
   return (
-    <div className="h-full overflow-y-auto bg-gradient-to-br p-4 sm:p-6 pt-20 sm:pt-0">
+    <div className="h-full overflow-y-auto bg-gradient-to-br p-4 sm:p-6 sm:pt-6">
       <div className="w-full max-w-4xl mx-auto space-y-6">
         {/* Job Header Card */}
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
@@ -111,6 +121,70 @@ const JobDashboard = () => {
             </div>
           </div>
         </div>
+
+        {/* Job Applications */}
+        {jobApplications && jobApplications.length > 0 && (
+          <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div className="p-8">
+              <h2 className="text-xl font-bold mb-6 text-gray-900">
+                Applications ({jobApplications.length})
+              </h2>
+              <div className="space-y-4">
+                {jobApplications.map((application) => (
+                  <div
+                    key={application._id}
+                    className="bg-gray-50 rounded-xl overflow-hidden border border-gray-100"
+                  >
+                    <div className="p-6">
+                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
+                          <span className="flex items-center gap-2 bg-green-100 text-green-800 px-4 py-2 rounded-lg text-sm font-semibold">
+                            <DollarSign className="w-4 h-4" />
+                            {application.bidAmount}
+                          </span>
+                          <span className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-yellow-100 text-yellow-800">
+                            <Clock className="w-4 h-4" />
+                            {application.status}
+                          </span>
+                        </div>
+                        <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
+                          Open Application
+                        </button>
+                      </div>
+                      <div className="flex items-center text-sm text-gray-600 mb-4">
+                        <Clock className="mr-2 w-4 h-4" />
+                        Submitted on{" "}
+                        {new Date(application.submittedAt).toLocaleDateString()}
+                      </div>
+                      <div className="bg-white p-4 rounded-lg">
+                        <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                          <FileIcon className="w-5 h-5 text-blue-600" />
+                          Cover Letter
+                        </h3>
+                        <p className="text-sm text-gray-700 leading-relaxed line-clamp-2">
+                          {application.coverLetter}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {(!jobApplications || jobApplications.length === 0) && (
+          <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div className="p-8 flex flex-col items-center justify-center text-center">
+              <h2 className="text-xl font-bold text-gray-900 mb-2">
+                No Applications Yet
+              </h2>
+              <p className="text-base text-gray-600">
+                There are currently no applications for this job.
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

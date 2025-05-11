@@ -49,7 +49,7 @@ const JobDetails: React.FC = () => {
   };
 
   const jobApply = () => {
-    applyJob(jobId,coverLetter,bidAmount);
+    applyJob(jobId,bidAmount,coverLetter);
     setShowApplyJobModal(false);
     setBidAmount("");
     setCoverLetter("");
