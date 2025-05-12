@@ -1,30 +1,63 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useJobStore } from "../store/useJobStore";
-import { useEffect } from "react";
-import { 
-  DollarSign, 
-  Briefcase, 
-  FileText, 
-  Tag, 
-  User, 
+import { useEffect, useState } from "react";
+import {
+  DollarSign,
+  Briefcase,
+  FileText,
+  Tag,
+  User,
   Calendar,
   Clock,
-  FileText as FileIcon
+  FileText as FileIcon,
+  X,
 } from "lucide-react";
 import { useApplicationStore } from "../store/useApplicationStore";
 
-
+type JobApplications = {
+  _id: string;
+  job: string;
+  freelancer: string;
+  bidAmount: string;
+  coverLetter: string;
+  submittedAt: string;
+  status: string;
+};
 
 const JobDashboard = () => {
   const { id: jobId } = useParams<{ id: string }>();
+  const router = useNavigate();
   const { getJob, job, isFetchingJobs } = useJobStore();
-  const { getJobApplications, jobApplications } = useApplicationStore();
+  const { getJobApplications, jobApplications, acceptApplication } =
+    useApplicationStore();
+  const [isApplicationModalOpen, setIsApplicationModalOpen] =
+    useState<boolean>(false);
+  const [selectedApplication, setSelectedApplications] =
+    useState<JobApplications | null>();
+
+  const openApplicationModal = (application: JobApplications) => {
+    setIsApplicationModalOpen(true);
+    setSelectedApplications(application);
+  };
+
+  const closeApplicationModal = () => {
+    setIsApplicationModalOpen(false);
+    setIsApplicationModalOpen(false);
+  };
+
+  const acceptApplicationFunction = (jobId: string, applicationId: string) => {
+    acceptApplication(jobId, applicationId);
+  };
+
+  const openChat = (toChatId: string) => {
+    router(`/chatRoom/${toChatId}`);
+  };
 
   useEffect(() => {
     if (jobId) {
       getJob(jobId);
     }
-    
+
     if (jobId) {
       getJobApplications(jobId);
     }
@@ -37,13 +70,15 @@ const JobDashboard = () => {
       </div>
     );
   }
-  
+
   if (!job) {
     return (
       <div className="h-full flex justify-center items-center bg-gradient-to-br pt-20 sm:pt-0">
         <div className="text-center p-8">
           <h2 className="text-2xl font-bold text-gray-700">Job not found</h2>
-          <p className="mt-2 text-gray-500">The job you're looking for doesn't exist or has been removed.</p>
+          <p className="mt-2 text-gray-500">
+            The job you're looking for doesn't exist or has been removed.
+          </p>
         </div>
       </div>
     );
@@ -70,7 +105,9 @@ const JobDashboard = () => {
                 <User className="w-5 h-5 mr-3 text-gray-600" />
                 <div>
                   <p className="text-sm text-gray-600">Posted by</p>
-                  <p className="font-medium text-gray-900">{job.employerName}</p>
+                  <p className="font-medium text-gray-900">
+                    {job.employerName}
+                  </p>
                 </div>
               </div>
               <div className="flex items-center p-4 bg-gray-50 rounded-xl">
@@ -147,7 +184,12 @@ const JobDashboard = () => {
                             {application.status}
                           </span>
                         </div>
-                        <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
+                        <button
+                          onClick={() => {
+                            openApplicationModal(application);
+                          }}
+                          className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+                        >
                           Open Application
                         </button>
                       </div>
@@ -172,7 +214,7 @@ const JobDashboard = () => {
             </div>
           </div>
         )}
-        
+
         {(!jobApplications || jobApplications.length === 0) && (
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
             <div className="p-8 flex flex-col items-center justify-center text-center">
@@ -182,6 +224,96 @@ const JobDashboard = () => {
               <p className="text-base text-gray-600">
                 There are currently no applications for this job.
               </p>
+            </div>
+          </div>
+        )}
+
+        {isApplicationModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black bg-opacity-50">
+            <div
+              className="relative w-full max-w-lg p-6 mx-4 bg-white rounded-lg shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-medium text-gray-900">
+                  Application
+                </h3>
+                <button
+                  onClick={closeApplicationModal}
+                  className="text-gray-400 hover:text-gray-500 focus:outline-none"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+              <div className="mt-2">
+                <div className="flex gap-4">
+                  <span className="px-6 py-2 bg-[#dcfce7] rounded-md text-green-800 font-bold">
+                    {selectedApplication?.bidAmount}
+                  </span>
+                  <span className="px-6 py-2 bg-[#fee2e2] rounded-md text-red-800 font-bold">
+                    {selectedApplication?.status}
+                  </span>
+                </div>
+
+                <div className="bg-gray-50 p-4 mt-4 rounded-lg flex justify-center">
+                  <div className="flex flex-col gap-2">
+                    <span className="font-semibold flex gap-1">
+                      <User />
+                      Freelancer
+                    </span>
+                    <h4>{selectedApplication?.freelancer}</h4>
+                  </div>
+
+                  <div className="flex p-4 gap-4">
+                    <button
+                      onClick={() => {
+                        openChat(selectedApplication?.freelancer || "");
+                      }}
+                      className="px-4 py-2 font-semibold text-gray-700 bg-gray-300 rounded-md"
+                    >
+                      Message
+                    </button>
+                    <button className="px-4 py-2 font-semibold text-gray-700 bg-gray-300 rounded-md">
+                      profile
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex gap-2 items-center p-4 text-gray-600">
+                  <Clock />
+                  <span>{selectedApplication?.submittedAt}</span>
+                </div>
+
+                <div className="bg-gray-50 p-4 mt-4 rounded-lg ">
+                  <div className="flex flex-col gap-2">
+                    <span className="font-semibold flex gap-1">
+                      <FileText className="w-6 h-6" />
+                      Coverletter
+                    </span>
+
+                    <p className="mt-2 text-gray-700">
+                      {selectedApplication?.coverLetter}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex justify-center gap-4 mt-6">
+                  <button
+                    onClick={() => {
+                      acceptApplicationFunction(
+                        selectedApplication?.job || "",
+                        selectedApplication?._id || ""
+                      );
+                    }}
+                    className="px-4 py-2 font-semibold text-gray-700 bg-green-400 rounded-md"
+                  >
+                    Accept
+                  </button>
+                  <button className="px-4 py-2 font-semibold text-gray-700 bg-red-400 rounded-md">
+                    Decline
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         )}

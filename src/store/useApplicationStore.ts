@@ -32,6 +32,7 @@ type ApplicationStore = {
 
   getAppliedJobs: () => Promise<void>;
   getJobApplications: (jobId: string) => Promise<void>;
+  acceptApplication: (jobId: string,applicationId: string) => Promise<void>;
 };
 
 export const useApplicationStore = create<ApplicationStore>((set) => ({
@@ -69,4 +70,16 @@ export const useApplicationStore = create<ApplicationStore>((set) => ({
       set({ isLoadingAppliedJobs: false });
     }
   },
+
+  acceptApplication: async (jobId: string, applicationId: string) => {
+    try {
+      const response = await axiosInstance.post(`/job/acceptApplication/${jobId}/${applicationId}`);
+      toast.success(response.data.message);
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      const errorMessage =
+        axiosError.response?.data?.message || "Error Fetching Applications";
+      toast.error(errorMessage);
+    }
+  }
 }));
