@@ -11,6 +11,10 @@ import {
   Clock,
   FileText as FileIcon,
   X,
+  XCircle,
+  CheckCircle,
+  MessageCircle,
+  UserCircle,
 } from "lucide-react";
 import { useApplicationStore } from "../store/useApplicationStore";
 
@@ -42,7 +46,7 @@ const JobDashboard = () => {
 
   const closeApplicationModal = () => {
     setIsApplicationModalOpen(false);
-    setIsApplicationModalOpen(false);
+    setSelectedApplications(null);
   };
 
   const acceptApplicationFunction = (jobId: string, applicationId: string) => {
@@ -62,6 +66,18 @@ const JobDashboard = () => {
       getJobApplications(jobId);
     }
   }, [getJob, getJobApplications, jobId]);
+
+  useEffect(() => {
+    if (isApplicationModalOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [isApplicationModalOpen]);
 
   if (isFetchingJobs) {
     return (
@@ -95,7 +111,7 @@ const JobDashboard = () => {
                 <Briefcase className="mr-3 text-blue-600 w-8 h-8" />
                 {job.title}
               </h1>
-              <span className="px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+              <span className="px-4 py-2 bg-[#e6e2ff] text-blue-800 rounded-full text-sm font-medium">
                 {job.status}
               </span>
             </div>
@@ -129,7 +145,7 @@ const JobDashboard = () => {
             </div>
 
             <div className="space-y-6">
-              <div className="bg-blue-50 p-6 rounded-xl">
+              <div className="bg-[#e6e2ff] p-6 rounded-xl">
                 <h2 className="text-xl font-semibold mb-4 flex items-center text-gray-900">
                   <FileText className="mr-3 text-blue-600" />
                   Job Description
@@ -148,7 +164,7 @@ const JobDashboard = () => {
                   {job.skillsRequired.map((skill, index) => (
                     <span
                       key={index}
-                      className="px-4 py-2 bg-blue-100 text-blue-800 rounded-lg text-sm font-medium hover:bg-blue-200 transition-colors"
+                      className="px-4 py-2 bg-[#e6e2ff] text-blue-800 rounded-lg text-sm font-medium hover:bg-blue-200 transition-colors"
                     >
                       {skill}
                     </span>
@@ -229,89 +245,108 @@ const JobDashboard = () => {
         )}
 
         {isApplicationModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black bg-opacity-50">
-            <div
-              className="relative w-full max-w-lg p-6 mx-4 bg-white rounded-lg shadow-xl"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-medium text-gray-900">
-                  Application
-                </h3>
-                <button
-                  onClick={closeApplicationModal}
-                  className="text-gray-400 hover:text-gray-500 focus:outline-none"
-                >
-                  <X size={20} />
-                </button>
-              </div>
-              <div className="mt-2">
-                <div className="flex gap-4">
-                  <span className="px-6 py-2 bg-[#dcfce7] rounded-md text-green-800 font-bold">
-                    {selectedApplication?.bidAmount}
-                  </span>
-                  <span className="px-6 py-2 bg-[#fee2e2] rounded-md text-red-800 font-bold">
-                    {selectedApplication?.status}
-                  </span>
-                </div>
-
-                <div className="bg-gray-50 p-4 mt-4 rounded-lg flex justify-center">
-                  <div className="flex flex-col gap-2">
-                    <span className="font-semibold flex gap-1">
-                      <User />
-                      Freelancer
-                    </span>
-                    <h4>{selectedApplication?.freelancer}</h4>
-                  </div>
-
-                  <div className="flex p-4 gap-4">
+          <div className="fixed inset-0 z-50 overflow-hidden">
+            <div 
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm"
+              onClick={closeApplicationModal}
+            ></div>
+            <div className="fixed inset-0 flex items-center justify-center p-4 pointer-events-none">
+              <div
+                className="relative w-full max-w-2xl bg-white rounded-2xl shadow-xl overflow-hidden pointer-events-auto"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="p-6 border-blue-100">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xl font-semibold text-gray-900">
+                      Application Details
+                    </h3>
                     <button
-                      onClick={() => {
-                        openChat(selectedApplication?.freelancer || "");
-                      }}
-                      className="px-4 py-2 font-semibold text-gray-700 bg-gray-300 rounded-md"
+                      onClick={closeApplicationModal}
+                      className="text-gray-500 hover:text-gray-700 transition-colors p-2 hover:bg-blue-100 rounded-full"
                     >
-                      Message
+                      <X size={20} />
                     </button>
-                    <button className="px-4 py-2 font-semibold text-gray-700 bg-gray-300 rounded-md">
-                      profile
-                    </button>
+                  </div>
+                  <div className="flex gap-3 mt-4">
+                    <span className="inline-flex items-center px-4 py-2 bg-green-100 text-green-800 rounded-lg font-medium">
+                      <DollarSign className="w-4 h-4 mr-1" />
+                      {selectedApplication?.bidAmount}
+                    </span>
+                    <span className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-lg font-medium">
+                      <Clock className="w-4 h-4 mr-1" />
+                      {selectedApplication?.status}
+                    </span>
                   </div>
                 </div>
 
-                <div className="flex gap-2 items-center p-4 text-gray-600">
-                  <Clock />
-                  <span>{selectedApplication?.submittedAt}</span>
-                </div>
+                {/* Modal Content */}
+                <div className="p-6 space-y-6 max-h-[calc(100vh-200px)] overflow-y-auto">
+                  {/* Freelancer Info */}
+                  <div className="bg-gray-50 rounded-xl p-6">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-4">
+                        <div className="bg-blue-100 p-3 rounded-full">
+                          <User className="w-6 h-6 text-blue-600" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-gray-900">
+                            {selectedApplication?.freelancer}
+                          </h4>
+                          <p className="text-sm text-gray-500">Freelancer</p>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => openChat(selectedApplication?.freelancer || "")}
+                          className="inline-flex items-center px-4 py-2 bg-[#d2caff] text-[#6d28d2] rounded-lg font-medium hover:bg-purple-200 transition-colors"
+                        >
+                          <MessageCircle className="w-4 h-4 mr-2" />
+                          Message
+                        </button>
+                        <button className="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors">
+                          <UserCircle className="w-4 h-4 mr-2" />
+                          View Profile
+                        </button>
+                      </div>
+                    </div>
+                  </div>
 
-                <div className="bg-gray-50 p-4 mt-4 rounded-lg ">
-                  <div className="flex flex-col gap-2">
-                    <span className="font-semibold flex gap-1">
-                      <FileText className="w-6 h-6" />
-                      Coverletter
-                    </span>
+                  {/* Submission Time */}
+                  <div className="flex items-center text-sm text-gray-600">
+                    <Clock className="w-4 h-4 mr-2" />
+                    Submitted on {new Date(selectedApplication?.submittedAt || "").toLocaleString()}
+                  </div>
 
-                    <p className="mt-2 text-gray-700">
+                  {/* Cover Letter */}
+                  <div className="bg-gray-50 rounded-xl p-6">
+                    <h4 className="font-semibold text-gray-900 flex items-center mb-4">
+                      <FileText className="w-5 h-5 text-blue-600 mr-2" />
+                      Cover Letter
+                    </h4>
+                    <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
                       {selectedApplication?.coverLetter}
                     </p>
                   </div>
-                </div>
 
-                <div className="flex justify-center gap-4 mt-6">
-                  <button
-                    onClick={() => {
-                      acceptApplicationFunction(
-                        selectedApplication?.job || "",
-                        selectedApplication?._id || ""
-                      );
-                    }}
-                    className="px-4 py-2 font-semibold text-gray-700 bg-green-400 rounded-md"
-                  >
-                    Accept
-                  </button>
-                  <button className="px-4 py-2 font-semibold text-gray-700 bg-red-400 rounded-md">
-                    Decline
-                  </button>
+                  {/* Action Buttons */}
+                  <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+                    <button
+                      onClick={() => {
+                        acceptApplicationFunction(
+                          selectedApplication?.job || "",
+                          selectedApplication?._id || ""
+                        );
+                      }}
+                      className="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors"
+                    >
+                      <CheckCircle className="w-5 h-5 mr-2" />
+                      Accept Application
+                    </button>
+                    <button className="inline-flex items-center px-6 py-3 bg-red-100 text-red-700 rounded-lg font-medium hover:bg-red-200 transition-colors">
+                      <XCircle className="w-5 h-5 mr-2" />
+                      Decline
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
