@@ -48,9 +48,28 @@ type UserDetails = {
     createdOn: string;
     __v: number;
     averageRating: string;
-    totalRatings: number;
+    totalRatings: string;
   };
 };
+
+type UserDetailsView = {
+  message: string;
+  userDetails: {
+    profile: {
+      name: string;
+      skills: string[];
+      portfolio: string;
+      rating: string;
+      bio: string;
+    }
+    _id: string;
+    email: string;
+    role: string;
+    createdOn: string;
+    averageRating: string;
+    totalRatings: string;
+  }
+}
 
 type AuthStore = {
   isSigningUp: boolean;
@@ -64,10 +83,11 @@ type AuthStore = {
   getProfile: () => Promise<void>;
   editProfile: (data: editData) => Promise<void>;
   getUserDetails: (userId: string) => Promise<void>;
-
+  getUserProfile: (userId: string) => Promise<void>;
   authUser: authUser | null;
   userProfile: UserDetails | null;
   chatuserDetails: authUser | null;
+  userProfileView: UserDetailsView | null;
 };
 
 export const useAuthStore = create<AuthStore>((set, get) => ({
@@ -78,6 +98,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   isCheckingAuth: false,
   isProfileLoading: false,
   chatuserDetails: null,
+  userProfileView: null,
 
   checkAuth: async () => {
     set({ isCheckingAuth: true });
@@ -170,12 +191,27 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       const response = await axiosInstance.get(
         `/user/getUserDetails/${userId}`
       );
-      set({chatuserDetails: response.data.user})
+      set({ chatuserDetails: response.data.user });
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       const errorMessage =
         axiosError.response?.data?.message || "failed to update profile";
       toast.error(errorMessage);
+    }
+  },
+
+  getUserProfile: async (userId: string) => {
+    set({isProfileLoading: true});
+    try {
+      const response = await axiosInstance.get(`/profile/getUserProfile/${userId}`)
+      set({userProfileView: response.data})
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      const errorMessage =
+        axiosError.response?.data?.message || "failed to update profile";
+      toast.error(errorMessage);
+    } finally {
+      set({isProfileLoading: false});
     }
   },
 }));

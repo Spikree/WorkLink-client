@@ -27,6 +27,7 @@ import ChangeEmail from "./pages/ChangeEmail";
 import Chat from "./pages/Chat";
 import EmpChat from "./pages/EmpChat";
 import JobDashboard from "./pages/JobDashboard";
+import UserProfile from "./pages/UserProfile";
 
 function App() {
   const { checkAuth, isCheckingAuth, logout, authUser } = useAuthStore();
@@ -78,6 +79,7 @@ function App() {
               <Route path="/settings" element={<Settings />} />
               <Route path="/changePassword" element={<ChangePassword />} />
               <Route path="/changeEmail" element={<ChangeEmail />} />
+              <Route path="/userProfile/:id" element={<UserProfile/>} />
               
               <Route element={<FreelancerRoutes />}>
                 <Route path="/dashboard" element={<Dashboard />} />

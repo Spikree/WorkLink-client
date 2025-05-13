@@ -1,6 +1,7 @@
 import React from "react";
 import { Calendar, Building2, DollarSign, Briefcase } from "lucide-react";
 import Button from "./Button";
+import { useNavigate } from "react-router-dom";
 
 interface JobCardProps {
   jobs: {
@@ -32,6 +33,8 @@ const JobCard: React.FC<JobCardProps> = ({
     day: "numeric",
   });
 
+  const navigate = useNavigate();
+
   // Format budget with proper handling for large numbers
   const formatBudget = (budget: string) => {
     const num = Number(budget);
@@ -42,6 +45,10 @@ const JobCard: React.FC<JobCardProps> = ({
     }
     return num.toLocaleString();
   };
+
+  const navigateToProfile = (jobId: string) => {
+    navigate(`/userProfile/${jobId}`)
+  }
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-5 sm:p-6 hover:shadow-xl transition-shadow duration-300 border border-gray-100">
@@ -54,14 +61,14 @@ const JobCard: React.FC<JobCardProps> = ({
             }}
             className="flex-1"
           >
-            <h2 className="text-lg sm:text-xl font-bold text-gray-800 flex items-center">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-800 flex items-center cursor-pointer">
               <Briefcase className="w-5 h-5 text-blue-600 mr-2 flex-shrink-0 hidden sm:inline" />
               <span className="break-words">{jobs.title}</span>
             </h2>
 
-            <div className="flex items-center gap-2 mt-2 text-gray-600 text-sm">
+            <div className="flex items-center gap-2 mt-2 text-gray-600 text-sm cursor-pointer">
               <Building2 className="w-4 h-4 flex-shrink-0 text-gray-500" />
-              <span className="truncate font-medium">{jobs.employerName}</span>
+              <span onClick={() => {navigateToProfile(jobs?.employer)}} className="truncate font-medium">{jobs.employerName}</span>
 
               <span className="mx-1 text-gray-400">•</span>
 
@@ -97,7 +104,7 @@ const JobCard: React.FC<JobCardProps> = ({
           {jobs.skillsRequired.map((skill, index) => (
             <span
               key={index}
-              className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-medium truncate max-w-[150px] border border-blue-100"
+              className="px-3 py-1 cursor-pointer bg-blue-50 text-blue-600 rounded-full text-xs font-medium truncate max-w-[150px] border border-blue-100"
             >
               {skill}
             </span>
