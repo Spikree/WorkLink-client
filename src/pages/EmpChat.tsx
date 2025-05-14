@@ -17,7 +17,7 @@ const EmpChat = () => {
 
   const SkeletonChatCard = () => {
     return (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden animate-pulse">
+      <div className="bg-white rounded-xl shadow-sm border mb-6 border-gray-100 overflow-hidden animate-pulse">
         <div className="p-6">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
