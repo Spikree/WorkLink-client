@@ -99,7 +99,7 @@ const EmpChat = () => {
 
                 <p className="text-gray-600">
                   {job.jobDescription.length > 350
-                    ? `${job.jobDescription.substring(0, 550)}...`
+                    ? `${job.jobDescription.substring(0,100)}...`
                     : job.jobDescription}
                 </p>
               </div>
