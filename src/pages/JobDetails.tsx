@@ -6,7 +6,8 @@ import {
   BriefcaseIcon,
   CheckCircle2,
 } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import JobDetailsSkeleton from "../components/common/JobDetailsSkeleton";
 import { useJobStore } from "../store/useJobStore";
 
 const JobDetails: React.FC = () => {
@@ -14,11 +15,16 @@ const JobDetails: React.FC = () => {
   const [showApplyJobModal, setShowApplyJobModal] = useState<boolean>(false);
   const [coverLetter, setCoverLetter] = useState<string>("");
   const [bidAmount, setBidAmount] = useState<string>("");
-  const { getJob, job, saveJob, applyJob } = useJobStore();
+  const { getJob, job, saveJob, applyJob, isFetchingJobs } = useJobStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     getJob(jobId);
   }, [jobId, getJob]);
+
+  const navigateToProfile = (employerId: string) => {
+    navigate(`/userProfile/${employerId}`);
+  };
 
   const formatDate = (dateString: string | undefined) => {
     if (!dateString) return "";
@@ -48,12 +54,21 @@ const JobDetails: React.FC = () => {
     ));
   };
 
+  if (isFetchingJobs) {
+    return (
+      <div>
+        {" "}
+        <JobDetailsSkeleton />
+      </div>
+    );
+  }
+
   const jobApply = () => {
-    applyJob(jobId,bidAmount,coverLetter);
+    applyJob(jobId, bidAmount, coverLetter);
     setShowApplyJobModal(false);
     setBidAmount("");
     setCoverLetter("");
-  }
+  };
   return (
     <div className="flex flex-col gap-4 overflow-y-auto pb-6 sm:mt-0 mt-4">
       <div className="bg-white border-b rounded-xl">
@@ -66,7 +81,14 @@ const JobDetails: React.FC = () => {
               <div className="flex flex-wrap items-center gap-4 text-gray-600 text-sm sm:text-base cursor-pointer">
                 <div className="flex items-center gap-1">
                   <Building2 className="w-4 h-4" />
-                  <span className="truncate">{job?.employerName}</span>
+                  <span
+                    onClick={() => {
+                      navigateToProfile(job?.employer || "");
+                    }}
+                    className="truncate"
+                  >
+                    {job?.employerName}
+                  </span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Calendar className="w-4 h-4" />

@@ -283,7 +283,7 @@ const JobDashboard = () => {
                 <div className="p-6 space-y-6 max-h-[calc(100vh-200px)] overflow-y-auto">
                   {/* Freelancer Info */}
                   <div className="bg-gray-50 rounded-xl p-6">
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between flex-wrap gap-4">
                       <div className="flex items-center space-x-4">
                         <div className="bg-blue-100 p-3 rounded-full">
                           <User className="w-6 h-6 text-blue-600" />

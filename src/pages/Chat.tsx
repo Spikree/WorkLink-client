@@ -2,9 +2,11 @@ import { useEffect } from "react";
 import { useJobStore } from "../store/useJobStore";
 import Button from "../components/common/Button";
 import { useNavigate } from "react-router-dom";
+// import { useAuthStore } from "../store/useAuthStore";
 
 const Chat = () => {
   const { currentJobs, isFetchingJobs, getCurrentJobs } = useJobStore();
+  // const { getUserDetails } = useAuthStore();
   const router = useNavigate();
 
   useEffect(() => {
@@ -12,8 +14,8 @@ const Chat = () => {
   }, [getCurrentJobs]);
 
   const openChat = (toChatId: string) => {
-    router(`/chatRoom/${toChatId}`)
-  }
+    router(`/chatRoom/${toChatId}`);
+  };
 
   const SkeletonChatCard = () => {
     return (
@@ -99,7 +101,7 @@ const Chat = () => {
 
                 <p className="text-gray-600">
                   {job.jobDescription.length > 350
-                    ? `${job.jobDescription.substring(0, 550)}...`
+                    ? `${job.jobDescription.substring(0, 100)}...`
                     : job.jobDescription}
                 </p>
               </div>
