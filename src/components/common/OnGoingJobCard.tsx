@@ -25,7 +25,7 @@ const OnGoingJobsCard = ({ job }: JobCardProps) => {
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-      <div className="flex items-start justify-between mb-4">
+      <div className="flex flex-wrap items-start justify-between mb-4">
         <div className="flex items-center space-x-2 flex-1 mr-2">
           <BriefcaseIcon className="w-5 h-5 text-blue-600 flex-shrink-0" />
           <h3 className="text-xl font-semibold text-gray-800 truncate">{job.jobTitle}</h3>
