@@ -1,4 +1,5 @@
 import { BriefcaseIcon, DollarSignIcon, UserIcon, ExternalLinkIcon } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface JobCardProps {
   job: {
@@ -7,6 +8,7 @@ interface JobCardProps {
     jobDescription: string;
     freelancer: string;
     payCheck: string;
+    jobId: string;
   }
 }
 
@@ -17,6 +19,12 @@ const OnGoingJobsCard = ({ job }: JobCardProps) => {
 
   // Format the payment amount
   const formattedPayment = new Intl.NumberFormat().format(Number(job.payCheck));
+
+  const navigate = useNavigate();
+
+  const openOnGoingJobDetails = (jobId: string) => {
+    navigate(`/getOnGoingJobDetails/${jobId}`);
+  }
   
   // If payment amount is too long, truncate with ellipsis
   const displayPayment = formattedPayment.length > 10 
@@ -45,7 +53,7 @@ const OnGoingJobsCard = ({ job }: JobCardProps) => {
         </div>
         <button 
           className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex-shrink-0"
-          onClick={() => console.log('View details for job:', job._id)}
+          onClick={() => {console.log('View details for job:', job._id); openOnGoingJobDetails(job.jobId)}}
         >
           <span className="mr-2">View Details</span>
           <ExternalLinkIcon className="w-4 h-4" />

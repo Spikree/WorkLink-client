@@ -28,6 +28,7 @@ import Chat from "./pages/Chat";
 import EmpChat from "./pages/EmpChat";
 import JobDashboard from "./pages/JobDashboard";
 import UserProfile from "./pages/UserProfile";
+import OnGoingJobDetails from "./pages/OnGoingJobDetails";
 
 function App() {
   const { checkAuth, isCheckingAuth, logout, authUser } = useAuthStore();
@@ -71,6 +72,7 @@ function App() {
                 <Route path="/getOnGoingJobs" element={<GetOnGoingJobs />} />
                 <Route path="/chatEmp" element={<EmpChat />} />
                 <Route path="/jobDashboard/:id" element={<JobDashboard />} />
+                <Route path="/getOnGoingJobDetails/:id" element={<OnGoingJobDetails />} />
               </Route>
 
               {/* common page between employer and freelancer */}
