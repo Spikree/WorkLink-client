@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useJobStore } from "../store/useJobStore";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   DollarSign,
   Briefcase,
@@ -16,6 +16,7 @@ import { useApplicationStore } from "../store/useApplicationStore";
 const OnGoingJobDetails = () => {
   const { id: jobId } = useParams<{ id: string }>();
   const [showStatusOptions, setShowStatusOptions] = useState<boolean>(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const { getJob, job, isFetchingJobs, editJobStatus } = useJobStore();
   const { getJobApplications } = useApplicationStore();
@@ -30,26 +31,40 @@ const OnGoingJobDetails = () => {
     }
   }, [getJob, getJobApplications, jobId]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowStatusOptions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const editStatusOfTheJob = (jobid: string, status: string) => {
     editJobStatus(jobid, status);
+    setShowStatusOptions(false);
   };
 
   const status = [
-    // { name: "Open", value: "open", color: "bg-blue-100 text-blue-800" },
     {
       name: "In Progress",
       value: "in progress",
       color: "bg-yellow-100 text-yellow-800",
+      hoverColor: "hover:bg-yellow-50",
     },
     {
       name: "Completed",
       value: "completed",
       color: "bg-green-100 text-green-800",
+      hoverColor: "hover:bg-green-50",
     },
     {
       name: "Cancelled",
       value: "cancelled",
       color: "bg-red-100 text-red-800",
+      hoverColor: "hover:bg-red-50",
     },
   ];
 
@@ -86,18 +101,18 @@ const OnGoingJobDetails = () => {
       <div className="w-full max-w-4xl mx-auto space-y-6">
         {/* Job Header Card */}
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-          <div className="p-8">
-            <div className="flex flex-wrap gap-2 items-center justify-between mb-6">
-              <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-                <Briefcase className="mr-3 text-blue-600 w-8 h-8" />
-                {job.title}
+          <div className="p-4 sm:p-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center">
+                <Briefcase className="mr-3 text-blue-600 w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0" />
+                <span className="break-words">{job.title}</span>
               </h1>
-              <div className="py-1">
+              <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setShowStatusOptions(!showStatusOptions)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium inline-flex items-center gap-2 transition-all duration-200 ${getStatusColor(
+                  className={`w-full sm:w-auto px-4 py-2 rounded-full text-sm font-medium inline-flex items-center justify-between sm:justify-start gap-2 transition-all duration-200 ${getStatusColor(
                     job.status
-                  )}`}
+                  )} hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
                 >
                   {job.status || "Unknown"}
                   <ChevronDown
@@ -107,56 +122,60 @@ const OnGoingJobDetails = () => {
                   />
                 </button>
                 {showStatusOptions && (
-                  <div>
-                    {status.map((statusOption, index) => (
-                      <button
-                        key={index}
-                        onClick={() =>
-                          editStatusOfTheJob(jobId || "", statusOption.value)
-                        }
-                        className={`w-full text-left px-4 py-2 text-sm flex items-center justify-between hover:bg-gray-50 transition-colors ${
-                          job.status.toLowerCase() === statusOption.value
-                            ? "font-medium"
-                            : "font-normal"
-                        }`}
-                      >
-                        <span
-                          className={`px-2 py-1 rounded-full ${statusOption.color}`}
+                  <div className="absolute right-0 mt-2 w-full sm:w-48 rounded-xl shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                    <div className="py-1">
+                      {status.map((statusOption, index) => (
+                        <button
+                          key={index}
+                          onClick={() =>
+                            editStatusOfTheJob(jobId || "", statusOption.value)
+                          }
+                          className={`w-full text-left px-4 py-2 text-sm flex items-center justify-between ${
+                            statusOption.hoverColor
+                          } transition-colors ${
+                            job.status.toLowerCase() === statusOption.value
+                              ? "bg-gray-50"
+                              : ""
+                          }`}
                         >
-                          {statusOption.name}
-                        </span>
-                        {job.status.toLowerCase() === statusOption.value && (
-                          <Check className="w-4 h-4 text-green-600" />
-                        )}
-                      </button>
-                    ))}
+                          <span
+                            className={`px-2 py-1 rounded-full ${statusOption.color}`}
+                          >
+                            {statusOption.name}
+                          </span>
+                          {job.status.toLowerCase() === statusOption.value && (
+                            <Check className="w-4 h-4 text-green-600" />
+                          )}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-8">
               <div className="flex items-center p-4 bg-gray-50 rounded-xl">
-                <User className="w-5 h-5 mr-3 text-gray-600" />
-                <div>
+                <User className="w-5 h-5 mr-3 text-gray-600 flex-shrink-0" />
+                <div className="min-w-0">
                   <p className="text-sm text-gray-600">Posted by</p>
-                  <p className="font-medium text-gray-900">
+                  <p className="font-medium text-gray-900 truncate">
                     {job.employerName}
                   </p>
                 </div>
               </div>
               <div className="flex items-center p-4 bg-gray-50 rounded-xl">
-                <DollarSign className="w-5 h-5 mr-3 text-green-600" />
-                <div>
+                <DollarSign className="w-5 h-5 mr-3 text-green-600 flex-shrink-0" />
+                <div className="min-w-0">
                   <p className="text-sm text-gray-600">Budget</p>
-                  <p className="font-medium text-gray-900">${job.budget}</p>
+                  <p className="font-medium text-gray-900 truncate">${job.budget}</p>
                 </div>
               </div>
               <div className="flex items-center p-4 bg-gray-50 rounded-xl">
-                <Calendar className="w-5 h-5 mr-3 text-blue-600" />
-                <div>
+                <Calendar className="w-5 h-5 mr-3 text-blue-600 flex-shrink-0" />
+                <div className="min-w-0">
                   <p className="text-sm text-gray-600">Posted</p>
-                  <p className="font-medium text-gray-900">
+                  <p className="font-medium text-gray-900 truncate">
                     {new Date(job.createdAt).toLocaleDateString()}
                   </p>
                 </div>
@@ -164,26 +183,26 @@ const OnGoingJobDetails = () => {
             </div>
 
             <div className="space-y-6">
-              <div className="bg-[#e6e2ff] p-6 rounded-xl">
-                <h2 className="text-xl font-semibold mb-4 flex items-center text-gray-900">
-                  <FileText className="mr-3 text-blue-600" />
+              <div className="bg-[#e6e2ff] p-4 sm:p-6 rounded-xl">
+                <h2 className="text-lg sm:text-xl font-semibold mb-4 flex items-center text-gray-900">
+                  <FileText className="mr-3 text-blue-600 flex-shrink-0" />
                   Job Description
                 </h2>
-                <p className="text-gray-700 leading-relaxed">
+                <p className="text-gray-700 leading-relaxed break-words">
                   {job.description}
                 </p>
               </div>
 
               <div>
-                <h2 className="text-xl font-semibold mb-4 flex items-center text-gray-900">
-                  <Tag className="mr-3 text-blue-600" />
+                <h2 className="text-lg sm:text-xl font-semibold mb-4 flex items-center text-gray-900">
+                  <Tag className="mr-3 text-blue-600 flex-shrink-0" />
                   Required Skills
                 </h2>
                 <div className="flex flex-wrap gap-2">
                   {job.skillsRequired.map((skill, index) => (
                     <span
                       key={index}
-                      className="px-4 py-2 bg-[#e6e2ff] text-blue-800 rounded-lg text-sm font-medium hover:bg-blue-200 transition-colors"
+                      className="px-3 sm:px-4 py-1.5 sm:py-2 bg-[#e6e2ff] text-blue-800 rounded-lg text-sm font-medium hover:bg-blue-200 transition-colors"
                     >
                       {skill}
                     </span>

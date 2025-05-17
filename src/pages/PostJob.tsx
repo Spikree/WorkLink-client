@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { PlusCircle, X, BriefcaseIcon } from "lucide-react";
 import { useJobStore } from "../store/useJobStore";
+import Button from "../components/common/Button";
 
 function App() {
   const { createJob, isPostingJob } = useJobStore();
@@ -110,14 +111,13 @@ function App() {
                     placeholder="e.g. React, TypeScript, Node.js"
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddSkill())}
                   />
-                  <button
+                  <Button
                     type="button"
                     className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200 flex items-center gap-2"
-                    onClick={handleAddSkill}
-                  >
+                    onClick={handleAddSkill} disableStyles={false}                  >
                     <PlusCircle className="w-5 h-5" />
                     Add
-                  </button>
+                  </Button>
                 </div>
                 
                 {skills.length > 0 && (
@@ -143,11 +143,10 @@ function App() {
                 )}
               </div>
               
-              <button
+              <Button
                 type="submit"
                 className="w-full mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200 flex items-center justify-center font-medium disabled:bg-gray-300 disabled:cursor-not-allowed"
-                disabled={isPostingJob}
-              >
+                disabled={isPostingJob} disableStyles={false}              >
                 {isPostingJob ? (
                   <>
                     <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -159,7 +158,7 @@ function App() {
                 ) : (
                   "Post Job"
                 )}
-              </button>
+              </Button>
             </form>
           </div>
         </div>

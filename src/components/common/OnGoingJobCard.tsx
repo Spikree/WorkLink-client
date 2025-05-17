@@ -1,6 +1,6 @@
 import { BriefcaseIcon, DollarSignIcon, UserIcon, ExternalLinkIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-
+import Button from './Button';
 interface JobCardProps {
   job: {
     _id: string;
@@ -51,13 +51,12 @@ const OnGoingJobsCard = ({ job }: JobCardProps) => {
           <UserIcon className="w-4 h-4 mr-2 flex-shrink-0" />
           <span className="text-sm truncate">Freelancer ID: {job.freelancer}</span>
         </div>
-        <button 
+        <Button 
           className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex-shrink-0"
-          onClick={() => {console.log('View details for job:', job._id); openOnGoingJobDetails(job.jobId)}}
-        >
+          onClick={() => { console.log('View details for job:', job._id); openOnGoingJobDetails(job.jobId); } } disableStyles={false}        >
           <span className="mr-2">View Details</span>
           <ExternalLinkIcon className="w-4 h-4" />
-        </button>
+        </Button>
       </div>
     </div>
   );

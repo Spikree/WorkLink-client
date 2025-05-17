@@ -46,7 +46,7 @@ const GetOnGoingJobs = () => {
       <div className="flex items-center gap-3 mb-6 pb-4">
         <Briefcase className="text-blue-600" size={24} />
         <h2 className="text-2xl font-bold text-gray-800">Ongoing Jobs</h2>
-        <div className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full ml-2">
+        <div className="text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full ml-2">
           {onGoingJobs.length}
         </div>
       </div>
