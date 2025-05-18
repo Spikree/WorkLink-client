@@ -61,6 +61,11 @@ const Home = () => {
 
   return (
     <div className="flex flex-col gap-6 p-2 m-4">
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+        <p className="text-lg text-gray-600">Jobs you created</p>
+      </div>
+
       {createdJobs?.map((job) => (
         <JobCard
           key={job._id}

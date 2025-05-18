@@ -21,7 +21,12 @@ import { useApplicationStore } from "../store/useApplicationStore";
 type JobApplications = {
   _id: string;
   job: string;
-  freelancer: string;
+  freelancer: {
+    _id: string,
+    profile: {
+      name: string
+    }
+  };
   bidAmount: string;
   coverLetter: string;
   submittedAt: string;
@@ -290,14 +295,14 @@ const JobDashboard = () => {
                         </div>
                         <div>
                           <h4 className="font-semibold text-gray-900">
-                            {selectedApplication?.freelancer}
+                            {selectedApplication?.freelancer?.profile?.name}
                           </h4>
                           <p className="text-sm text-gray-500">Freelancer</p>
                         </div>
                       </div>
                       <div className="flex gap-2">
                         <button
-                          onClick={() => openChat(selectedApplication?.freelancer || "")}
+                          onClick={() => openChat(selectedApplication?.freelancer?._id || "")}
                           className="inline-flex items-center px-4 py-2 bg-[#d2caff] text-[#6d28d2] rounded-lg font-medium hover:bg-purple-200 transition-colors"
                         >
                           <MessageCircle className="w-4 h-4 mr-2" />

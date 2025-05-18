@@ -2,6 +2,7 @@ import { useState } from "react";
 import { PlusCircle, X, BriefcaseIcon } from "lucide-react";
 import { useJobStore } from "../store/useJobStore";
 import Button from "../components/common/Button";
+import { motion } from "framer-motion";
 
 function App() {
   const { createJob, isPostingJob } = useJobStore();
@@ -30,7 +31,7 @@ function App() {
         description,
         budget,
         skillsRequired: skills,
-        status: "open"
+        status: "open",
       });
       setTitle("");
       setDescription("");
@@ -43,19 +44,31 @@ function App() {
 
   return (
     <div className="min-h-screen py-8 px-4 mt-4 sm:mt-0">
+      <div className="text-center mb-8">
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.2 }}
+          className="inline-block p-3 bg-blue-100 rounded-full mb-4"
+        >
+          <BriefcaseIcon className="w-8 h-8 text-blue-600" />
+        </motion.div>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          Post a New Job
+        </h1>
+        <p className="text-gray-600">
+          Fill in the details below to create your job posting
+        </p>
+      </div>
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
           <div className="p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="bg-blue-100 p-2 rounded-lg">
-                <BriefcaseIcon className="w-6 h-6 text-blue-600" />
-              </div>
-              <h1 className="text-2xl font-bold text-gray-900">Post a New Job</h1>
-            </div>
-            
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="title">
+                <label
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                  htmlFor="title"
+                >
                   Job Title
                 </label>
                 <input
@@ -68,9 +81,12 @@ function App() {
                   required
                 />
               </div>
-              
+
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="description">
+                <label
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                  htmlFor="description"
+                >
                   Job Description
                 </label>
                 <textarea
@@ -82,9 +98,12 @@ function App() {
                   required
                 />
               </div>
-              
+
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="budget">
+                <label
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                  htmlFor="budget"
+                >
                   Budget
                 </label>
                 <input
@@ -97,7 +116,7 @@ function App() {
                   required
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Skills Required
@@ -109,17 +128,22 @@ function App() {
                     value={skillInput}
                     onChange={(e) => setSkillInput(e.target.value)}
                     placeholder="e.g. React, TypeScript, Node.js"
-                    onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddSkill())}
+                    onKeyPress={(e) =>
+                      e.key === "Enter" &&
+                      (e.preventDefault(), handleAddSkill())
+                    }
                   />
                   <Button
                     type="button"
                     className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200 flex items-center gap-2"
-                    onClick={handleAddSkill} disableStyles={false}                  >
+                    onClick={handleAddSkill}
+                    disableStyles={false}
+                  >
                     <PlusCircle className="w-5 h-5" />
                     Add
                   </Button>
                 </div>
-                
+
                 {skills.length > 0 && (
                   <div className="mt-2">
                     <div className="flex flex-wrap gap-2">
@@ -142,16 +166,34 @@ function App() {
                   </div>
                 )}
               </div>
-              
+
               <Button
                 type="submit"
                 className="w-full mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200 flex items-center justify-center font-medium disabled:bg-gray-300 disabled:cursor-not-allowed"
-                disabled={isPostingJob} disableStyles={false}              >
+                disabled={isPostingJob}
+                disableStyles={false}
+              >
                 {isPostingJob ? (
                   <>
-                    <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    <svg
+                      className="animate-spin -ml-1 mr-2 h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
                     </svg>
                     Posting Job...
                   </>

@@ -6,7 +6,12 @@ import toast from "react-hot-toast";
 type Application = {
   _id: string;
   job: string;
-  freelancer: string;
+  freelancer: {
+    _id: string,
+    profile: {
+      name: string
+    }
+  };
   bidAmount: string;
   coverLetter: string;
   status: string;
@@ -17,7 +22,12 @@ type Application = {
 type JobApplications = {
   _id: string;
   job: string;
-  freelancer: string;
+  freelancer: {
+    _id: string,
+    profile: {
+      name: string
+    }
+  };
   bidAmount: string;
   coverLetter: string;
   submittedAt: string;
