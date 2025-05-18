@@ -83,7 +83,7 @@ const JobDetails: React.FC = () => {
                   <Building2 className="w-4 h-4" />
                   <span
                     onClick={() => {
-                      navigateToProfile(job?.employer || "");
+                      navigateToProfile(job?.employer?._id || "");
                     }}
                     className="truncate"
                   >
