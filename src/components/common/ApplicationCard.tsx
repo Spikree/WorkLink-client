@@ -6,7 +6,12 @@ interface ApplicationCardProps {
   application: {
     _id: string;
     job: string;
-    freelancer: string;
+    freelancer: {
+      _id: string,
+      profile: {
+        name: string
+      }
+    };
     bidAmount: string;
     coverLetter: string;
     status: string;
