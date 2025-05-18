@@ -17,7 +17,12 @@ type Job = {
 
 type onGoingJobs = {
   _id: string;
-  freelancer: string;
+  freelancer: {
+    _id: string,
+    profile: {
+      name: string
+    }
+  };
   jobId: string;
   jobTitle: string;
   jobDescription: string;

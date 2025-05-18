@@ -6,7 +6,12 @@ interface JobCardProps {
     _id: string;
     jobTitle: string;
     jobDescription: string;
-    freelancer: string;
+    freelancer: {
+      _id: string,
+      profile: {
+        name: string
+      }
+    };
     payCheck: string;
     jobId: string;
   }
@@ -49,7 +54,7 @@ const OnGoingJobsCard = ({ job }: JobCardProps) => {
       <div className="flex flex-col sm:flex-row gap-4 justify-between">
         <div className="flex items-center text-gray-500 flex-1 mr-2">
           <UserIcon className="w-4 h-4 mr-2 flex-shrink-0" />
-          <span className="text-sm truncate">Freelancer ID: {job.freelancer}</span>
+          <span className="text-sm truncate">Freelancer name: {job?.freelancer?.profile?.name}</span>
         </div>
         <Button 
           className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex-shrink-0"

@@ -108,13 +108,11 @@ const EmpChat = () => {
               <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
                 <div className="flex items-center justify-between">
                   <div className="text-sm text-gray-500">
-                    {job.employer.includes("@")
-                      ? `freelancer: ${job.freelancer.split("@")[0]}`
-                      : `freelancer: ${job.freelancer}`}
+                    freelancer : {job?.freelancer?.profile?.name || "user"}
                   </div>
                   <Button
                     className="px-4 py-2 bg-primary hover:bg-purple-800"
-                    onClick={() => openChat(job.freelancer)}
+                    onClick={() => openChat(job?.freelancer?._id)}
                     disableStyles={false}
                   >
                     Chat
