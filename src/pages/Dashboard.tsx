@@ -40,7 +40,7 @@ const Dashboard = () => {
   }, [getJobs]);
 
   const handleSearch = async (query: string) => {
-    setSearchQuery(query); // Store the query to display it
+    setSearchQuery(query);
     const results = await searchJobs(query);
     setSearchResults(results);
   };
@@ -81,7 +81,6 @@ const Dashboard = () => {
         </div>
       </div>
       
-      {/* Search results header and clear button */}
       {searchResults !== null && (
         <div className="flex justify-between items-center">
           <p className="text-lg font-medium">

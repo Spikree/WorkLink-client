@@ -20,6 +20,22 @@ type Job = {
   employerName: string;
 };
 
+type searchJob = {
+  _id: string;
+  title: string;
+  description: string;
+  budget: string;
+  skillsRequired: string[];
+  employer: {
+    _id: string;
+    profile: {
+      name: string;
+    }
+  };
+  status: "open" | "in progress" | "completed" | "cancelled";
+  createdAt: string;
+}
+
 type onGoingJobs = {
   _id: string;
   freelancer: {
@@ -96,6 +112,7 @@ type JobStore = {
   jobs: Job[];
   createdJobs: Job[];
   finishedJobs : FinishedJob[];
+  searchJob: searchJob[];
   savedJobs: SavedJob[];
   currentJobs: CurrentJob[];
   onGoingJobs: onGoingJobs[];
@@ -112,6 +129,7 @@ export const useJobStore = create<JobStore>((set,get) => ({
   currentJobs:[],
   onGoingJobs:[],
   createdJobs: [],
+  searchJob:[],
   job: null,
   isFetchingJobs: false,
   isDeletingJob: false,
@@ -306,11 +324,12 @@ export const useJobStore = create<JobStore>((set,get) => ({
     set({ isFetchingJobs: true });
     try {
       const response = await axiosInstance.post<{ jobs: Job[] }>("/job/searchJob", {
-        title: query,        // Search in title
-        skills: query,       // Search in skills
-        employerName: query  // Search in employer names
+        title: query,
+        skills: query,
+        employerName: query
       });
       
+      set({searchJob: response.data.jobs});
       return response.data.jobs;
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
