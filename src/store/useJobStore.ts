@@ -61,7 +61,12 @@ type CurrentJob = {
   jobId: string;
   jobTitle: string;
   jobDescription: string;
-  employer: string;
+  employer: {
+    _id: string;
+    profile: {
+      name: string;
+    }
+  };
   payCheck: string;
 }
 

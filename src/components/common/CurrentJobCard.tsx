@@ -9,7 +9,12 @@ interface CurrentJobProps {
     jobDescription: string;
     jobId: string;
     freelancer: string;
-    employer: string;
+    employer: {
+      _id: string;
+      profile: {
+        name: string;
+      }
+    };
     payCheck: string;
   };
 }
@@ -38,7 +43,7 @@ const CurrentJobCard: React.FC<CurrentJobProps> = ({ job }) => {
             <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-500">
               <div className="flex items-center gap-1.5">
                 <Building2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                <span>ID: {job.jobId}</span>
+                <span>{job?.employer?.profile?.name}</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <DollarSign className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
