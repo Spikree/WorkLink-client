@@ -1,17 +1,23 @@
-import { useState } from "react";
+import  { useState, FormEvent } from "react";
 import Button from "./Button";
 import { Search } from "lucide-react";
 
+interface SearchBarProps {
+  placeholder?: string;
+  onSearch: (query: string) => void;
+  className?: string;
+}
+
 const SearchBar = ({
   placeholder = "",
-  onSearch = () => {},
+  onSearch,
   className = "",
-}) => {
-  const [searchQuery, setSearchQuery] = useState<string>("");
+}: SearchBarProps) => {
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSearch();
+    onSearch(searchQuery);
   };
 
   return (
@@ -28,7 +34,7 @@ const SearchBar = ({
             placeholder={placeholder}
           />
           <Button
-            className="py-2 px-4  hover:bg-primary/5 transition-colors duration-200"
+            className="py-2 px-4 hover:bg-primary/5 transition-colors duration-200"
             type="submit"
             disableStyles={false}
           >
