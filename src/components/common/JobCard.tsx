@@ -73,7 +73,7 @@ const JobCard: React.FC<JobCardProps> = ({
 
             <div className="flex items-center gap-2 mt-2 text-gray-600 text-sm cursor-pointer">
               <Building2 className="w-4 h-4 flex-shrink-0 text-gray-500" />
-              <span onClick={() => {navigateToProfile(jobs?.employer?._id)}} className="truncate font-medium">{jobs?.employerName  || jobs?.employer?.profile?.name}</span>
+              <span onClick={() => {navigateToProfile(jobs?.employer?._id)}} className="truncate font-medium">{jobs?.employer?.profile?.name || jobs.employerName}</span>
 
               <span className="mx-1 text-gray-400">•</span>
 
