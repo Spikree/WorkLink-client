@@ -91,7 +91,7 @@ const Dashboard = () => {
             className="flex items-center gap-1 px-3 py-1 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors"
           >
             <X size={16} />
-            Clear search results
+            Clear search
           </button>
         </div>
       )}
