@@ -53,8 +53,8 @@ const Dashboard = () => {
   };
 
   const handleClearSearch = () => {
-    setSearchResults(null);
     setSearchQuery("");
+    setSearchResults(null);
   };
 
   const displayJobs = searchResults || jobs;
@@ -73,6 +73,8 @@ const Dashboard = () => {
             <SearchBar
               placeholder="Search by title, skills, or employer"
               onSearch={handleSearch}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
             />
           </div>
         </div>
