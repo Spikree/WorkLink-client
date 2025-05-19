@@ -12,19 +12,6 @@ const AppliedJobs = () => {
     getAppliedJobs();
   }, [getAppliedJobs]);
 
-  if (isLoadingAppliedJobs) {
-    return (
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="h-10 w-48 bg-gray-200 rounded mb-8 animate-pulse"></div>
-        <div className="flex flex-col gap-4">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <SkeletonCard key={index} />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="flex flex-col gap-0 mb-8">
@@ -34,7 +21,11 @@ const AppliedJobs = () => {
         </p>
       </div>
 
-      {applications.length === 0 ? (
+      {isLoadingAppliedJobs ? (<div className="flex flex-col gap-4">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <SkeletonCard key={index} />
+          ))}
+        </div>) : applications.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-gray-600 text-lg">No job applications found.</p>
         </div>

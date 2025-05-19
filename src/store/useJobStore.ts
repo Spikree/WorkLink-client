@@ -119,6 +119,7 @@ type JobStore = {
   isFetchingJobs: boolean;
   isDeletingJob: boolean;
   isPostingJob: boolean;
+  isSearchingForJobs: boolean;
   job: Job | null;
 };
 
@@ -134,6 +135,7 @@ export const useJobStore = create<JobStore>((set,get) => ({
   isFetchingJobs: false,
   isDeletingJob: false,
   isPostingJob: false,
+  isSearchingForJobs: false,
 
   getJobs: async () => {
     set({ isFetchingJobs: true });
@@ -321,7 +323,7 @@ export const useJobStore = create<JobStore>((set,get) => ({
   },
 
   searchJobs: async (query: string) => {
-    set({ isFetchingJobs: true });
+    set({ isSearchingForJobs: true });
     try {
       const response = await axiosInstance.post<{ jobs: Job[] }>("/job/searchJob", {
         title: query,
@@ -337,7 +339,7 @@ export const useJobStore = create<JobStore>((set,get) => ({
       toast.error(errorMessage);
       return [];
     } finally {
-      set({ isFetchingJobs: false });
+      set({ isSearchingForJobs: false });
     }
   },
 }));

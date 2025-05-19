@@ -10,19 +10,6 @@ const SavedJobs = () => {
     getSavedJobs();
   }, [getSavedJobs]);
 
-  if (isFetchingJobs) {
-    return (
-      <div className="max-w-7xl mx-auto px-4 py-8">
-      <div className="h-10 w-48 bg-gray-200 rounded mb-8 animate-pulse"></div>
-      <div className="flex flex-col gap-4">
-        {Array.from({ length: 5 }).map((_, index) => (
-          <SkeletonCard key={index} />
-        ))}
-      </div>
-    </div>
-    );
-  }
-
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
@@ -32,7 +19,14 @@ const SavedJobs = () => {
         </p>
       </div>
 
-      {!savedJobs || savedJobs.length === 0 ? (
+      { isFetchingJobs ? (<div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="h-10 w-48 bg-gray-200 rounded mb-8 animate-pulse"></div>
+      <div className="flex flex-col gap-4">
+        {Array.from({ length: 5 }).map((_, index) => (
+          <SkeletonCard key={index} />
+        ))}
+      </div>
+    </div>) :  !savedJobs || savedJobs.length === 0 ? (
         <div className="text-center py-16 bg-white rounded-xl shadow-sm border border-gray-100">
           <div className="max-w-md mx-auto">
             <h3 className="text-lg font-semibold text-gray-900 mb-1">

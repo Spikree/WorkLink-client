@@ -4,7 +4,7 @@ import SearchBar from "../components/common/SearchBar";
 import { useJobStore } from "../store/useJobStore";
 import { useNavigate } from "react-router-dom";
 import SkeletonCard from "../components/common/SkeletonCard";
-import { X } from "lucide-react";
+import { Search, SearchSlash, X } from "lucide-react";
 
 type Job = {
   _id: string;
@@ -16,7 +16,7 @@ type Job = {
     _id: string;
     profile: {
       name: string;
-    }
+    };
   };
   status: "open" | "in progress" | "completed" | "cancelled";
   createdAt: string;
@@ -33,8 +33,15 @@ const Dashboard = () => {
     getJob(jobId);
   };
 
-  const { isFetchingJobs, getJobs, jobs, getJob, searchJobs } = useJobStore();
-  
+  const {
+    isFetchingJobs,
+    getJobs,
+    jobs,
+    getJob,
+    searchJobs,
+    isSearchingForJobs,
+  } = useJobStore();
+
   useEffect(() => {
     getJobs();
   }, [getJobs]);
@@ -52,16 +59,6 @@ const Dashboard = () => {
 
   const displayJobs = searchResults || jobs;
 
-  if (isFetchingJobs) {
-    return (
-      <div className="flex flex-col gap-10 p-2 m-4">
-        {Array.from({ length: 5 }).map((_, index) => (
-          <SkeletonCard key={index} />
-        ))}
-      </div>
-    );
-  }
-  
   return (
     <div className="flex flex-col gap-10 p-2 m-4 sm:px-16">
       <div className="flex">
@@ -73,18 +70,19 @@ const Dashboard = () => {
             </p>
           </div>
           <div className="mt-6">
-            <SearchBar 
-              placeholder="Search by title, skills, or employer" 
+            <SearchBar
+              placeholder="Search by title, skills, or employer"
               onSearch={handleSearch}
             />
           </div>
         </div>
       </div>
-      
+
       {searchResults !== null && (
         <div className="flex justify-between items-center">
           <p className="text-lg font-medium">
-            Showing results for: <span className="text-primary">{searchQuery}</span>
+            Found a job for your search:{" "}
+            <span className="text-primary">{searchQuery}</span>
           </p>
           <button
             onClick={handleClearSearch}
@@ -95,9 +93,20 @@ const Dashboard = () => {
           </button>
         </div>
       )}
-      
+
       <div className="flex flex-col gap-4">
-        {displayJobs && displayJobs.length > 0 ? (
+        {isSearchingForJobs ? (
+          <div className="text-center py-8 flex flex-col items-center">
+            <Search className="text-gray-500 size-24 animate-pulse"/>
+            <p className="text-gray-500">
+              Searching for jobs
+            </p>
+          </div>
+        ) : isFetchingJobs ? (
+          Array.from({ length: 5 }).map((_, index) => (
+            <SkeletonCard key={index} />
+          ))
+        ) : displayJobs && displayJobs.length > 0 ? (
           displayJobs.map((job) => (
             <JobCard
               key={job._id}
@@ -106,8 +115,11 @@ const Dashboard = () => {
             />
           ))
         ) : (
-          <div className="text-center py-8">
-            <p className="text-gray-500">No jobs found. Try a different search.</p>
+          <div className="text-center py-8 flex flex-col items-center">
+            <SearchSlash className="text-gray-500 size-14" />
+            <p className="text-gray-500">
+              No jobs found. Try a different search.
+            </p>
           </div>
         )}
       </div>
