@@ -18,9 +18,17 @@ const OnGoingJobDetails = () => {
   const [showStatusOptions, setShowStatusOptions] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const { getJob, job, isFetchingJobs, editJobStatus } = useJobStore();
+  const { getJob, job, isFetchingJobs, editJobStatus,markJobAsFinished,markJobCancelled } = useJobStore();
   const { getJobApplications } = useApplicationStore();
   const navigate = useNavigate();
+
+  const finishJob = (jobId: string) => {
+    markJobAsFinished(jobId)
+  }
+
+  const cancelJob = (jobId: string) => {
+    markJobCancelled(jobId)
+  }
 
   useEffect(() => {
     if (jobId) {
@@ -222,7 +230,7 @@ const OnGoingJobDetails = () => {
                 </div>
 
                 {job.status === "completed" ? (
-                  <div>
+                  <div onClick={() => {finishJob(job._id)}}>
                     <button className=" py-2 px-4 rounded-md bg-green-300 text-green-800 font-semibold">
                       Mark finished
                     </button>
@@ -230,7 +238,7 @@ const OnGoingJobDetails = () => {
                 ) : null}
 
                 {job.status === "cancelled" ? (
-                  <div>
+                  <div onClick={() => {cancelJob(job._id)}}>
                     <button className=" py-2 px-4 rounded-md bg-red-300 text-red-800 font-semibold">
                       Mark Cancelled
                     </button>

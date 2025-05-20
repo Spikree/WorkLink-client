@@ -56,11 +56,16 @@ const JobDashboard = () => {
 
   const acceptApplicationFunction = (jobId: string, applicationId: string) => {
     acceptApplication(jobId, applicationId);
+    closeApplicationModal()
   };
 
   const openChat = (toChatId: string) => {
     router(`/chatRoom/${toChatId}`);
   };
+
+  const viewProfile = (userId: string) => {
+    router(`/userProfile/${userId}`)
+  }
 
   useEffect(() => {
     if (jobId) {
@@ -308,7 +313,7 @@ const JobDashboard = () => {
                           <MessageCircle className="w-4 h-4 mr-2" />
                           Message
                         </button>
-                        <button className="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors">
+                        <button onClick={() => {viewProfile(selectedApplication?.freelancer._id || "")}} className="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors">
                           <UserCircle className="w-4 h-4 mr-2" />
                           View Profile
                         </button>

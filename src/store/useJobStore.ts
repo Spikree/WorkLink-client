@@ -95,6 +95,8 @@ type JobStore = {
   getJobs: () => Promise<void>;
   searchJobs: (query: string) => Promise<Job[]>;
   getJob: (data: string) => Promise<void>;
+  markJobAsFinished: (jobId: string) => Promise<void>;
+  markJobCancelled: (jobId: string) => Promise<void>;
   saveJob: (data: string) => Promise<void>;
   deleteJob: (data: string) => Promise<void>;
   createJob: (data: createJobData) => Promise<void>;
@@ -340,6 +342,30 @@ export const useJobStore = create<JobStore>((set,get) => ({
       return [];
     } finally {
       set({ isSearchingForJobs: false });
+    }
+  },
+
+  markJobAsFinished: async (jobId: string) => {
+    try {
+      const response = await axiosInstance.post(`/job/jobFinished/${jobId}`);
+      toast.success(response.data.message);
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      const errorMessage =
+        axiosError.response?.data?.message || "Server Error.";
+      toast.error(errorMessage);
+    }
+  }, 
+
+  markJobCancelled: async (jobId: string) => {
+    try {
+      const response = await axiosInstance.post(`/job/jobCancelled/${jobId}`);
+      toast.success(response.data.message);
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      const errorMessage =
+        axiosError.response?.data?.message || "Server Error.";
+      toast.error(errorMessage);
     }
   },
 }));
