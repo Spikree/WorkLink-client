@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useJobStore } from "../store/useJobStore";
 import { useEffect, useState, useRef } from "react";
 import {
@@ -20,6 +20,7 @@ const OnGoingJobDetails = () => {
 
   const { getJob, job, isFetchingJobs, editJobStatus } = useJobStore();
   const { getJobApplications } = useApplicationStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (jobId) {
@@ -33,13 +34,16 @@ const OnGoingJobDetails = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setShowStatusOptions(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const editStatusOfTheJob = (jobid: string, status: string) => {
@@ -168,7 +172,9 @@ const OnGoingJobDetails = () => {
                 <DollarSign className="w-5 h-5 mr-3 text-green-600 flex-shrink-0" />
                 <div className="min-w-0">
                   <p className="text-sm text-gray-600">Budget</p>
-                  <p className="font-medium text-gray-900 truncate">${job.budget}</p>
+                  <p className="font-medium text-gray-900 truncate">
+                    ${job.budget}
+                  </p>
                 </div>
               </div>
               <div className="flex items-center p-4 bg-gray-50 rounded-xl">
@@ -193,21 +199,43 @@ const OnGoingJobDetails = () => {
                 </p>
               </div>
 
-              <div>
-                <h2 className="text-lg sm:text-xl font-semibold mb-4 flex items-center text-gray-900">
-                  <Tag className="mr-3 text-blue-600 flex-shrink-0" />
-                  Required Skills
-                </h2>
-                <div className="flex flex-wrap gap-2">
-                  {job.skillsRequired.map((skill, index) => (
-                    <span
-                      key={index}
-                      className="px-3 sm:px-4 py-1.5 sm:py-2 bg-[#e6e2ff] text-blue-800 rounded-lg text-sm font-medium hover:bg-blue-200 transition-colors"
-                    >
-                      {skill}
-                    </span>
-                  ))}
+              <div onClick={() => {navigate(`/jobDashboard/${job._id}`);console.log(job._id)}} className="px-2 rounded-md bg-gray-300 text-gray-600 py-2 flex justify-center items-center cursor-pointer">
+                <button className="">view orignal offer</button>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <div>
+                  <h2 className="text-lg sm:text-xl font-semibold mb-4 flex items-center text-gray-900">
+                    <Tag className="mr-3 text-blue-600 flex-shrink-0" />
+                    Required Skills
+                  </h2>
+                  <div className="flex flex-wrap gap-2">
+                    {job.skillsRequired.map((skill, index) => (
+                      <span
+                        key={index}
+                        className="px-3 sm:px-4 py-1.5 sm:py-2 bg-[#e6e2ff] text-blue-800 rounded-lg text-sm font-medium hover:bg-blue-200 transition-colors"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
                 </div>
+
+                {job.status === "completed" ? (
+                  <div>
+                    <button className=" py-2 px-4 rounded-md bg-green-300 text-green-800 font-semibold">
+                      Mark finished
+                    </button>
+                  </div>
+                ) : null}
+
+                {job.status === "cancelled" ? (
+                  <div>
+                    <button className=" py-2 px-4 rounded-md bg-red-300 text-red-800 font-semibold">
+                      Mark Cancelled
+                    </button>
+                  </div>
+                ) : null}
               </div>
             </div>
           </div>

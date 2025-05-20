@@ -22,8 +22,7 @@ const FinishedJobs = () => {
       </div>
 
       {isFetchingJobs ? (
-        <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="h-10 w-48 bg-gray-200 rounded mb-8 animate-pulse"></div>
+        <div className="max-w-7xl mx-auto px-4 py-6">
         <div className="flex flex-col gap-4">
           {Array.from({ length: 5 }).map((_, index) => (
             <SkeletonCard key={index} />
