@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowLeft, Lock } from 'lucide-react'
+import toast from 'react-hot-toast'
+import { useAuthStore } from '../store/useAuthStore'
 
 function ChangePassword() {
   const navigate = useNavigate()
@@ -8,10 +10,14 @@ function ChangePassword() {
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
 
+  const {updatePassword} = useAuthStore(); // add isChangingPassword 
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle password change logic here
-    navigate('/')
+    if(newPassword !== confirmPassword) {
+      return toast.error("confirm new password doesen't match with new password")
+    }
+    updatePassword(oldPassword, newPassword);
   }
 
   return (

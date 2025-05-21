@@ -74,6 +74,7 @@ type UserDetailsView = {
 type AuthStore = {
   isSigningUp: boolean;
   isLoggingIn: boolean;
+  isChangingPassword: boolean;
   isCheckingAuth: boolean;
   isProfileLoading: boolean;
   signup: (data: authData) => Promise<void>;
@@ -84,6 +85,7 @@ type AuthStore = {
   editProfile: (data: editData) => Promise<void>;
   getUserDetails: (userId: string) => Promise<void>;
   getUserProfile: (userId: string) => Promise<void>;
+  updatePassword: (oldPassword: string,newPassword: string) => Promise<void>;
   authUser: authUser | null;
   userProfile: UserDetails | null;
   chatuserDetails: authUser | null;
@@ -93,6 +95,7 @@ type AuthStore = {
 export const useAuthStore = create<AuthStore>((set, get) => ({
   isSigningUp: false,
   isLoggingIn: false,
+  isChangingPassword: false,
   authUser: null,
   userProfile: null,
   isCheckingAuth: false,
@@ -214,4 +217,22 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       set({isProfileLoading: false});
     }
   },
+
+  updatePassword: async (oldPassword: string,newPassword: string) => {
+    set({isChangingPassword: true})
+    try {
+      const response = await axiosInstance.put("/auth/resetpassword", {
+        oldPassword,
+        newPassword
+      })
+      toast.success(response.data.message);
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      const errorMessage =
+        axiosError.response?.data?.message || "failed to update profile";
+      toast.error(errorMessage);
+    } finally {
+      set({isChangingPassword: false});
+    }
+  }
 }));
