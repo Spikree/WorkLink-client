@@ -16,7 +16,7 @@ import Button from "../components/common/Button";
 
 const UserProfile = () => {
   const { getUserProfile, userProfileView, isProfileLoading } = useAuthStore();
-  const { postReview,getReview } = useReviewStore();
+  const { postReview, getReview, reviews, isFetchingReviews } = useReviewStore();
   const { id: userId } = useParams();
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [rating, setRating] = useState(0);
@@ -61,6 +61,23 @@ const UserProfile = () => {
       year: "numeric",
       month: "long",
     });
+  };
+
+  const renderStars = (rating: number) => {
+    return (
+      <div className="flex items-center space-x-1">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <Star
+            key={star}
+            className={`h-4 w-4 ${
+              star <= rating
+                ? "text-yellow-400 fill-current"
+                : "text-gray-300"
+            }`}
+          />
+        ))}
+      </div>
+    );
   };
 
   return (
@@ -165,6 +182,70 @@ const UserProfile = () => {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Reviews Section - Separate Card */}
+        <div className="bg-white rounded-2xl shadow-lg shadow-primary/5 p-8 mt-8">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              Reviews
+            </h2>
+            {isFetchingReviews ? (
+              <div className="space-y-4">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="animate-pulse">
+                    <div className="p-4 border border-gray-200 rounded-lg">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <div className="h-4 bg-gray-300 rounded w-20"></div>
+                        <div className="h-4 bg-gray-300 rounded w-16"></div>
+                      </div>
+                      <div className="h-4 bg-gray-300 rounded w-full mb-2"></div>
+                      <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : reviews.length > 0 ? (
+              <div className="space-y-4">
+                {reviews.map((review) => (
+                  <div
+                    key={review._id}
+                    className="p-4 border border-gray-200 rounded-lg hover:bg-gradient-to-r hover:from-primary/5 hover:to-danger/20 transition-colors duration-150"
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center space-x-3">
+                        <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary/5 to-danger/20 flex items-center justify-center">
+                          <User className="h-4 w-4 text-primary" />
+                        </div>
+                        <span className="text-sm font-medium text-gray-700">
+                          Reviewer ID: {review.reviewer}
+                        </span>
+                      </div>
+                      <span className="text-sm text-gray-500">
+                        Rating: {review.rating}/5
+                      </span>
+                    </div>
+                    <div className="flex items-center mb-2">
+                      {renderStars(parseInt(review.rating))}
+                    </div>
+                    <p className="text-gray-700 leading-relaxed">
+                      {review.review}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <div className="bg-gradient-to-r from-primary/5 to-danger/20 rounded-lg p-6">
+                  <Star className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                  <p className="text-gray-600">No reviews yet</p>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Be the first to leave a review!
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
