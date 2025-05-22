@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { MdWorkHistory } from "react-icons/md";
 import { motion, AnimatePresence } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { workLinkLogoDark } from "../assets/assets";
 
 import {
@@ -26,6 +26,7 @@ const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showProfileOptions, setShowProfileOptions] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { authUser, logout } = useAuthStore();
   const dontShowProfileOptions = () => {
     if (showProfileOptions) {
@@ -132,26 +133,36 @@ const Sidebar = () => {
             setShowProfileOptions(false);
           }}
         >
-          {menuItems.map((item, index) => (
-            <button
-              key={index}
-              onClick={() => navigate(item.to)}
-              className="flex items-center text-gray-300 hover:bg-gray-700 rounded-lg px-4 py-3 transition-colors duration-200 relative group"
-            >
-              <span className="text-gray-400">{item.icon}</span>
-              {isOpen && (
-                <motion.span className="ml-3 font-medium">
-                  {item.title}
-                </motion.span>
-              )}
+          {menuItems.map((item, index) => {
+            const isActive = location.pathname === item.to;
+            
+            return (
+              <button
+                key={index}
+                onClick={() => navigate(item.to)}
+                className={`flex items-center rounded-lg px-4 py-3 transition-colors duration-200 relative group ${
+                  isActive
+                    ? "bg-gray-700 text-white"
+                    : "text-gray-300 hover:bg-gray-700"
+                }`}
+              >
+                <span className={isActive ? "text-white" : "text-gray-400"}>
+                  {item.icon}
+                </span>
+                {isOpen && (
+                  <motion.span className="ml-3 font-medium">
+                    {item.title}
+                  </motion.span>
+                )}
 
-              {!isOpen && (
-                <div className="absolute left-full ml-2 px-2 py-2 bg-gray-800 text-white text-sm rounded-md whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                  {item.title}
-                </div>
-              )}
-            </button>
-          ))}
+                {!isOpen && (
+                  <div className="absolute left-full ml-2 px-2 py-2 bg-gray-800 text-white text-sm rounded-md whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                    {item.title}
+                  </div>
+                )}
+              </button>
+            );
+          })}
         </div>
 
         <div className="relative mt-auto">
