@@ -213,7 +213,7 @@ const UserProfile = () => {
                     key={review._id}
                     className="p-4 border border-gray-200 rounded-lg hover:bg-gradient-to-r hover:from-primary/5 hover:to-danger/20 transition-colors duration-150"
                   >
-                    <div className="flex items-center justify-between mb-3">
+                    <div className="flex flex-wrap gap-2 items-center justify-between mb-3">
                       <div className="flex items-center space-x-3">
                         <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary/5 to-danger/20 flex items-center justify-center">
                           <User className="h-4 w-4 text-primary" />
