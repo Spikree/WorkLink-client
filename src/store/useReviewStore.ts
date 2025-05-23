@@ -47,7 +47,7 @@ export const useReviewStore = create<ReviewStore>((set) => ({
     set({ isFetchingReviews: true });
     try {
       const response = await axiosInstance.get(`/review/getReviews/${userId}`);
-      set({ reviews: response.data.reviews });
+      set({ reviews: response.data.reviews || [] });
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       const errorMessage =

@@ -18,7 +18,6 @@ type editData = {
   name?: string;
 };
 
-
 type authUser = {
   _id: string;
   email: string;
@@ -61,15 +60,15 @@ type UserDetailsView = {
       portfolio: string;
       rating: string;
       bio: string;
-    }
+    };
     _id: string;
     email: string;
     role: string;
     createdOn: string;
     averageRating: string;
     totalRatings: string;
-  }
-}
+  };
+};
 
 type AuthStore = {
   isSigningUp: boolean;
@@ -77,6 +76,7 @@ type AuthStore = {
   isChangingPassword: boolean;
   isCheckingAuth: boolean;
   isProfileLoading: boolean;
+  isEmailUpdating : boolean;
   signup: (data: authData) => Promise<void>;
   login: (data: authData) => Promise<void>;
   logout: () => Promise<void>;
@@ -85,7 +85,8 @@ type AuthStore = {
   editProfile: (data: editData) => Promise<void>;
   getUserDetails: (userId: string) => Promise<void>;
   getUserProfile: (userId: string) => Promise<void>;
-  updatePassword: (oldPassword: string,newPassword: string) => Promise<void>;
+  updatePassword: (oldPassword: string, newPassword: string) => Promise<void>;
+  updateEmail: (email: string, password: string) => Promise<void>;
   authUser: authUser | null;
   userProfile: UserDetails | null;
   chatuserDetails: authUser | null;
@@ -95,6 +96,7 @@ type AuthStore = {
 export const useAuthStore = create<AuthStore>((set, get) => ({
   isSigningUp: false,
   isLoggingIn: false,
+  isEmailUpdating: false,
   isChangingPassword: false,
   authUser: null,
   userProfile: null,
@@ -204,27 +206,29 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   },
 
   getUserProfile: async (userId: string) => {
-    set({isProfileLoading: true});
+    set({ isProfileLoading: true });
     try {
-      const response = await axiosInstance.get(`/profile/getUserProfile/${userId}`)
-      set({userProfileView: response.data})
+      const response = await axiosInstance.get(
+        `/profile/getUserProfile/${userId}`
+      );
+      set({ userProfileView: response.data });
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       const errorMessage =
         axiosError.response?.data?.message || "failed to update profile";
       toast.error(errorMessage);
     } finally {
-      set({isProfileLoading: false});
+      set({ isProfileLoading: false });
     }
   },
 
-  updatePassword: async (oldPassword: string,newPassword: string) => {
-    set({isChangingPassword: true})
+  updatePassword: async (oldPassword: string, newPassword: string) => {
+    set({ isChangingPassword: true });
     try {
       const response = await axiosInstance.put("/auth/resetpassword", {
         oldPassword,
-        newPassword
-      })
+        newPassword,
+      });
       toast.success(response.data.message);
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
@@ -232,7 +236,25 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         axiosError.response?.data?.message || "failed to update profile";
       toast.error(errorMessage);
     } finally {
-      set({isChangingPassword: false});
+      set({ isChangingPassword: false });
     }
-  }
+  },
+
+  updateEmail: async (email: string, password: string) => {
+    set({isEmailUpdating: true});
+    try {
+      const response = await axiosInstance.put("/auth/changeEmail", {
+        newEmail: email,
+        password,
+      });
+      toast.success(response.data.message);
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      const errorMessage =
+        axiosError.response?.data?.message || "failed to update profile";
+      toast.error(errorMessage);
+    } finally {
+      set({isEmailUpdating: false});
+    }
+  },
 }));
