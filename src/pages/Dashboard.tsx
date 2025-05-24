@@ -60,7 +60,7 @@ const Dashboard = () => {
   const displayJobs = searchResults || jobs;
 
   return (
-    <div className="flex flex-col gap-10 p-2 m-4 sm:px-16">
+    <div className="flex flex-col gap-10 p-2 m-2 sm:px-16">
       <div className="flex">
         <div className="sm:flex sm:justify-between w-full">
           <div className="header">

@@ -60,7 +60,7 @@ const Home = () => {
   }
 
   return (
-    <div className="flex flex-col gap-6 p-2 m-4">
+    <div className="flex flex-col gap-6 p-2 m-2">
       <div>
         <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
         <p className="text-lg text-gray-600">Jobs you created</p>
