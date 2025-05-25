@@ -5,7 +5,12 @@ import toast from "react-hot-toast";
 
 type Review = {
   _id: string;
-  reviewer: string;
+  reviewer: {
+    profile: {
+      name: string;
+    }
+    _id: string;
+  };
   rating: string;
   reviewOf: string;
   review: string;

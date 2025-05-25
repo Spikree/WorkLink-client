@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
 import ProfileSkeleton from "../components/common/ProfileSkeleton";
 import {
@@ -16,12 +16,18 @@ import Button from "../components/common/Button";
 
 const UserProfile = () => {
   const { getUserProfile, userProfileView, isProfileLoading } = useAuthStore();
-  const { postReview, getReview, reviews, isFetchingReviews } = useReviewStore();
+  const { postReview, getReview, reviews, isFetchingReviews } =
+    useReviewStore();
   const { id: userId } = useParams();
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
   const [hoveredStar, setHoveredStar] = useState(0);
+  const navigate = useNavigate();
+
+  const navigateToUserProfile = (userId: string) => {
+    navigate(`/userProfile/${userId}`);
+  }
 
   const postReviewHandler = async (rating: number, review: string) => {
     if (userId) {
@@ -70,9 +76,7 @@ const UserProfile = () => {
           <Star
             key={star}
             className={`h-4 w-4 ${
-              star <= rating
-                ? "text-yellow-400 fill-current"
-                : "text-gray-300"
+              star <= rating ? "text-yellow-400 fill-current" : "text-gray-300"
             }`}
           />
         ))}
@@ -125,8 +129,8 @@ const UserProfile = () => {
                   </div>
 
                   <div>
-                    <Button 
-                      className="m-2" 
+                    <Button
+                      className="m-2"
                       disableStyles={false}
                       onClick={() => setShowReviewModal(true)}
                     >
@@ -188,9 +192,7 @@ const UserProfile = () => {
         {/* Reviews Section - Separate Card */}
         <div className="bg-white rounded-2xl shadow-lg shadow-primary/5 p-8 mt-8">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
-              Reviews
-            </h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Reviews</h2>
             {isFetchingReviews ? (
               <div className="space-y-4">
                 {[1, 2, 3].map((i) => (
@@ -218,8 +220,8 @@ const UserProfile = () => {
                         <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary/5 to-danger/20 flex items-center justify-center">
                           <User className="h-4 w-4 text-primary" />
                         </div>
-                        <span className="text-sm font-medium text-gray-700">
-                          Reviewer ID: {review.reviewer}
+                        <span onClick={() => {navigateToUserProfile(review?.reviewer?._id)}} className="text-sm font-medium text-gray-700 cursor-pointer">
+                          {review?.reviewer?.profile?.name}
                         </span>
                       </div>
                       <span className="text-sm text-gray-500">
