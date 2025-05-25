@@ -16,8 +16,14 @@ import Button from "../components/common/Button";
 
 const UserProfile = () => {
   const { getUserProfile, userProfileView, isProfileLoading } = useAuthStore();
-  const { postReview, getReview, reviews, isFetchingReviews } =
-    useReviewStore();
+  const {
+    postReview,
+    getReview,
+    reviews,
+    isFetchingReviews,
+    hasReviewed,
+    currentReview,
+  } = useReviewStore();
   const { id: userId } = useParams();
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [rating, setRating] = useState(0);
@@ -27,7 +33,7 @@ const UserProfile = () => {
 
   const navigateToUserProfile = (userId: string) => {
     navigate(`/userProfile/${userId}`);
-  }
+  };
 
   const postReviewHandler = async (rating: number, review: string) => {
     if (userId) {
@@ -48,8 +54,9 @@ const UserProfile = () => {
     if (userId) {
       getUserProfile(userId);
       getReview(userId);
+      hasReviewed(userId);
     }
-  }, [userId, getUserProfile, getReview]);
+  }, [userId, getUserProfile, getReview, hasReviewed]);
 
   if (isProfileLoading) {
     return <ProfileSkeleton />;
@@ -133,8 +140,11 @@ const UserProfile = () => {
                       className="m-2"
                       disableStyles={false}
                       onClick={() => setShowReviewModal(true)}
+                      disabled={currentReview?.userReview}
                     >
-                      rate user
+                      {currentReview?.userReview
+                        ? "Already Reviewed"
+                        : "Rate User"}
                     </Button>
                   </div>
                 </div>
@@ -193,6 +203,43 @@ const UserProfile = () => {
         <div className="bg-white rounded-2xl shadow-lg shadow-primary/5 p-8 mt-8">
           <div>
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Reviews</h2>
+
+            {/* Your Review Section */}
+            {currentReview?.userReview ? (
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                  Your Review
+                </h3>
+                <div className="p-4 border-2 border-primary/20 rounded-lg bg-gradient-to-r from-primary/5 to-danger/20">
+                  <div className="flex flex-wrap gap-2 items-center justify-between mb-3">
+                    <div className="flex items-center space-x-3">
+                      <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary/5 to-danger/20 flex items-center justify-center">
+                        <User className="h-4 w-4 text-primary" />
+                      </div>
+                      <span className="text-sm font-medium text-gray-700">
+                        {currentReview?.hasReviewed?.reviewer?.profile?.name}
+                      </span>
+                    </div>
+                    <span className="text-sm text-gray-500">
+                      Rating: {currentReview?.hasReviewed?.rating}/5
+                    </span>
+                  </div>
+                  <div className="flex items-center mb-2">
+                    {renderStars(parseInt(currentReview?.hasReviewed?.rating))}
+                  </div>
+                  <p className="text-gray-700 leading-relaxed">
+                    {currentReview?.hasReviewed?.review}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50">
+                <p className="text-gray-600 text-center">
+                  No review by you yet
+                </p>
+              </div>
+            )}
+
             {isFetchingReviews ? (
               <div className="space-y-4">
                 {[1, 2, 3].map((i) => (
@@ -220,7 +267,12 @@ const UserProfile = () => {
                         <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary/5 to-danger/20 flex items-center justify-center">
                           <User className="h-4 w-4 text-primary" />
                         </div>
-                        <span onClick={() => {navigateToUserProfile(review?.reviewer?._id)}} className="text-sm font-medium text-gray-700 cursor-pointer">
+                        <span
+                          onClick={() => {
+                            navigateToUserProfile(review?.reviewer?._id);
+                          }}
+                          className="text-sm font-medium text-gray-700 cursor-pointer"
+                        >
                           {review?.reviewer?.profile?.name}
                         </span>
                       </div>
