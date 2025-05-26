@@ -37,7 +37,13 @@ type ReviewStore = {
   postReview: (rating: number, review: string, userId: string) => Promise<void>;
   hasReviewed: (userId: string) => Promise<void>;
   getReview: (userId: string) => Promise<void>;
-  deleteReview: (reviewId: string,userId: string) => Promise<void>;
+  deleteReview: (reviewId: string, userId: string) => Promise<void>;
+  editReview: (
+    reviewId: string,
+    userId: string,
+    rating: number,
+    review: string
+  ) => Promise<void>;
 
   isPostingReview: boolean;
   isFetchingReviews: boolean;
@@ -45,7 +51,7 @@ type ReviewStore = {
   currentReview: CurrentReview | null;
 };
 
-export const useReviewStore = create<ReviewStore>((set,get) => ({
+export const useReviewStore = create<ReviewStore>((set, get) => ({
   isPostingReview: false,
   isFetchingReviews: false,
   reviews: [],
@@ -61,10 +67,7 @@ export const useReviewStore = create<ReviewStore>((set,get) => ({
       toast.success(response.data.message);
 
       const { getReview, hasReviewed } = get();
-      await Promise.all([
-        getReview(userId),
-        hasReviewed(userId)
-      ]);
+      await Promise.all([getReview(userId), hasReviewed(userId)]);
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       const errorMessage =
@@ -107,17 +110,36 @@ export const useReviewStore = create<ReviewStore>((set,get) => ({
     }
   },
 
-  deleteReview: async (reviewId: string,userId: string) => {
+  deleteReview: async (reviewId: string, userId: string) => {
     try {
       const response = await axiosInstance.delete(
         `/review/deleteReview/${reviewId}`
       );
       toast.success(response.data.message);
       const { getReview, hasReviewed } = get();
-      await Promise.all([
-        getReview(userId),
-        hasReviewed(userId)
-      ]);
+      await Promise.all([getReview(userId), hasReviewed(userId)]);
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      const errorMessage =
+        axiosError.response?.data?.message || "Server Error.";
+      toast.error(errorMessage);
+    }
+  },
+
+  editReview: async (
+    reviewId: string,
+    userId: string,
+    rating: number,
+    review: string
+  ) => {
+    try {
+      const response = await axiosInstance.put(`/review/edit/${reviewId}`, {
+        newRating: rating,
+        NewReview: review,
+      });
+      toast.success(response.data.message);
+      const { getReview, hasReviewed } = get();
+      await Promise.all([getReview(userId), hasReviewed(userId)]);
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       const errorMessage =

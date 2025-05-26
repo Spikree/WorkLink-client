@@ -16,6 +16,7 @@ import {
 import { useReviewStore } from "../store/useReviewStore";
 import Button from "../components/common/Button";
 import DeleteModal from "../components/common/DeleteModal";
+import EditModal from "../components/common/EditModal";
 
 const UserProfile = () => {
   const { getUserProfile, userProfileView, isProfileLoading } = useAuthStore();
@@ -27,6 +28,7 @@ const UserProfile = () => {
     hasReviewed,
     currentReview,
     deleteReview,
+    editReview,
   } = useReviewStore();
   const { id: userId } = useParams();
   const [showReviewModal, setShowReviewModal] = useState(false);
@@ -34,7 +36,9 @@ const UserProfile = () => {
   const [review, setReview] = useState("");
   const [hoveredStar, setHoveredStar] = useState(0);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
-  const [deleteReviewId, setDeleteReviewId] = useState<string>("")
+  const [showEditModal, setShowEditModal] = useState<boolean>(false);
+  const [deleteReviewId, setDeleteReviewId] = useState<string>("");
+  const [editReviewId, setEditReviewId] = useState<string>("");
   const navigate = useNavigate();
 
   const navigateToUserProfile = (userId: string) => {
@@ -51,8 +55,18 @@ const UserProfile = () => {
   };
 
   const openDeleteModal = () => {
-    setShowDeleteModal(!showDeleteModal)
-  }
+    setShowDeleteModal(!showDeleteModal);
+  };
+
+  const openEditModal = () => {
+    setShowEditModal(!showEditModal);
+  };
+
+  const editUserReview = (newRating: number, newReview: string) => {
+    if (!userId || !editReviewId) return;
+    editReview(editReviewId, userId, newRating, newReview);
+    setShowEditModal(false);
+  };
 
   const postReviewHandler = useCallback(
     async (rating: number, review: string) => {
@@ -256,13 +270,19 @@ const UserProfile = () => {
                     <button
                       onClick={() => {
                         openDeleteModal();
-                        setDeleteReviewId(currentReview?.hasReviewed?._id)
+                        setDeleteReviewId(currentReview?.hasReviewed?._id);
                       }}
                       className="size-10 flex items-center justify-center rounded-full hover:bg-red-100 text-red-600 transition duration-200"
                     >
                       <Trash2Icon className="w-5 h-5" />
                     </button>
-                    <button className="size-10 flex items-center justify-center rounded-full hover:bg-blue-100 text-blue-600 transition duration-200">
+                    <button
+                      onClick={() => {
+                        setEditReviewId(currentReview?.hasReviewed?._id);
+                        openEditModal();
+                      }}
+                      className="size-10 flex items-center justify-center rounded-full hover:bg-blue-100 text-blue-600 transition duration-200"
+                    >
                       <Pencil className="w-5 h-5" />
                     </button>
                   </div>
@@ -412,7 +432,26 @@ const UserProfile = () => {
           </div>
         </div>
       )}
-      {showDeleteModal && <DeleteModal onCancel={openDeleteModal} title="review" onDelete={() => {deleteUserReview(); openDeleteModal()}}/>}
+      {showDeleteModal && (
+        <DeleteModal
+          onCancel={openDeleteModal}
+          title="review"
+          onDelete={() => {
+            deleteUserReview();
+            openDeleteModal();
+          }}
+        />
+      )}
+
+      {showEditModal && currentReview?.hasReviewed && (
+        <EditModal
+          onCancel={() => setShowEditModal(false)}
+          title="Review"
+          currentRating={parseInt(currentReview.hasReviewed.rating)}
+          currentReview={currentReview.hasReviewed.review}
+          onEdit={editUserReview}
+        />
+      )}
     </div>
   );
 };
