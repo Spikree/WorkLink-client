@@ -8,7 +8,7 @@ type Review = {
   reviewer: {
     profile: {
       name: string;
-    }
+    };
     _id: string;
   };
   rating: string;
@@ -19,24 +19,25 @@ type Review = {
 type CurrentReview = {
   message: string;
   userReview: boolean;
-  hasReviewed : {
+  hasReviewed: {
     _id: string;
     reviewer: {
       profile: {
         name: string;
-      }
+      };
       _id: string;
     };
     rating: string;
     reviewOf: string;
     review: string;
   };
-}
+};
 
 type ReviewStore = {
   postReview: (rating: number, review: string, userId: string) => Promise<void>;
   hasReviewed: (userId: string) => Promise<void>;
   getReview: (userId: string) => Promise<void>;
+  deleteReview: (reviewId: string,userId: string) => Promise<void>;
 
   isPostingReview: boolean;
   isFetchingReviews: boolean;
@@ -44,7 +45,7 @@ type ReviewStore = {
   currentReview: CurrentReview | null;
 };
 
-export const useReviewStore = create<ReviewStore>((set) => ({
+export const useReviewStore = create<ReviewStore>((set,get) => ({
   isPostingReview: false,
   isFetchingReviews: false,
   reviews: [],
@@ -58,6 +59,12 @@ export const useReviewStore = create<ReviewStore>((set) => ({
         review,
       });
       toast.success(response.data.message);
+
+      const { getReview, hasReviewed } = get();
+      await Promise.all([
+        getReview(userId),
+        hasReviewed(userId)
+      ]);
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       const errorMessage =
@@ -79,19 +86,43 @@ export const useReviewStore = create<ReviewStore>((set) => ({
         axiosError.response?.data?.message || "Server Error.";
       toast.error(errorMessage);
     } finally {
-        set({isFetchingReviews: false});
+      set({ isFetchingReviews: false });
     }
   },
 
   hasReviewed: async (userId: string) => {
     try {
       const response = await axiosInstance.get(`/review/getReview/${userId}`);
-      set({currentReview: response.data || null});
+      set({ currentReview: response.data || null });
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      const errorMessage =
+        axiosError.response?.data?.message || "Server Error.";
+      const statusCode = axiosError.response?.status;
+      if (statusCode === 500) {
+        toast.error(errorMessage);
+      }
+
+      set({ currentReview: null });
+    }
+  },
+
+  deleteReview: async (reviewId: string,userId: string) => {
+    try {
+      const response = await axiosInstance.delete(
+        `/review/deleteReview/${reviewId}`
+      );
+      toast.success(response.data.message);
+      const { getReview, hasReviewed } = get();
+      await Promise.all([
+        getReview(userId),
+        hasReviewed(userId)
+      ]);
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       const errorMessage =
         axiosError.response?.data?.message || "Server Error.";
       toast.error(errorMessage);
     }
-  }
+  },
 }));

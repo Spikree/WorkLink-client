@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
 import ProfileSkeleton from "../components/common/ProfileSkeleton";
@@ -10,9 +10,12 @@ import {
   Briefcase,
   Calendar,
   X,
+  Trash2Icon,
+  Pencil,
 } from "lucide-react";
 import { useReviewStore } from "../store/useReviewStore";
 import Button from "../components/common/Button";
+import DeleteModal from "../components/common/DeleteModal";
 
 const UserProfile = () => {
   const { getUserProfile, userProfileView, isProfileLoading } = useAuthStore();
@@ -23,26 +26,45 @@ const UserProfile = () => {
     isFetchingReviews,
     hasReviewed,
     currentReview,
+    deleteReview,
   } = useReviewStore();
   const { id: userId } = useParams();
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
   const [hoveredStar, setHoveredStar] = useState(0);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [deleteReviewId, setDeleteReviewId] = useState<string>("")
   const navigate = useNavigate();
 
   const navigateToUserProfile = (userId: string) => {
     navigate(`/userProfile/${userId}`);
   };
 
-  const postReviewHandler = async (rating: number, review: string) => {
+  const deleteUserReview = () => {
+    if (!userId) return;
+    deleteReview(deleteReviewId, userId);
     if (userId) {
-      postReview(rating, review, userId);
-      setShowReviewModal(false);
-      setRating(0);
-      setReview("");
+      getReview(userId);
+      hasReviewed(userId);
     }
   };
+
+  const openDeleteModal = () => {
+    setShowDeleteModal(!showDeleteModal)
+  }
+
+  const postReviewHandler = useCallback(
+    async (rating: number, review: string) => {
+      if (userId) {
+        postReview(rating, review, userId);
+        setShowReviewModal(false);
+        setRating(0);
+        setReview("");
+      }
+    },
+    [userId, postReview]
+  );
 
   const handleSubmitReview = () => {
     if (rating > 0 && review.trim()) {
@@ -56,7 +78,7 @@ const UserProfile = () => {
       getReview(userId);
       hasReviewed(userId);
     }
-  }, [userId, getUserProfile, getReview, hasReviewed]);
+  }, [userId, getUserProfile, getReview, hasReviewed, postReviewHandler]);
 
   if (isProfileLoading) {
     return <ProfileSkeleton />;
@@ -230,6 +252,20 @@ const UserProfile = () => {
                   <p className="text-gray-700 leading-relaxed">
                     {currentReview?.hasReviewed?.review}
                   </p>
+                  <div className="flex">
+                    <button
+                      onClick={() => {
+                        openDeleteModal();
+                        setDeleteReviewId(currentReview?.hasReviewed?._id)
+                      }}
+                      className="size-10 flex items-center justify-center rounded-full hover:bg-red-100 text-red-600 transition duration-200"
+                    >
+                      <Trash2Icon className="w-5 h-5" />
+                    </button>
+                    <button className="size-10 flex items-center justify-center rounded-full hover:bg-blue-100 text-blue-600 transition duration-200">
+                      <Pencil className="w-5 h-5" />
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : (
@@ -376,6 +412,7 @@ const UserProfile = () => {
           </div>
         </div>
       )}
+      {showDeleteModal && <DeleteModal onCancel={openDeleteModal} title="review" onDelete={() => {deleteUserReview(); openDeleteModal()}}/>}
     </div>
   );
 };
