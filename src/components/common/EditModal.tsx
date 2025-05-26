@@ -1,5 +1,6 @@
-import { Edit, X, Star } from 'lucide-react';
-import { useState } from 'react';
+import { Edit, X, Star } from "lucide-react";
+import { useState } from "react";
+import Button from "./Button";
 
 type Props = {
   onEdit: (rating: number, review: string) => void;
@@ -9,7 +10,13 @@ type Props = {
   title?: string;
 };
 
-const EditModal = ({onEdit, onCancel, currentRating, currentReview, title}: Props) => {
+const EditModal = ({
+  onEdit,
+  onCancel,
+  currentRating,
+  currentReview,
+  title,
+}: Props) => {
   const [rating, setRating] = useState(currentRating);
   const [review, setReview] = useState(currentReview);
   const [hoveredStar, setHoveredStar] = useState(0);
@@ -36,7 +43,7 @@ const EditModal = ({onEdit, onCancel, currentRating, currentReview, title}: Prop
             <X size={20} />
           </button>
         </div>
-        
+
         <div className="mb-6 space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -77,7 +84,7 @@ const EditModal = ({onEdit, onCancel, currentRating, currentReview, title}: Prop
             />
           </div>
         </div>
-        
+
         <div className="flex justify-end space-x-3">
           <button
             onClick={onCancel}
@@ -85,14 +92,15 @@ const EditModal = ({onEdit, onCancel, currentRating, currentReview, title}: Prop
           >
             Cancel
           </button>
-          <button
+          <Button
             onClick={handleSubmit}
             disabled={rating === 0 || !review.trim()}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center"
+            disableStyles={false}
           >
             <Edit size={18} className="mr-2" />
             Update
-          </button>
+          </Button>
         </div>
       </div>
     </div>
