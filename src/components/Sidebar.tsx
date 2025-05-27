@@ -22,6 +22,12 @@ import {
 import { MessageSquareText } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 
+type MenuItem = {
+  title: string;
+  icon: React.ReactElement;
+  to: string;
+}
+
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showProfileOptions, setShowProfileOptions] = useState(false);
@@ -90,6 +96,13 @@ const Sidebar = () => {
     },
   ];
 
+  const isMenuItemActive = (item: MenuItem) => {
+    if (item.title === "Chat") {
+      return location.pathname === item.to || location.pathname.startsWith("/chatRoom");
+    }
+    return location.pathname === item.to;
+  };
+
   const menuItems =
     authUser?.role === "employer" ? employerMenuItems : freelancerMenuItems;
 
@@ -134,7 +147,7 @@ const Sidebar = () => {
           }}
         >
           {menuItems.map((item, index) => {
-            const isActive = location.pathname === item.to;
+            const isActive = isMenuItemActive(item)
             
             return (
               <button

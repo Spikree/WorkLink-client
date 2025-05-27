@@ -19,6 +19,12 @@ import {
 import { MessageSquareText } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 
+type MenuItem = {
+  title: string;
+  icon: React.ReactElement;
+  to: string;
+};
+
 const MobileNav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showProfileOptions, setShowProfileOptions] = useState(false);
@@ -88,6 +94,16 @@ const MobileNav = () => {
     },
   ];
 
+  const isMenuItemActive = (item: MenuItem) => {
+    if (item.title === "Chat") {
+      return (
+        location.pathname === item.to ||
+        location.pathname.startsWith("/chatRoom")
+      );
+    }
+    return location.pathname === item.to;
+  };
+
   const menuItems =
     authUser?.role === "employer" ? employerMenuItems : freelancerMenuItems;
 
@@ -140,20 +156,27 @@ const MobileNav = () => {
               {/* Menu Items */}
               <div className="flex-1 px-4 py-6 overflow-y-auto">
                 <div className="space-y-2">
-                  {menuItems.map((item, index) => (
-                    <motion.button
-                      key={index}
-                      onClick={() => {
-                        navigate(item.to);
-                        setIsMenuOpen(false);
-                      }}
-                      className="flex items-center w-full text-gray-300 hover:bg-[#292a36] rounded-lg px-4 py-3 transition-colors"
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <span className="text-gray-400">{item.icon}</span>
-                      <span className="ml-3 font-medium">{item.title}</span>
-                    </motion.button>
-                  ))}
+                  {menuItems.map((item, index) => {
+                    const isActive = isMenuItemActive(item);
+                    return (
+                      <motion.button
+                        key={index}
+                        onClick={() => {
+                          navigate(item.to);
+                          setIsMenuOpen(false);
+                        }}
+                        className={`flex items-center w-full text-gray-300 hover:bg-[#292a36] rounded-lg px-4 py-3 transition-colors ${
+                          isActive
+                            ? "bg-gray-700 text-white"
+                            : "text-gray-300 hover:bg-gray-700"
+                        }`}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <span className="text-gray-400">{item.icon}</span>
+                        <span className="ml-3 font-medium">{item.title}</span>
+                      </motion.button>
+                    );
+                  })}
                 </div>
               </div>
 

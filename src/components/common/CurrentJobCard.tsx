@@ -1,6 +1,6 @@
 import React from 'react';
 import { Briefcase, DollarSign, Building2 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface CurrentJobProps {
   job: {
@@ -28,6 +28,12 @@ const CurrentJobCard: React.FC<CurrentJobProps> = ({ job }) => {
       maximumFractionDigits: 0,
     }).format(Number(amount));
   };
+
+  const navigate = useNavigate();
+
+  const submitWork = (employerId: string) => {
+    navigate(`/chatRoom/${employerId}`);
+  }
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300">
@@ -67,7 +73,7 @@ const CurrentJobCard: React.FC<CurrentJobProps> = ({ job }) => {
               View Details
             </button>
           </Link>
-          <button className="text-xs sm:text-sm font-medium text-purple-600 hover:text-purple-700 transition-colors flex items-center gap-1.5">
+          <button onClick={() => {submitWork(job?.employer?._id)}} className="text-xs sm:text-sm font-medium text-purple-600 hover:text-purple-700 transition-colors flex items-center gap-1.5">
             Submit Work
           </button>
         </div>
