@@ -219,7 +219,7 @@ const UserProfile = () => {
                   <h2 className="text-2xl font-bold text-gray-900 mb-4">
                     {role === "freelancer" && "Skill"}
                   </h2>
-                  <div className="flex flex-wrap gap-2">
+                  {role !== "employer" &&<div className="flex flex-wrap gap-2">
                     {profile.skills.map((skill: string, index: number) => (
                       <span
                         key={index}
@@ -228,7 +228,7 @@ const UserProfile = () => {
                         {skill}
                       </span>
                     ))}
-                  </div>
+                  </div>}
                 </div>
               </div>
             </div>
