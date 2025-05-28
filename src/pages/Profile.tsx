@@ -176,7 +176,7 @@ const Profile = () => {
                     </a>
                   </div>
 
-                  <div>
+                  {role !== "employer" && <div>
                     <h2 className="text-2xl font-bold text-gray-900 mb-4">
                       Skills
                     </h2>
@@ -190,7 +190,7 @@ const Profile = () => {
                         </span>
                       ))}
                     </div>
-                  </div>
+                  </div>}
                 </div>
               ) : (
                 <form onSubmit={handleEditSubmit} className="space-y-6">
@@ -224,7 +224,7 @@ const Profile = () => {
                     />
                   </div>
 
-                  <div>
+                  {role !== "employer" && <div>
                     <label className="block text-lg font-semibold text-gray-900 mb-2">
                       Skills
                     </label>
@@ -237,7 +237,7 @@ const Profile = () => {
                       className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
                       placeholder="Enter skills separated by commas"
                     />
-                  </div>
+                  </div>}
 
                   <div className="flex justify-end space-x-4 pt-4">
                     <button

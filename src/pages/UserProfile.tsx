@@ -195,12 +195,12 @@ const UserProfile = () => {
                   <h2 className="text-2xl font-bold text-gray-900 mb-4">
                     About
                   </h2>
-                  <p className="text-gray-600 leading-relaxed">{profile.bio}</p>
+                  <p className="text-gray-600 leading-relaxed">{profile.bio ? profile?.bio : <p className="p-10 bg-gray-100 rounded-md text-center">No Bio Provided</p>}</p>
                 </div>
 
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                    Portfolio
+                    {role === "freelancer" ? "Portfolio" : "Company Website"}
                   </h2>
                   <a
                     href={profile.portfolio}
@@ -217,7 +217,7 @@ const UserProfile = () => {
 
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                    Skills
+                    {role === "freelancer" && "Skill"}
                   </h2>
                   <div className="flex flex-wrap gap-2">
                     {profile.skills.map((skill: string, index: number) => (
