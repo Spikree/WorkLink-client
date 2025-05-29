@@ -1,29 +1,31 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, Lock } from 'lucide-react'
-import toast from 'react-hot-toast'
-import { useAuthStore } from '../store/useAuthStore'
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft, Loader, Lock } from "lucide-react";
+import toast from "react-hot-toast";
+import { useAuthStore } from "../store/useAuthStore";
 
 function ChangePassword() {
-  const navigate = useNavigate()
-  const [oldPassword, setOldPassword] = useState('')
-  const [newPassword, setNewPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
+  const navigate = useNavigate();
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const {updatePassword} = useAuthStore(); // add isChangingPassword 
+  const { updatePassword, isChangingPassword } = useAuthStore(); // add isChangingPassword
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if(newPassword !== confirmPassword) {
-      return toast.error("confirm new password doesen't match with new password")
+    e.preventDefault();
+    if (newPassword !== confirmPassword) {
+      return toast.error(
+        "confirm new password doesen't match with new password"
+      );
     }
     updatePassword(oldPassword, newPassword);
-  }
+  };
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
+    <div className="max-w-2xl mx-auto p-2">
       <button
-        onClick={() => navigate('/settings')}
+        onClick={() => navigate("/settings")}
         className="flex items-center gap-2 text-gray-600 hover:text-primary mb-8"
       >
         <ArrowLeft size={20} />
@@ -84,7 +86,7 @@ function ChangePassword() {
           <div className="flex gap-3 pt-4">
             <button
               type="button"
-              onClick={() => navigate('/settings')}
+              onClick={() => navigate("/settings")}
               className="flex-1 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-xl transition-colors"
             >
               Cancel
@@ -98,8 +100,14 @@ function ChangePassword() {
           </div>
         </form>
       </div>
+
+      {isChangingPassword && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-6 sm:px-0">
+          <Loader className="size-10 animate-spin" />
+        </div>
+      )}
     </div>
-  )
+  );
 }
 
-export default ChangePassword
+export default ChangePassword;

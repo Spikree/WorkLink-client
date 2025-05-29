@@ -10,7 +10,7 @@ function Settings() {
   const navigate = useNavigate();
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-6xl mx-auto p-6">
       <div className="flex items-center gap-3 mb-8">
         <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
           <UserCog className="text-primary" size={24} />
