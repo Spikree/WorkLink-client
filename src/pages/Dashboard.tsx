@@ -47,6 +47,9 @@ const Dashboard = () => {
   }, [getJobs]);
 
   const handleSearch = async (query: string) => {
+    if(query.length === 0) {
+      return
+    }
     setSearchQuery(query);
     const results = await searchJobs(query);
     setSearchResults(results);

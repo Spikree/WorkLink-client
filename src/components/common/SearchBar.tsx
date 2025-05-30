@@ -38,7 +38,11 @@ const SearchBar = ({
             placeholder={placeholder}
           />
           <Button
-            className="py-2 px-4 hover:bg-primary/5 transition-colors duration-200"
+            className={`py-2 px-4 transition-colors duration-200 ${
+              searchQuery.length === 0 
+                ? 'bg-danger opacity-50' 
+                : 'hover:bg-primary/5 cursor-pointer'
+            }`}
             type="submit"
             disableStyles={false}
           >
