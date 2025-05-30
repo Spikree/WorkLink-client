@@ -50,15 +50,11 @@ const Profile = () => {
   }, []);
 
   if (isProfileLoading) {
-    return (
-      <ProfileSkeleton/>
-    );
+    return <ProfileSkeleton />;
   }
 
   if (!userProfile) {
-    return (
-      <ProfileSkeleton/>
-    );
+    return <ProfileSkeleton />;
   }
 
   const { email, role, profile, averageRating, totalRatings, createdOn } =
@@ -176,21 +172,27 @@ const Profile = () => {
                     </a>
                   </div>
 
-                  {role !== "employer" && <div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                      Skills
-                    </h2>
-                    <div className="flex flex-wrap gap-2">
-                      {profile.skills.map((skill: string, index: number) => (
-                        <span
-                          key={index}
-                          className="px-4 py-2 bg-gradient-to-r from-primary/5 to-danger/20 text-primary rounded-xl text-sm font-medium"
-                        >
-                          {skill}
-                        </span>
-                      ))}
+                  {role !== "employer" && (
+                    <div>
+                      <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                        Skills
+                      </h2>
+                      <div className="flex flex-wrap gap-2">
+                        {profile.skills
+                          .flatMap((skillString: string) =>
+                            skillString.split(",")
+                          )
+                          .map((skill: string, index: number) => (
+                            <span
+                              key={index}
+                              className="px-4 py-2 bg-gradient-to-r from-primary/5 to-danger/20 text-primary rounded-xl text-sm font-medium"
+                            >
+                              {skill.trim()}
+                            </span>
+                          ))}
+                      </div>
                     </div>
-                  </div>}
+                  )}
                 </div>
               ) : (
                 <form onSubmit={handleEditSubmit} className="space-y-6">
@@ -224,20 +226,22 @@ const Profile = () => {
                     />
                   </div>
 
-                  {role !== "employer" && <div>
-                    <label className="block text-lg font-semibold text-gray-900 mb-2">
-                      Skills
-                    </label>
-                    <input
-                      type="text"
-                      value={editForm.skills}
-                      onChange={(e) =>
-                        setEditForm({ ...editForm, skills: e.target.value })
-                      }
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-                      placeholder="Enter skills separated by commas"
-                    />
-                  </div>}
+                  {role !== "employer" && (
+                    <div>
+                      <label className="block text-lg font-semibold text-gray-900 mb-2">
+                        Skills
+                      </label>
+                      <input
+                        type="text"
+                        value={editForm.skills}
+                        onChange={(e) =>
+                          setEditForm({ ...editForm, skills: e.target.value })
+                        }
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                        placeholder="Enter skills separated by commas"
+                      />
+                    </div>
+                  )}
 
                   <div className="flex justify-end space-x-4 pt-4">
                     <button

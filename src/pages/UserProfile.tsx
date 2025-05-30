@@ -220,14 +220,18 @@ const UserProfile = () => {
                     {role === "freelancer" && "Skill"}
                   </h2>
                   {role !== "employer" &&<div className="flex flex-wrap gap-2">
-                    {profile.skills.map((skill: string, index: number) => (
-                      <span
+                  <div className="flex flex-wrap gap-2">
+                    {
+                      profile?.skills?.flatMap((skillS: string) => skillS.split(",").map((skill: string, index: number) => (
+                        <span
                         key={index}
                         className="px-4 py-2 bg-gradient-to-r from-primary/5 to-danger/20 text-primary rounded-xl text-sm font-medium"
-                      >
-                        {skill}
-                      </span>
-                    ))}
+                        >
+                          {skill.trim()}
+                        </span>
+                      )))
+                    }
+                  </div>
                   </div>}
                 </div>
               </div>
