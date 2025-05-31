@@ -106,15 +106,7 @@ const ReviewSection: React.FC = () => {
   return (
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4 text-primary">
-            What Our Users Say
-          </h1>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Discover how WorkLink has helped professionals and businesses around
-            the world connect and succeed.
-          </p>
-        </div>
+        
 
         {/* Carousel for small screens */}
         <div className="block md:hidden">
