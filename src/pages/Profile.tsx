@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import ProfileSkeleton from "../components/common/ProfileSkeleton";
 import {
@@ -9,12 +9,15 @@ import {
   User,
   Briefcase,
   Calendar,
+  Camera,
+  Loader2,
 } from "lucide-react";
 
 const Profile = () => {
-  const { getProfile, userProfile, isProfileLoading, editProfile } =
+  const { getProfile, userProfile, isProfileLoading, editProfile, uploadProfilePicture } =
     useAuthStore();
   const [isEditing, setIsEditing] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [editForm, setEditForm] = useState({
     bio: "",
     portfolio: "",
@@ -22,6 +25,7 @@ const Profile = () => {
     name: "",
   });
   const cancelEditButtonRef = useRef<HTMLButtonElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     getProfile();
@@ -66,6 +70,15 @@ const Profile = () => {
     editProfile(editForm);
   };
 
+  const handleImageUpload = async (file: File) => {
+    try {
+      setIsUploading(true);
+      await uploadProfilePicture(file);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
@@ -74,17 +87,62 @@ const Profile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br ">
+    <div className="min-h-screen bg-gradient-to-br">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl shadow-lg shadow-primary/5 overflow-hidden">
               <div className="bg-gradient-to-r from-primary to-primary/90 px-6 py-8">
                 <div className="flex flex-col items-center">
-                  <div className="h-32 w-32 rounded-full bg-white p-2 shadow-lg">
-                    <div className="h-full w-full rounded-full bg-gradient-to-br from-primary/5 to-danger/20 flex items-center justify-center">
-                      <User className="h-16 w-16 text-primary" />
+                  <div className="relative">
+                    <div className="h-32 w-32 rounded-full bg-white p-2 shadow-lg">
+                      <div className="relative h-full w-full rounded-full bg-gradient-to-br from-primary/5 to-danger/20 flex items-center justify-center group cursor-pointer overflow-hidden">
+                        {profile?.profilePicture ? (
+                          <img
+                            src={profile?.profilePicture}
+                            alt="profile picture"
+                            className="h-full w-full rounded-full object-cover transition-transform duration-300 group-hover:scale-110"
+                          />
+                        ) : (
+                          <User className="h-16 w-16 text-primary" />
+                        )}
+
+                        {/* Upload overlay with animation */}
+                        <div className="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm">
+                          {isUploading ? (
+                            <Loader2 className="h-8 w-8 text-white animate-spin" />
+                          ) : (
+                            <div className="flex flex-col items-center transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                              <Camera className="h-8 w-8 text-white mb-1" />
+                              <span className="text-white text-xs font-medium">Update Photo</span>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Hidden file input */}
+                        <input
+                          type="file"
+                          ref={fileInputRef}
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              handleImageUpload(file);
+                            }
+                          }}
+                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer rounded-full disabled:cursor-not-allowed"
+                          disabled={isUploading}
+                        />
+                      </div>
                     </div>
+                    {/* Edit Photo Button */}
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      className="absolute -bottom-2 left-1/2 -translate-x-1/2 flex items-center justify-center p-2 bg-white rounded-full shadow-lg hover:bg-gray-50 transition-colors duration-200"
+                      disabled={isUploading}
+                    >
+                      <Camera className="h-4 w-4 text-primary" />
+                    </button>
                   </div>
                   {isEditing ? (
                     <input

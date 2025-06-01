@@ -28,6 +28,7 @@ type authUser = {
     rating: string;
     skills?: string[];
     portfolio?: string;
+    profilePicture?: string;
   };
 };
 
@@ -43,6 +44,7 @@ type UserDetails = {
       portfolio: string;
       rating: number;
       bio: string;
+      profilePicture: string;
     };
     createdOn: string;
     __v: number;
@@ -60,6 +62,7 @@ type UserDetailsView = {
       portfolio: string;
       rating: string;
       bio: string;
+      profilePicture: string;
     };
     _id: string;
     email: string;
@@ -74,9 +77,10 @@ type AuthStore = {
   isSigningUp: boolean;
   isLoggingIn: boolean;
   isChangingPassword: boolean;
+  isProfilePhotoUploading: boolean;
   isCheckingAuth: boolean;
   isProfileLoading: boolean;
-  isEmailUpdating : boolean;
+  isEmailUpdating: boolean;
   signup: (data: authData) => Promise<void>;
   login: (data: authData) => Promise<void>;
   logout: () => Promise<void>;
@@ -87,6 +91,7 @@ type AuthStore = {
   getUserProfile: (userId: string) => Promise<void>;
   updatePassword: (oldPassword: string, newPassword: string) => Promise<void>;
   updateEmail: (email: string, password: string) => Promise<void>;
+  uploadProfilePicture: (file: File) => Promise<void>;
   authUser: authUser | null;
   userProfile: UserDetails | null;
   chatuserDetails: authUser | null;
@@ -98,6 +103,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   isLoggingIn: false,
   isEmailUpdating: false,
   isChangingPassword: false,
+  isProfilePhotoUploading: false,
   authUser: null,
   userProfile: null,
   isCheckingAuth: false,
@@ -241,7 +247,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   },
 
   updateEmail: async (email: string, password: string) => {
-    set({isEmailUpdating: true});
+    set({ isEmailUpdating: true });
     try {
       const response = await axiosInstance.put("/auth/changeEmail", {
         newEmail: email,
@@ -254,7 +260,39 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         axiosError.response?.data?.message || "failed to update profile";
       toast.error(errorMessage);
     } finally {
-      set({isEmailUpdating: false});
+      set({ isEmailUpdating: false });
+    }
+  },
+
+  uploadProfilePicture: async (file: File) => {
+    set({ isProfileLoading: true });
+
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const response = await axiosInstance.post(
+        "/profile/uploadProfilePicture",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      toast.success(
+        response.data.message || "Profile photo updated successfully"
+      );
+
+      await get().getProfile();
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      const errorMessage =
+        axiosError.response?.data?.message || "failed to update profile";
+      toast.error(errorMessage);
+    } finally {
+      set({ isProfileLoading: false });
     }
   },
 }));

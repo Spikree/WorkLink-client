@@ -136,8 +136,16 @@ const UserProfile = () => {
               <div className="bg-gradient-to-r from-primary to-primary/90 px-6 py-8">
                 <div className="flex flex-col items-center">
                   <div className="h-32 w-32 rounded-full bg-white p-2 shadow-lg">
-                    <div className="h-full w-full rounded-full bg-gradient-to-br from-primary/5 to-danger/20 flex items-center justify-center">
-                      <User className="h-16 w-16 text-primary" />
+                  <div className="h-full w-full rounded-full bg-gradient-to-br from-primary/5 to-danger/20 flex items-center justify-center">
+                      {profile?.profilePicture ? (
+                        <img
+                          src={profile?.profilePicture}
+                          alt="profile picture"
+                          className="h-full w-full rounded-full object-cover"
+                        />
+                      ) : (
+                        <User className="h-16 w-16 text-primary" />
+                      )}
                     </div>
                   </div>
                   <h1 className="mt-4 text-3xl font-bold text-white">
