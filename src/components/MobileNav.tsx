@@ -187,7 +187,14 @@ const MobileNav = () => {
                   className="flex items-center space-x-3 mb-4"
                 >
                   <div className="h-10 w-10 rounded-full bg-gray-600 text-white flex items-center justify-center">
-                    {authUser?.profile?.name?.charAt(0).toUpperCase()}
+                    {authUser?.profile.profilePicture ? (
+                      <img
+                        className="h-10 w-10 rounded-full bg-gray-600 text-white flex items-center justify-center"
+                        src={authUser?.profile?.profilePicture}
+                      />
+                    ) : (
+                      authUser?.profile?.name?.charAt(0).toUpperCase()
+                    )}
                   </div>
                   <div>
                     <p className="text-sm font-medium text-gray-300">
