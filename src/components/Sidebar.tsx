@@ -26,7 +26,7 @@ type MenuItem = {
   title: string;
   icon: React.ReactElement;
   to: string;
-}
+};
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -98,7 +98,10 @@ const Sidebar = () => {
 
   const isMenuItemActive = (item: MenuItem) => {
     if (item.title === "Chat") {
-      return location.pathname === item.to || location.pathname.startsWith("/chatRoom");
+      return (
+        location.pathname === item.to ||
+        location.pathname.startsWith("/chatRoom")
+      );
     }
     return location.pathname === item.to;
   };
@@ -147,8 +150,8 @@ const Sidebar = () => {
           }}
         >
           {menuItems.map((item, index) => {
-            const isActive = isMenuItemActive(item)
-            
+            const isActive = isMenuItemActive(item);
+
             return (
               <button
                 key={index}
@@ -217,7 +220,14 @@ const Sidebar = () => {
           >
             <div className="flex items-center">
               <div className="h-8 w-8 rounded-full bg-gray-600 text-white flex justify-center items-center">
-                {authUser?.profile?.name?.charAt(0).toUpperCase()}
+                {authUser?.profile.profilePicture ? (
+                  <img
+                    className="h-8 w-8 rounded-full bg-gray-600 text-white flex justify-center items-center"
+                    src={authUser?.profile?.profilePicture}
+                  />
+                ) : (
+                  authUser?.profile?.name?.charAt(0).toUpperCase()
+                )}
               </div>
 
               {isOpen && (

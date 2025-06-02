@@ -34,13 +34,12 @@ const ChatPage = () => {
   const role = localStorage.getItem("user_role");
 
   const goToChatPage = () => {
-    if(role === "freelancer") {
-      navigate("/chat")
-    } else if(role === "employer") {
-      navigate("/chatEmp")
+    if (role === "freelancer") {
+      navigate("/chat");
+    } else if (role === "employer") {
+      navigate("/chatEmp");
     }
-   
-  }
+  };
 
   const typingTimerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -163,12 +162,18 @@ const ChatPage = () => {
           <div className="flex items-center justify-between p-4">
             <div className="flex items-center gap-3">
               <div className="md:hidden">
-                <ArrowLeft onClick={goToChatPage} className="w-5 h-5 text-gray-600 cursor-pointer" />
+                <ArrowLeft
+                  onClick={goToChatPage}
+                  className="w-5 h-5 text-gray-600 cursor-pointer"
+                />
               </div>
               <div className="flex items-center gap-3">
                 <div className="relative">
                   <img
-                    src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                    src={
+                      chatuserDetails?.profile?.profilePicture ||
+                      `https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png`
+                    }
                     alt="Profile"
                     className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm"
                   />
@@ -180,7 +185,11 @@ const ChatPage = () => {
                   <h2 className="font-semibold text-gray-900">
                     {chatuserDetails?.profile?.name || "User"}
                   </h2>
-                  <p className={`text-xs ${isUserActive ? "text-green-500" : "text-gray-500"}`}>
+                  <p
+                    className={`text-xs ${
+                      isUserActive ? "text-green-500" : "text-gray-500"
+                    }`}
+                  >
                     {isUserActive ? "Online" : "Offline"}
                   </p>
                 </div>
@@ -202,10 +211,13 @@ const ChatPage = () => {
       </div>
 
       {/* Chat Area */}
-      <div 
-        className="flex-1 overflow-y-auto px-4 py-6 scroll-smooth" 
+      <div
+        className="flex-1 overflow-y-auto px-4 py-6 scroll-smooth"
         ref={chatContainerRef}
-        style={{  backgroundBlendMode: "overlay", backgroundColor: "rgba(255,255,255,0.95)" }}
+        style={{
+          backgroundBlendMode: "overlay",
+          backgroundColor: "rgba(255,255,255,0.95)",
+        }}
       >
         <div className="max-w-2xl mx-auto flex flex-col gap-3">
           {isFetchingMessages ? (
@@ -259,10 +271,13 @@ const ChatPage = () => {
                 index === 0 || messageDate !== prevMessageDate;
 
               // Check if messages are from the same sender and within 2 minutes
-              const isContinuousMessage = index > 0 && 
-                prevMessage && 
-                prevMessage.senderId === msg.senderId && 
-                new Date(msg.createdAt).getTime() - new Date(prevMessage.createdAt).getTime() < 2 * 60 * 1000;
+              const isContinuousMessage =
+                index > 0 &&
+                prevMessage &&
+                prevMessage.senderId === msg.senderId &&
+                new Date(msg.createdAt).getTime() -
+                  new Date(prevMessage.createdAt).getTime() <
+                  2 * 60 * 1000;
 
               return (
                 <div key={msg._id || index} className="animate-fadeIn">
@@ -276,17 +291,27 @@ const ChatPage = () => {
                   <div
                     className={`flex ${
                       isSentToChatId ? "justify-end" : "justify-start"
-                    } ${!isContinuousMessage ? 'mt-2' : 'mt-1'}`}
+                    } ${!isContinuousMessage ? "mt-2" : "mt-1"}`}
                   >
                     <div
                       className={`p-3 rounded-2xl ${
                         isSentToChatId
                           ? "bg-blue-600 text-white rounded-br-none"
                           : "bg-white text-gray-800 shadow-sm rounded-bl-none"
-                      } ${isContinuousMessage ? (isSentToChatId ? 'rounded-tr-none' : 'rounded-tl-none') : ''}`}
+                      } ${
+                        isContinuousMessage
+                          ? isSentToChatId
+                            ? "rounded-tr-none"
+                            : "rounded-tl-none"
+                          : ""
+                      }`}
                     >
                       <p className="text-sm">{msg.text}</p>
-                      <p className={`text-xs mt-1 ${isSentToChatId ? 'text-blue-100' : 'text-gray-500'}`}>
+                      <p
+                        className={`text-xs mt-1 ${
+                          isSentToChatId ? "text-blue-100" : "text-gray-500"
+                        }`}
+                      >
                         {formatTime(msg.createdAt)}
                       </p>
                     </div>
@@ -353,7 +378,7 @@ const ChatPage = () => {
               type="submit"
               disabled={!message.trim()}
               className={`${
-                message.trim() ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-400'
+                message.trim() ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-400"
               } text-white rounded-full p-2.5 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`}
             >
               <Send className="w-4 h-4" />
