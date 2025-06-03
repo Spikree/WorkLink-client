@@ -7,6 +7,8 @@ import {
   Loader2,
   MessageCircle,
   ArrowLeft,
+  Camera,
+  X,
 } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useChatStore } from "../store/useChatStore";
@@ -27,9 +29,12 @@ const ChatPage = () => {
   const { id: chatId } = useParams<{ id: string }>();
   const [message, setMessage] = useState<string>("");
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [typingUser, setTypingUser] = useState(null);
   const [isUserActive, setIsUserActive] = useState<boolean>(false);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const navigate = useNavigate();
   const role = localStorage.getItem("user_role");
 
@@ -71,6 +76,32 @@ const ChatPage = () => {
         setIsTyping(false);
       }
     }, 200);
+  };
+
+  const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+      setSelectedImage(file);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleImageUpload = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const removeSelectedImage = () => {
+    setSelectedImage(null);
+    setImagePreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   useEffect(() => {
@@ -128,9 +159,12 @@ const ChatPage = () => {
   const sendText = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!message.trim() || !chatId) return;
-    sendMessage(chatId, message);
+    if ((!message.trim() && !selectedImage) || !chatId) return;
+    
+    sendMessage(chatId, message, selectedImage as File);
+    
     setMessage("");
+    removeSelectedImage();
   };
 
   useEffect(() => {
@@ -306,7 +340,17 @@ const ChatPage = () => {
                           : ""
                       }`}
                     >
-                      <p className="text-sm">{msg.text}</p>
+                      {msg.imageUrl && (
+                        <div className="mb-2">
+                          <img
+                            src={msg.imageUrl}
+                            alt="Shared image"
+                            className="max-w-xs max-h-64 rounded-lg object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                            onClick={() => window.open(msg.imageUrl, '_blank')}
+                          />
+                        </div>
+                      )}
+                      {msg.text && <p className="text-sm">{msg.text}</p>}
                       <p
                         className={`text-xs mt-1 ${
                           isSentToChatId ? "text-blue-100" : "text-gray-500"
@@ -360,6 +404,27 @@ const ChatPage = () => {
         </div>
       )}
 
+      {/* Image Preview */}
+      {imagePreview && (
+        <div className="bg-white border-t px-4 py-3">
+          <div className="max-w-2xl mx-auto">
+            <div className="relative inline-block">
+              <img
+                src={imagePreview}
+                alt="Preview"
+                className="max-w-32 max-h-32 rounded-lg object-cover"
+              />
+              <button
+                onClick={removeSelectedImage}
+                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Message Input */}
       <div className="bg-white border-t sticky bottom-0">
         <div className="max-w-2xl mx-auto p-3">
@@ -374,11 +439,25 @@ const ChatPage = () => {
               placeholder="Type a message..."
               className="flex-1 bg-gray-100 rounded-full px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white transition-all"
             />
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleImageSelect}
+              className="hidden"
+            />
+            <button
+              type="button"
+              onClick={handleImageUpload}
+              className="bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full p-2.5 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400"
+            >
+              <Camera className="w-4 h-4" />
+            </button>
             <button
               type="submit"
-              disabled={!message.trim()}
+              disabled={!message.trim() && !selectedImage}
               className={`${
-                message.trim() ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-400"
+                message.trim() || selectedImage ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-400"
               } text-white rounded-full p-2.5 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`}
             >
               <Send className="w-4 h-4" />

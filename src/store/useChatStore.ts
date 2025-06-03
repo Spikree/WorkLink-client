@@ -8,13 +8,14 @@ type message = {
   senderId: string;
   receiverId: string;
   text: string;
+  imageUrl: string;
   chatId: string;
   createdAt: string;
 };
 
 type chatStore = {
   getMessages: (data: string) => Promise<void>;
-  sendMessage: (data: string, text: string) => Promise<void>;
+  sendMessage: (data: string, text: string,imageFile: File) => Promise<void>;
   setMessages: (data: message) => Promise<void>;
   isFetchingMessages: boolean;
   isSendingMessage: boolean;
@@ -45,18 +46,26 @@ export const useChatStore = create<chatStore>((set) => ({
 
   setMessages: async (newMsg: message) => {
     set((state) => ({
-      messages: [...state.messages, newMsg]
-    }))
+      messages: [...state.messages, newMsg],
+    }));
   },
-  
-  sendMessage: async (userId: string, text: string) => {
+
+  sendMessage: async (userId: string, text: string, imageFile?: File) => {
     set({ isSendingMessage: true });
 
     try {
+      const formData = new FormData();
+      formData.append("text", text);
+      if (imageFile) {
+        formData.append("image", imageFile); // "image" must match the field name expected by multer
+      }
       const response = await axiosInstance.post(
         `/message/sendMessage/${userId}`,
+        formData,
         {
-          text,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
       const newMessage = response.data.newMessage;
