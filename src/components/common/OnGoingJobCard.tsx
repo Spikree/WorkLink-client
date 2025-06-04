@@ -39,9 +39,9 @@ const OnGoingJobsCard = ({ job }: JobCardProps) => {
   return (
     <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow mb-6">
       <div className="flex flex-wrap items-start justify-between mb-4">
-        <div className="flex items-center space-x-2 flex-1 mr-2">
+        <div className="flex items-center space-x-2 flex-1 mr-2 min-w-0">
           <BriefcaseIcon className="w-5 h-5 text-blue-600 flex-shrink-0" />
-          <h3 className="text-xl font-semibold text-gray-800 truncate">{job.jobTitle}</h3>
+          <h3 className="text-xl font-semibold text-gray-800 truncate max-w-full">{job.jobTitle}</h3>
         </div>
         <div className="flex items-center text-green-600 flex-shrink-0" title={`$${formattedPayment}`}>
           <DollarSignIcon className="w-4 h-4 mr-1 flex-shrink-0" />

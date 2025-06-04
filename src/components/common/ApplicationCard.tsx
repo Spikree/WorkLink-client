@@ -2,7 +2,7 @@ import React from 'react';
 import { Calendar, DollarSign, CheckCircle2, Clock, XCircle, Briefcase } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-interface ApplicationCardProps {
+type ApplicationCardProps = {
   application: {
     _id: string;
     job: string;
@@ -17,6 +17,7 @@ interface ApplicationCardProps {
     status: string;
     submittedAt: string;
     jobTitle: string;
+    employer: string;
   };
 }
 
@@ -93,6 +94,12 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({ application }) => {
               View Details
             </button>
           </Link>
+
+          <Link to={`/chatRoom/${application?.employer}`}>
+            <button className="text-xs sm:text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors">
+              message
+            </button>
+          </Link> 
         </div>
       </div>
     </div>

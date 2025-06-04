@@ -17,6 +17,7 @@ type Application = {
   status: string;
   submittedAt: string;
   jobTitle: string;
+  employer: string;
 };
 
 type JobApplications = {

@@ -4,9 +4,10 @@ import JobCard from "../components/common/JobCard";
 import DeleteModal from "../components/common/DeleteModal";
 import { LayoutGrid, Plus } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import SkeletonCard from "../components/common/SkeletonCard";
 
 const Home = () => {
-  const { getCreatedJobs, createdJobs, deleteJob } = useJobStore();
+  const { getCreatedJobs, createdJobs, deleteJob,isFetchingJobs } = useJobStore();
   const [jobDeleteId, setJobDeleteId] = useState<string>("");
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const role = localStorage.getItem("user_role");
@@ -37,26 +38,12 @@ const Home = () => {
     }
   };
 
-  if (createdJobs?.length === 0) {
+  if(isFetchingJobs) {
     return (
-      <div className="flex flex-col items-center justify-center h-[70vh] px-4">
-        <div className="bg-gray-50 rounded-full p-6 mb-6">
-          <LayoutGrid size={48} className="text-gray-400" />
-        </div>
-        <h3 className="text-xl font-semibold text-gray-800 mb-2">
-          No jobs created yet
-        </h3>
-        <p className="text-gray-500 text-center max-w-md mb-6">
-          You haven't created any jobs. When you do, they'll appear here.
-        </p>
-        <Link to={"/postJob"}>
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center">
-            <Plus size={16} className="mr-2" />
-            Create New Job
-          </button>
-        </Link>
-      </div>
-    );
+      Array.from({ length: 5 }).map((_, index) => (
+        <SkeletonCard key={index} />
+      ))
+    )
   }
 
   return (
@@ -66,14 +53,34 @@ const Home = () => {
         <p className="text-lg text-gray-600">Jobs you created</p>
       </div>
 
-      {createdJobs?.map((job) => (
-        <JobCard
-          key={job._id}
-          jobs={job}
-          onDelete={() => onDelete(job._id)}
-          navigateToJobDashboard={navigateToJobDashboard}
-        />
-      ))}
+      {createdJobs.length === 0 ? (
+        <div className="flex flex-col items-center justify-center h-[70vh] px-4">
+          <div className="bg-gray-50 rounded-full p-6 mb-6">
+            <LayoutGrid size={48} className="text-gray-400" />
+          </div>
+          <h3 className="text-xl font-semibold text-gray-800 mb-2">
+            No jobs created yet
+          </h3>
+          <p className="text-gray-500 text-center max-w-md mb-6">
+            You haven't created any jobs. When you do, they'll appear here.
+          </p>
+          <Link to={"/postJob"}>
+            <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center">
+              <Plus size={16} className="mr-2" />
+              Create New Job
+            </button>
+          </Link>
+        </div>
+      ) : (
+        createdJobs?.map((job) => (
+          <JobCard
+            key={job._id}
+            jobs={job}
+            onDelete={() => onDelete(job._id)}
+            navigateToJobDashboard={navigateToJobDashboard}
+          />
+        ))
+      )}
 
       {showDeleteModal && (
         <DeleteModal

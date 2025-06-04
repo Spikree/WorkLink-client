@@ -214,10 +214,10 @@ const UserProfile = () => {
                     href={profile.portfolio}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gradient-to-r hover:from-primary/5 hover:to-danger/20 transition-colors duration-150"
+                    className="inline-flex items-center px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gradient-to-r hover:from-primary/5 hover:to-danger/20 transition-colors duration-150 max-w-full"
                   >
-                    <LinkIcon className="h-5 w-5 text-primary" />
-                    <span className="ml-2 text-gray-700">
+                    <LinkIcon className="h-5 w-5 text-primary flex-shrink-0" />
+                    <span className="ml-2 text-gray-700 truncate">
                       {profile.portfolio}
                     </span>
                   </a>
