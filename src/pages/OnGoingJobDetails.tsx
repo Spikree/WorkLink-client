@@ -12,23 +12,32 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { useApplicationStore } from "../store/useApplicationStore";
+import { useAuthStore } from "../store/useAuthStore";
 
 const OnGoingJobDetails = () => {
   const { id: jobId } = useParams<{ id: string }>();
   const [showStatusOptions, setShowStatusOptions] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const { getJob, job, isFetchingJobs, editJobStatus,markJobAsFinished,markJobCancelled } = useJobStore();
+  const {
+    getJob,
+    job,
+    isFetchingJobs,
+    editJobStatus,
+    markJobAsFinished,
+    markJobCancelled,
+  } = useJobStore();
+  const { authUser } = useAuthStore();
   const { getJobApplications } = useApplicationStore();
   const navigate = useNavigate();
 
   const finishJob = (jobId: string) => {
-    markJobAsFinished(jobId)
-  }
+    markJobAsFinished(jobId).then(() => navigate("/home"))
+  };
 
   const cancelJob = (jobId: string) => {
-    markJobCancelled(jobId)
-  }
+    markJobCancelled(jobId);
+  };
 
   useEffect(() => {
     if (jobId) {
@@ -172,7 +181,7 @@ const OnGoingJobDetails = () => {
                 <div className="min-w-0">
                   <p className="text-sm text-gray-600">Posted by</p>
                   <p className="font-medium text-gray-900 truncate">
-                    {job.employerName}
+                    {authUser?.profile?.name}
                   </p>
                 </div>
               </div>
@@ -207,7 +216,13 @@ const OnGoingJobDetails = () => {
                 </p>
               </div>
 
-              <div onClick={() => {navigate(`/jobDashboard/${job._id}`);console.log(job._id)}} className="px-2 rounded-md bg-gray-300 text-gray-600 py-2 flex justify-center items-center cursor-pointer">
+              <div
+                onClick={() => {
+                  navigate(`/jobDashboard/${job._id}`);
+                  console.log(job._id);
+                }}
+                className="px-2 rounded-md bg-gray-300 text-gray-600 py-2 flex justify-center items-center cursor-pointer"
+              >
                 <button className="">view orignal offer</button>
               </div>
 
@@ -230,7 +245,11 @@ const OnGoingJobDetails = () => {
                 </div>
 
                 {job.status === "completed" ? (
-                  <div onClick={() => {finishJob(job._id)}}>
+                  <div
+                    onClick={() => {
+                      finishJob(job._id);
+                    }}
+                  >
                     <button className=" py-2 px-4 rounded-md bg-green-300 text-green-800 font-semibold">
                       Mark finished
                     </button>
@@ -238,7 +257,11 @@ const OnGoingJobDetails = () => {
                 ) : null}
 
                 {job.status === "cancelled" ? (
-                  <div onClick={() => {cancelJob(job._id)}}>
+                  <div
+                    onClick={() => {
+                      cancelJob(job._id);
+                    }}
+                  >
                     <button className=" py-2 px-4 rounded-md bg-red-300 text-red-800 font-semibold">
                       Mark Cancelled
                     </button>
