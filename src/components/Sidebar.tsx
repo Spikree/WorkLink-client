@@ -69,6 +69,11 @@ const Sidebar = () => {
       icon: <FiSave size={20} />,
       to: "/getOnGoingJobs",
     },
+    {
+      title: "Finished Jobs",
+      icon: <MdWorkHistory size={20} />,
+      to: "/finishedJobs",
+    },
     { title: "Chat", icon: <MessageSquareText size={20} />, to: "/chatEmp" },
   ];
 

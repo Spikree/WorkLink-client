@@ -6,6 +6,7 @@ import SkeletonCard from "../components/common/SkeletonCard";
 
 const FinishedJobs = () => {
   const { getFinishedJob, finishedJobs,isFetchingJobs } = useJobStore();
+  const currentRole = localStorage.getItem("user_role") || ""
 
   useEffect(() => {
     getFinishedJob();
@@ -39,7 +40,7 @@ const FinishedJobs = () => {
       ) : (
         <div className="flex flex-col gap-4">
           {finishedJobs.map((job) => (
-            <FinishedJobCard key={job._id} job={job} />
+            <FinishedJobCard currentRole={currentRole} key={job._id} job={job} />
           ))}
         </div>
       )}

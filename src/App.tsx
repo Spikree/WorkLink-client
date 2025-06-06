@@ -82,12 +82,13 @@ function App() {
               <Route path="/changePassword" element={<ChangePassword />} />
               <Route path="/changeEmail" element={<ChangeEmail />} />
               <Route path="/userProfile/:id" element={<UserProfile/>} />
+              <Route path="/finishedJobs" element={<FinishedJobs />} />
               
               <Route element={<FreelancerRoutes />}>
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/jobDetails/:jobId" element={<JobDetails />} />
                 <Route path="/appliedjobs" element={<AppliedJobs />} />
-                <Route path="/finishedJobs" element={<FinishedJobs />} />
+                
                 <Route path="/savedJobs" element={<SavedJobs />} />
                 <Route path="/currentJob" element={<CurrentJobs />} />
                 <Route path="/chat" element={<Chat />} />

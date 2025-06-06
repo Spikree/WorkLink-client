@@ -241,7 +241,7 @@ const JobDashboard = () => {
           </div>
         )}
 
-        {(!jobApplications || jobApplications.length === 0) && (
+        {job.status === "open" && (!jobApplications || jobApplications.length === 0) && (
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
             <div className="p-8 flex flex-col items-center justify-center text-center">
               <h2 className="text-xl font-bold text-gray-900 mb-2">

@@ -11,9 +11,10 @@ interface FinishedJobProps {
     freelancer: string;
     createdAt: string;
   };
+  currentRole: string;
 }
 
-const FinishedJobCard: React.FC<FinishedJobProps> = ({ job }) => {
+const FinishedJobCard: React.FC<FinishedJobProps> = ({ job, currentRole }) => {
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -53,7 +54,7 @@ const FinishedJobCard: React.FC<FinishedJobProps> = ({ job }) => {
 
       <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
         <div className="flex items-center justify-between">
-            <Link to={`/jobDetails/${job.jobId}`}>
+            <Link to={`${ currentRole === "freelancer" ? `/jobDetails/${job.jobId}` :  `/jobDashboard/${job.jobId}`}`}>
           <button className="text-sm font-medium text-emerald-600 hover:text-emerald-700 transition-colors flex items-center gap-1.5">
             View Full Description
           </button>
