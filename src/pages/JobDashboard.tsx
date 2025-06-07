@@ -43,6 +43,7 @@ const JobDashboard = () => {
     useState<boolean>(false);
   const [selectedApplication, setSelectedApplications] =
     useState<JobApplications | null>();
+  const navigator = useNavigate();
 
   const openApplicationModal = (application: JobApplications) => {
     setIsApplicationModalOpen(true);
@@ -55,7 +56,7 @@ const JobDashboard = () => {
   };
 
   const acceptApplicationFunction = (jobId: string, applicationId: string) => {
-    acceptApplication(jobId, applicationId);
+    acceptApplication(jobId, applicationId).then(() => navigator(`/getOnGoingJobDetails/${jobId}`))
     closeApplicationModal()
   };
 

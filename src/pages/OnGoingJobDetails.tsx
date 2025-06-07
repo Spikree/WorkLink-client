@@ -32,7 +32,7 @@ const OnGoingJobDetails = () => {
   const navigate = useNavigate();
 
   const finishJob = (jobId: string) => {
-    markJobAsFinished(jobId).then(() => navigate("/home"))
+    markJobAsFinished(jobId).then(() => navigate("/home")).then(() => navigate(`/jobDashboard/${jobId}`))
   };
 
   const cancelJob = (jobId: string) => {
