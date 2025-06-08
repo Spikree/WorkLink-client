@@ -1,4 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
+import JobDashboardSkeleton from "./JobDashboardSkeleton";
 import { useJobStore } from "../store/useJobStore";
 import { useEffect, useState } from "react";
 import {
@@ -92,9 +93,7 @@ const JobDashboard = () => {
 
   if (isFetchingJobs) {
     return (
-      <div className="h-full flex justify-center items-center bg-gradient-to-br pt-20 sm:pt-0">
-        <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-      </div>
+      <JobDashboardSkeleton/>
     );
   }
 
