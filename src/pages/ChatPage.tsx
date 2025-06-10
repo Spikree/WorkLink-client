@@ -1,9 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import {
   Send,
-  Phone,
-  Video,
-  MoreVertical,
   Loader2,
   MessageCircle,
   ArrowLeft,
@@ -202,7 +199,7 @@ const ChatPage = () => {
                 />
               </div>
               <div className="flex items-center gap-3">
-                <div className="relative">
+                <div onClick={() => navigate(`/userProfile/${chatuserDetails?._id}`)} className="relative">
                   <img
                     src={
                       chatuserDetails?.profile?.profilePicture ||
@@ -229,7 +226,7 @@ const ChatPage = () => {
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-3">
+            {/* <div className="flex items-center gap-3">
               <button className="p-2 rounded-full hover:bg-gray-100 transition-colors">
                 <Phone className="w-5 h-5 text-gray-600" />
               </button>
@@ -239,7 +236,7 @@ const ChatPage = () => {
               <button className="p-2 rounded-full hover:bg-gray-100 transition-colors">
                 <MoreVertical className="w-5 h-5 text-gray-600" />
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
