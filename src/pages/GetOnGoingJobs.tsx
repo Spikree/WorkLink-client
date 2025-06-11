@@ -4,6 +4,7 @@ import OnGoingJobsCard from "../components/common/OnGoingJobCard";
 import { Briefcase, Clock, PlusCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import SkeletonCard from "../components/common/SkeletonCard";
+import Button from "../components/common/Button";
 
 const GetOnGoingJobs = () => {
   const { getOnGoingJobs, isFetchingJobs, onGoingJobs } = useJobStore();
@@ -32,7 +33,7 @@ const GetOnGoingJobs = () => {
       ) : onGoingJobs.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-[70vh] px-4">
           <div className="bg-blue-50 rounded-full p-6 mb-6">
-            <Clock size={48} className="text-blue-400" />
+            <Clock size={48} className="text-purple-400" />
           </div>
           <h3 className="text-xl font-semibold text-gray-800 mb-2">
             No ongoing jobs
@@ -41,10 +42,10 @@ const GetOnGoingJobs = () => {
             You don't have any jobs in progress. Active jobs will appear here.
           </p>
           <Link to={"/postJob"}>
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center">
+            <Button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center" disableStyles={false}>
               <PlusCircle size={16} className="mr-2" />
               Start a New Job
-            </button>
+            </Button>
           </Link>
         </div>
       ) : (

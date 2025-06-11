@@ -21,13 +21,22 @@ const AppliedJobs = () => {
         </p>
       </div>
 
-      {isLoadingAppliedJobs ? (<div className="flex flex-col gap-4">
+      {isLoadingAppliedJobs ? (
+        <div className="flex flex-col gap-4">
           {Array.from({ length: 5 }).map((_, index) => (
             <SkeletonCard key={index} />
           ))}
-        </div>) : applications.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-gray-600 text-lg">No job applications found.</p>
+        </div>
+      ) : applications.length === 0 ? (
+        <div className="text-center py-16 bg-white rounded-xl shadow-sm border border-gray-100">
+          <div className="max-w-md mx-auto">
+            <h3 className="text-lg font-semibold text-gray-900 mb-1">
+              No applications found
+            </h3>
+            <p className="text-gray-500">
+              Start applying for jobs you're interested in to view them here.
+            </p>
+          </div>
         </div>
       ) : (
         <div className="flex flex-col gap-4">

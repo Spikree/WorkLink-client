@@ -5,6 +5,7 @@ import DeleteModal from "../components/common/DeleteModal";
 import { LayoutGrid, Plus } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import SkeletonCard from "../components/common/SkeletonCard";
+import Button from "../components/common/Button";
 
 const Home = () => {
   const { getCreatedJobs, createdJobs, deleteJob,isFetchingJobs } = useJobStore();
@@ -65,10 +66,10 @@ const Home = () => {
             You haven't created any jobs. When you do, they'll appear here.
           </p>
           <Link to={"/postJob"}>
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center">
+            <Button  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center" disableStyles={false}>
               <Plus size={16} className="mr-2" />
               Create New Job
-            </button>
+            </Button>
           </Link>
         </div>
       ) : (

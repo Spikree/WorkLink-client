@@ -14,7 +14,12 @@ function App() {
 
   const handleAddSkill = () => {
     if (skillInput.trim()) {
-      setSkills([...skills, skillInput.trim()]);
+      const newSkills = skillInput
+        .split(',')
+        .map(skill => skill.trim())
+        .filter(skill => skill.length > 0);
+      
+      setSkills([...skills, ...newSkills]);
       setSkillInput("");
     }
   };
@@ -112,7 +117,7 @@ function App() {
                   className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 outline-none"
                   value={budget}
                   onChange={(e) => setBudget(e.target.value)}
-                  placeholder="e.g. $80,000 - $100,000 per year"
+                  placeholder="e.g. $80,000"
                   required
                 />
               </div>
@@ -127,7 +132,7 @@ function App() {
                     className="flex-1 px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 outline-none"
                     value={skillInput}
                     onChange={(e) => setSkillInput(e.target.value)}
-                    placeholder="e.g. React, TypeScript, Node.js"
+                    placeholder="e.g. React, TypeScript, Node.js (comma-separated)"
                     onKeyPress={(e) =>
                       e.key === "Enter" &&
                       (e.preventDefault(), handleAddSkill())
