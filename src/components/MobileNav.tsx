@@ -106,6 +106,13 @@ const MobileNav = () => {
         location.pathname.startsWith("/chatRoom")
       );
     }
+
+    if (item.title === "Finished Jobs") {
+      return (
+        location.pathname === item.to ||
+        location.pathname.startsWith("/jobDashboard")
+      );
+    }
     return location.pathname === item.to;
   };
 
